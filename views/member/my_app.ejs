@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<title>Review</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+<link rel="stylesheet"  type="text/css" href="../css/index.css"/>
+<link rel="stylesheet"  type="text/css" href="../css/bar.css"/>
+<link rel="stylesheet"  type="text/css" href="../css/report.css"/>
+
+  <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+
+<style>
+
+body{
+  margin: 0 auto;
+  text-align: center;
+}
+
+.myapp-box {
+  text-align: center;
+  float: left;
+  width:400px;
+  height:450px;
+  margin-top:100px;
+  background-color: white;
+  margin-left: 50px;;
+}
+
+.hr1{
+  margin-top: 15px;
+  border-top: 2px solid #2F5971;
+  width: 100%;
+}
+
+.app-templet{
+  margin-top: 15px;
+  margin-left: 25px;
+  width: 450px;
+  height: 120px;
+  background-color: white;
+}
+
+.myapp-btn{
+  float: right;
+  margin-right: 30px;
+  font-size: 12px;
+  color: #fff;
+  background-color: #2F5971;
+  font-weight: bold;
+  height: 40px;
+  width: 110px;
+  border: none;
+  border-radius: 20px;
+}
+h2{
+  float: left;
+  margin-top: 25px;
+  margin-left: 80px;
+  color:#2F5971;
+}
+
+span{
+  font-size: 12px;
+  color:gray;
+  margin-left: 5px;
+  margin-right: 5px;
+}
+</style>
+
+
+
+</head>
+
+
+<body>
+  <!-- 상단바   -->
+
+  <div class="bar">
+    <a href="/">
+      <img width="120px" height="110px" style="padding-top:6px; padding-left: 60px; float:left;" src="../img/reviewer!.png">
+    </a>
+
+    <!-- 메뉴바 마우스 오버 -->
+    <ul id="font" style="float:right; padding-right: 70px; padding-top:40px; color:gray;">
+      <li><a href="/guest/gu_search">Search</a></li>
+      <li><a href="/member/my_app">My app</a></li>
+      <li><a href="/member/my_report">Report</a></li>
+      <% if(session.loginData) { %>
+        <li><a href="/user/logout">Logout</a></li>
+      <% } else { %>
+        <li><a href="/login/login">Login</a></li>
+      <% } %>
+      </ul>
+
+      </div>
+
+  <br>
+  <hr>
+
+    <!-- 상단바 끝 -->
+
+
+    <!-- 마이앱 시작 -->
+    <div>
+      <h2 style="margin-top:140px; margin-bottom:25px;"> My app list</h2>
+      <a href="/member/add_myapp"><input class="myapp-btn" type="button" value="내 어플 등록하기" style="margin-top:140px; margin-bottom:25px;"></a>
+        <hr class="hr1">
+    </div>
+
+    <div class="myapp-box" style="margin-left:80px;">
+      <img width="175px" height="165px" style="margin-top:30px; margin-bottom:15px;" src="../img/reviewer!.png">
+      <h3 style="margin-top:15px; margin-bottom:15px;">App1</h3>
+      <span> 앱설명입니다.어플설명입니다.앱설명입니다.어플설명입니다.앱설명입니다.어플설명입니다.</span>
+    </div>
+
+    <div class="myapp-box">
+      <img width="175px" height="165px" style="margin-top:30px; margin-bottom:15px;" src="../img/reviewer!.png">
+      <h3 style="margin-top:15px; margin-bottom:15px;">App2</h3>
+      <span> 앱설명입니다.어플설명입니다.앱설명입니다.어플설명입니다.앱설명입니다.어플설명입니다.</span>
+    </div>
+
+    <div class="myapp-box">
+      <img width="175px" height="165px" style="margin-top:30px; margin-bottom:15px;" src="../img/reviewer!.png">
+      <h3 style="margin-top:15px; margin-bottom:15px;">App3</h3>
+      <span> 앱설명입니다.어플설명입니다.앱설명입니다.어플설명입니다.앱설명입니다.어플설명입니다.</span>
+    </div>
+
+
+
+    <!-- 하단 푸터 시작 -->
+    <div id='wrapper'>
+      <div>
+      </div>
+    </div>
+    <footer>
+    <h3 class="avo-title"> AVO </h3>
+    <a href="/">
+      <img width="25px" height="25px" style="padding-top:10px; padding-right:5px;" src="../img/instagram-logo.png">
+    </a>
+    <a href="/">
+      <img width="25px" height="25px" style="padding-top:10px; padding-right:5px;" src="../img/facebook-logo.png">
+    </a>
+
+    <a href="/">
+      <img width="25px" height="25px" style="padding-top:10px; padding-right:5px;" src="../img/twitter-logo.png">
+    </a>
+
+
+    <p class="footer-content1">reviewer3566@gmail.com</p>
+    <p class="footer-content2">@ 2022 Review service from AVO</p>
+    </footer>
+
+    <!-- 하단 푸터 끝 -->
+
+    
+</body>
+</html>

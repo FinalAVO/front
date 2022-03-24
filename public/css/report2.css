@@ -1,0 +1,114 @@
+
+
+
+.report-title-box{
+  margin:50px 0 0 300px;
+}
+
+.report-title{
+  float: left;
+  margin:50px 0 0 0;
+}
+
+.title-hr{
+  background-color: #2F5971;
+  height: 3px;
+  margin-top: 20px;
+  width: 100%;
+  float: left;
+
+}
+
+
+.real-report{
+  margin:15px 0 0 0px;
+}
+.keyword-box {
+  float: left;
+  margin:15px 300px 0 300px;
+}
+
+.wordcount{
+  display:flex;
+  float: left;
+  margin-right: 20px;
+  background-color: #CECECE;
+  color: #2F5971;
+  padding: 5px 5px 5px 5px;
+  font-size: 14px;
+  border-radius: 15px;
+}
+
+
+.keyword-title{
+  display:flex;
+  float: left;
+  font-size: 12px;
+  color: gray;
+  margin:7px 10px 7px 0;
+}
+
+.star-title{
+  float: left;
+  margin:30px 0 0 300px;
+  font-size: 14px;
+}
+
+.star-txt-title{
+  float: left;
+  margin:32px 0 0 10px;
+  font-size: 11px;
+  color:gray;
+}
+
+.star-box{
+
+float: left;
+ width: 800px;
+ height: 150px;
+ background-color: #CECECE;
+ margin:10px 0 0 300px;
+}
+
+.count-title{
+  float: left;
+  margin:30px 0 0 300px;
+  font-size: 14px;
+}
+
+.count-txt-title{
+  float: left;
+  margin:32px 0 0 10px;
+  font-size: 11px;
+  color:gray;
+}
+
+.count-box{
+display:left;
+float: left;
+ width: 800px;
+ height: 500px;
+ background-color: #CECECE;
+ margin:10px 0 0 300px;
+}
+
+.star2-title{
+  float: left;
+  margin:30px 0 0 300px;
+  font-size: 14px;
+}
+
+.star2-txt-title{
+  float: left;
+  margin:32px 0 0 10px;
+  font-size: 11px;
+  color:gray;
+}
+
+.star2-box{
+  float: left;
+ width: 800px;;
+ height: 150px;
+ background-color: #CECECE;
+ margin:10px 0 0 300px;
+}

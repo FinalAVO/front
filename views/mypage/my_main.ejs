@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<title>Review</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+<link rel="stylesheet"  type="text/css" href="../css/index.css"/>
+<link rel="stylesheet"  type="text/css" href="../css/bar.css"/>
+<link rel="stylesheet"  type="text/css" href="../css/report.css"/>
+
+<style>
+
+.my-page-title{
+  text-align:center;
+  font-size: 14px;
+  font-weight:bold;
+  margin-top: 50px;
+}
+
+</style>
+
+
+
+
+
+</head>
+
+
+<body>
+  <!-- 상단바   -->
+
+  <div class="bar">
+    <a href="/">
+      <img width="120px" height="110px" style="padding-top:6px; padding-left: 60px; float:left;" src="../img/reviewer!.png">
+    </a>
+
+    <!-- 메뉴바 마우스 오버 -->
+    <ul id="font" style="float:right; padding-right: 70px; padding-top:40px; color:gray;">
+      <li><a href="/guest/gu_search">Search</a></li>
+      <li><a href="/member/my_app">My app</a></li>
+      <li><a href="/member/my_report">Report</a></li>
+      <% if(session.loginData) { %>
+        <li><a href="/user/logout">Logout</a></li>
+      <% } else { %>
+        <li><a href="/login/login">Login</a></li>
+      <% } %>
+      </ul>
+
+      </div>
+
+  <br>
+  <hr>
+
+    <!-- 상단바 끝 -->
+
+    <!-- 사이드 바 -->
+  <div class="side-menu">
+    <ol>
+      <br/>
+      <span class="my-page-title">회원정보 수정</span>
+      <br/>
+      <br/>
+      <li><a class="menu" href="/mypage/basic_information">기본정보</a></li>
+      <li><a class="menu" href="/mypage/preferences">환경설정</a></li>
+      <li><a class="menu" href="/mypage/security">보안</a></li>
+    </ol>
+  </div>
+
+  <!-- 사이드바 끝 -->
+
+  <br>
+<hr>
+
+
+</body>
+</html>

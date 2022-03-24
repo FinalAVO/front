@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <title>Review</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+  <link rel="stylesheet"  type="text/css" href="../css/index.css"/>
+  <link rel="stylesheet"  type="text/css" href="../css/bar.css"/>
+  <link rel="stylesheet"  type="text/css" href="../css/report.css"/>
+  <link rel="stylesheet"  type="text/css" href="../css/drop-down.css"/>
+  <link rel="stylesheet"  type="text/css" href="../css/report2.css"/>
+  <link rel="stylesheet"  type="text/css" href="../css/popup-save.css"/>
+  <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+
+  <style>
+
+.iframe-preview{
+  top:0;
+  margin-left: 270px;
+  display: inline;
+  display:block;
+}
+
+.my_page{
+  z-index:5;
+  width:100px;
+  height:60px;
+}
+
+  </style>
+
+</head>
+
+
+<body>
+  <!-- 상단바   -->
+
+  <div class="bar">
+    <a href="/">
+      <img width="120px" height="110px" style="padding-top:6px; padding-left: 60px; float:left;" src="../img/reviewer!.png">
+    </a>
+
+    <!-- 메뉴바 마우스 오버 -->
+    <ul id="font" style="float:right; padding-right: 70px; padding-top:40px; color:gray;">
+      <li><a href="/guest/gu_search">Search</a></li>
+      <li><a href="/member/my_app">My app</a></li>
+      <li><a href="/member/my_report">Report</a></li>
+      <% if(session.loginData) { %>
+        <li><a href="/user/logout"><img width="100px" height="60px;" src="../img/my.png" class="my_page"></a></li>
+      <% } else { %>
+        <li><a href="/login/login">Login</a></li>
+      <% } %>
+      </ul>
+
+      </div>
+
+  <br/>
+  <hr/>
+
+  <!-- 상단바 끝 -->
+
+  <!-- 사이드 바 -->
+<div class="side-menu">
+  <ol>
+    <br/>
+    <span class="app-name">App1</span>
+
+    <div style="display:inline;">
+      <input type="button" class="other-app" id="otherapp_btn" value=">"/>
+    </div>
+
+    <br/>
+    <br/>
+    <li><a class="menu" href="/member/my_search">전체리뷰 살펴보기</a></li>
+    <li><a class="menu" href="/member/my_wordcloud">리뷰 키워드</a></li>
+    <li><a class="menu" href="/member/my_report">주제별 보고서 받기</a></li>
+    <li><a class="menu" href="#">인기 많은 리뷰</a></li>
+  </ol>
+</div>
+
+<!-- 사이드바 끝 -->
+
+<!--다른 앱 선택 드롭다운-->
+<div style="position:absolute;">
+  <div id="btn_toggle" class="dropdown" style="display:none; position:fixed;">
+    <button class="dropbtn">
+      <span class="dropbtn_content" style="font-size:10px;">Other App</span>
+      <span class="dropbtn_click" style="font-family: Material Icons; font-size : 16px; color : #ffffff; float:right;"
+        onclick="dropdown()">arrow_drop_down</span>
+    </button>
+    <div class="dropdown-content">
+      <div class="fastfood" onclick="showMenu(this.innerText)">App2</div>
+      <div class="fastfood" onclick="showMenu(this.innerText)">App3</div>
+      <div class="fastfood" onclick="showMenu(this.innerText)">App4</div>
+      <div class="fastfood" onclick="showMenu(this.innerText)">App5</div>
+      <div class="fastfood" onclick="showMenu(this.innerText)">App2</div>
+      <div class="fastfood" onclick="showMenu(this.innerText)">App3</div>
+      <div class="fastfood" onclick="showMenu(this.innerText)">App4</div>
+      <div class="fastfood" onclick="showMenu(this.innerText)">App5</div>
+    </div>
+  </div>
+</div>
+
+<!-- 다른 앱 선택 드롭다운 끝 -->
+<!-- 리모컨-->
+
+
+<div id="slidemenu">
+  <div style="margin-top:20px;">
+    <span class="report-s"> 주제별 보고서 선택</span>
+    <hr class="menu-hr">
+  </div>
+
+
+<script>
+
+$(document).ready(function(){
+  $('#otherapp_btn').click(function(){
+
+  const btnElement
+  = document.getElementById('otherapp_btn');
+  const otherapp
+  = document.getElementById('btn_toggle');
+
+  if(otherapp.style.display=='none'){
+    otherapp.style.display= 'inline';
+
+  }else{
+    otherapp.style.display='none';
+
+  }
+
+})
+})
+
+
+function getCheckboxValue()  {
+  // 선택된 목록 가져오기
+  const query = 'input[name="nb"]:checked';
+  const selectedEls =
+  document.querySelectorAll(query);
+
+  // 선택된 목록에서 value 찾기
+  let result = '';
+  selectedEls.forEach((el) => {
+    result += el.value + ' ';
+  });
+  // 출력
+  document.getElementById('result').innerText
+  = result;
+}
+
+
+</script>
+
+    <form method="post" action="/review/chart" target="targetURL2">
+      <p><label class="report-c"><input class="report-c" type="checkbox" name="nb" value="01">  디자인</label></p>
+      <br>
+      <p><label class="report-c"><input class="report-c" type="checkbox" name="nb" value="02">  프로필</label></p>
+      <br>
+      <p><label class="report-c"><input class="report-c" type="checkbox" name="nb" value="03"> 리소스 사용량</label></p>
+      <br>
+      <p><label class="report-c"><input class="report-c" type="checkbox" name="nb" value="04">  속도</label></p>
+      <br>
+      <p><label class="report-c"><input class="report-c" type="checkbox" name="nb" value="05">  안정성</label></p>
+      <br>
+      <p><label class="report-c"><input class="report-c" type="checkbox" name="nb" value="05">  제거</label></p>
+      <br>
+      <p><label class="report-c"><input class="report-c" type="checkbox" name="nb" value="05">  평점분석</label></p>
+      <br>
+      <!-- <p><input class="report-btn" type="submit" value="보고서 검색"></p> -->
+      <p><button onclick='getCheckboxValue()'> 보고서 검색</button>
+    </form>
+
+</div>
+
+
+<script>
+$(document).ready(function(){
+    var currentPosition = parseInt($("#slidemenu").css("top"));
+    $(window).scroll(function() {
+        var position = $(window).scrollTop(); // 현재 스크롤바의 위치값을 반환합니다.
+        $("#slidemenu").stop().animate({"top":position+currentPosition+"px"},750);
+    });
+});
+
+
+window.onload=()=>{
+      document.querySelector('.dropbtn_click').onclick = ()=>{
+        dropdown();
+      }
+      document.getElementsByClassName('fastfood').onclick = ()=>{
+        showMenu(value);
+      };
+      dropdown = () => {
+        var v = document.querySelector('.dropdown-content');
+        var dropbtn = document.querySelector('.dropbtn')
+        v.classList.toggle('show');
+        dropbtn.style.borderColor = 'rgb(94, 94, 94)';
+      }
+
+      showMenu=(value)=>{
+        var dropbtn_icon = document.querySelector('.dropbtn_icon');
+        var dropbtn_content = document.querySelector('.dropbtn_content');
+        var dropbtn_click = document.querySelector('.dropbtn_click');
+        var dropbtn = document.querySelector('.dropbtn');
+
+        dropbtn_icon.innerText = '';
+        dropbtn_content.innerText = value;
+        dropbtn_content.style.color = '#252525';
+        dropbtn.style.borderColor = '#3992a8';
+      }
+    }
+    window.onclick= (e)=>{
+      if(!e.target.matches('.dropbtn_click')){
+        var dropdowns = document.getElementsByClassName("dropdown-content");
+
+        var dropbtn_icon = document.querySelector('.dropbtn_icon');
+        var dropbtn_content = document.querySelector('.dropbtn_content');
+        var dropbtn_click = document.querySelector('.dropbtn_click');
+        var dropbtn = document.querySelector('.dropbtn');
+
+        var i;
+        for (i = 0; i < dropdowns.length; i++) {
+          var openDropdown = dropdowns[i];
+          if (openDropdown.classList.contains('show')) {
+            openDropdown.classList.remove('show');
+          }
+        }
+      }
+    }
+
+</script>
+
+<div class="iframe-preview" style="display:block;">
+  <iframe id="targetURL2" onload="calcHeight();" name="targetURL2"  frameborder="0" scrolling="no" style="overflow-x:hidden; overflow:auto; width:100%; min-height:500px;"src="/review/chart">
+  </iframe>
+</div>
+
+<script type="text/javascript">
+//<![CDATA[
+function calcHeight(){
+ //find the height of the internal page
+
+ var the_height=
+ document.getElementById('targetURL2').contentWindow.
+ document.body.scrollHeight;
+
+ //change the height of the iframe
+ document.getElementById('targetURL2').height=
+ the_height;
+
+ //document.getElementById('the_iframe').scrolling = "no";
+ document.getElementById('targetURL2').style.overflow = "hidden";
+}
+//
+</script>
+
+
+
+<div class="wrap" style="position:fixed; right: 30px; bottom: 30px;">
+  <a href="#pop_info_1" class="btn_open myapp-btn">보고서 다운로드</a>
+</div>
+    <div id="pop_info_1" class="pop_wrap" style="display:none;">
+      <div class="pop_inner">
+        <h3 class="save-title">보고서 다운로드</h3><br/>
+        <div class="container row">
+            <div class="col-md-1">
+              <p class="ok-txt">- 선택 기간 리뷰분석데이터를 csv 파일로 다운로드 할 수 있습니다.</p>
+            </div>
+            <div class="col-md-1">
+              <p class="ok-txt" style="margin-top:10px;">- 주제별 보고서를 PDF 파일로 다운로드 할 수 있습니다.</p>
+            </div>
+
+            <button type="button" id="csv-dl" class="btn_confirm">CSV 파일 다운로드</button>
+            <button type="button" id="pdf-dl" class="btn_confirm">PDF 파일 다운로드</button>
+          </div>
+
+
+
+            <button type="button" class="btn_close" onclick="location.href='/member/my_report';">닫기</button>
+      </div>
+    </div>
+
+<script>
+
+var target = document.querySelectorAll('.btn_open');
+var btnPopClose = document.querySelectorAll('.pop_wrap .btn_close');
+var targetID;
+
+
+    // 팝업 열기
+    for(var i = 0; i < target.length; i++){
+      target[i].addEventListener('click', function(){
+        targetID = this.getAttribute('href');
+        document.querySelector(targetID).style.display = 'block';
+      });
+    }
+
+
+    // 팝업 닫기
+    for(var j = 0; j < target.length; j++){
+      btnPopClose[j].addEventListener('click', function(){
+        this.parentNode.parentNode.style.display = 'none';
+      });
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,7 @@
+{
+  "host"     : "mymysql.csstqmpesreg.ap-northeast-2.rds.amazonaws.com",
+  "user"     : "admin",
+  "password" : "abcd1234",
+  "database" : "avo_review",
+  "raise_on_warnings" : true
+}

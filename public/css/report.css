@@ -1,0 +1,167 @@
+.side-menu{
+  margin-top: 95px;
+}
+ol {
+  list-style-type: none;
+  background-color: #2F5971;
+  width:150px;
+  padding:0;
+  margin:0;
+  position: fixed;
+  height: 100%;
+  overflow: auto;
+  font-size: 12px;
+}
+
+span{
+  font-size: 20px;
+  color:white;
+}
+.menu{
+  width: 150px;
+  margin: auto;
+  text-decoration-line : none;
+  text-align: center;
+  align-items: center;
+  display: block;
+  color: #ffffff;
+  padding: 15px 30px 15px 0px;
+  font-weight: bold;
+}
+
+.menu.job{
+  text-align: center;
+  background-color: #ffffff;
+  color:black;
+}
+
+.menu:hover:not(.job){
+  background-color: #ffffff;
+  color:black;
+}
+
+body {
+  margin: 0;
+  height: 1000px;
+
+}
+
+
+@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
+
+.dropdown{
+  position : relative;
+  display : inline-block;
+}
+
+.dropbtn_icon{
+  font-family : 'Material Icons';
+}
+.dropbtn{
+  border : 1px solid rgb(37, 37, 37);
+  border-radius : 4px;
+  background-color: #f5f5f5;
+  font-weight: 400;
+  color : rgb(37, 37, 37);
+  padding : 12px;
+  width :200px;
+  text-align: left;
+  cursor : pointer;
+  font-size : 12px;
+}
+.dropdown-content{
+  display : none;
+  position : absolute;
+  z-index : 1; /*다른 요소들보다 앞에 배치*/
+  font-weight: 400;
+  background-color: #f9f9f9;
+  min-width : 200px;
+}
+
+.dropdown-content a{
+  display : block;
+  text-decoration : none;
+  color : rgb(37, 37, 37);
+  font-size: 12px;
+  padding : 12px 20px;
+}
+
+.dropdown-content a:hover{
+  background-color : #ececec
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+
+.menu-hr{
+  background-color: #2F5971;
+  height: 1px;
+  margin-top: 5px;
+  width: 103px;
+}
+
+
+
+.app-name{
+  float:left;
+  margin-left:30%;
+  margin-bottom: 20px;
+  margin-top:10px;
+
+}
+.other-app{
+  float:right;
+  margin-right: 10px;
+  margin-top:18px;
+  background-color: transparent;
+  color:white;
+  border: none;
+}
+.report-s {
+  font-size:11px;
+  margin-top: 10px;
+  padding-top:20px;
+  color: #2F5971;
+  font-weight: bold;
+}
+
+.report-c {
+  float:left;
+  padding-left: 7px;
+  font-size:12px;
+  margin-top:2px;
+  padding-top:20px;
+  color:#2F5971;
+}
+
+
+
+#slidemenu{
+  background:#C9E3E5;
+  color:white;
+  position:fixed;
+  margin-top: 210px;
+  margin-bottom: 400px;
+  width:105px;
+  height: 400px;
+  top:50px;
+  left:155px;
+  border-radius: 20px;
+}
+
+.report-btn{
+  margin-top: 30px;
+  margin-left: 5px;
+  float: left;
+  font-size: 12px;
+  color: #fff;
+  background-color: #2F5971;
+  font-weight: bold;
+  height: 30px;
+  width: 90px;
+  border: none;
+  border-radius: 10px;
+
+}

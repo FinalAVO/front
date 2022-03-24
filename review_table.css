@@ -1,0 +1,21 @@
+.review-table{
+  backgraoud-color: whith;
+}
+table {
+  font-size: 9pt;
+  width: 100%;
+  border-top: 1px solid #444444;
+  border-collapse: collapse;
+  backgraoud: white;
+  table-layout: fixed;
+  }
+
+tr, th {
+  border-bottom: 1px solid #444444;
+  border-left: 1px solid #444444;
+  padding: 10px;
+  }
+
+tr:first-child, th:first-child {
+  border-left: none;
+  }

@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>login</title>
+<link rel="stylesheet"  type="text/css" href="../css/bar.css"/>
+<link rel="stylesheet"  type="text/css" href="../css/index.css"/>
+
+
+<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+
+<style>
+
+#font {
+  font-family: 'Pretendard'
+}
+
+.box1{
+  margin: 0 auto;
+  margin-top: 80px;
+  align-items:center;
+  width:320px;
+  height: 350px;
+  background-color: #ffffff;
+  border:none;
+  border-radius: 10px;
+  align-items:center;
+  text-align:center;
+  box-shadow: 2px 0 5px #ccc
+}
+
+/* ------------- Login ------------- */
+
+
+.loginBtn-wrap{
+    width: 230px;
+    height: 40px;
+    border-radius: 50%;
+}
+
+#loginBtn{
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    align-items: center;
+    font-size: 15px;
+    margin-top: 5px;
+    color: #fff;
+    background-color: #d8d8d8;
+    border: none;
+    border-radius: 3px;
+    outline: 0;
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+
+#loginBtn:hover{
+    background-color: #2F5971;
+
+}
+
+.email-input{
+  width: 180px;
+  height: 30px;
+  border: 2px inset gray;
+  border-radius: 20px;
+  margin-left:10px;
+  padding-left:10px;
+}
+
+
+</style>
+
+</head>
+
+<body>
+
+  <!-- 상단바   -->
+
+  <div class="bar">
+    <a href="/">
+      <img width="120px" height="110px" style="padding-top:6px; padding-left: 60px; float:left;" src="../img/reviewer!.png">
+    </a>
+
+    <!-- 메뉴바 마우스 오버 -->
+    <ul id="font" style="float:right; padding-right: 70px; padding-top:40px; color:gray;">
+      <li><a href="/guest/gu_search">Search</a></li>
+      <li><a href="/member/my_app">My app</a></li>
+      <li><a href="/member/my_report">Report</a></li>
+      <% if(session.loginData) { %>
+        <li><a href="/user/logout">Logout</a></li>
+      <% } else { %>
+        <li><a href="/login/login">Login</a></li>
+      <% } %>
+      </ul>
+
+      </div>
+
+  <br/>
+  <hr>
+
+    <!-- 상단바 끝 -->
+<br/>
+<br/>
+<br/>
+<br/>
+
+<!-- 로그인 -->
+
+<h3 style="padding-top: 60px;" id="font"> 아이디 / 비밀번호 찾기 </h3>
+<hr>
+<p style="padding-top:10px;" id="font"> 회원가입시 등록한 개발자 이름, 아이디, 이메일을 입력하세요.</p>
+
+<!-- 아이디 찾기 박스 -->
+<div class ="box1" style="align-items:center; textalign:center;">
+  <br>
+  <p id="font" style="margin-top:10px;"> 아이디 찾기 </p>
+  <br>
+  <div style="margin-top:55px;">
+    <span style="fontSize:8px;" id="font" > 인증번호 </span>
+      <input type="text" class="email-input" name="findId" placeholder=" 인증번호를 입력해주세요"/>
+  </div>
+
+<br>
+
+  <div class="loginBtn-wrap" style="textalign:center; margin-top:70px; margin-left:45px;">
+    <button type="submit" id="loginBtn" style="float:right;" onclick="location.href='/login/findIdCheck'">인증번호 확인</button>
+  </div>
+</div>
+
+<!-- 하단 푸터 시작 -->
+<div id='wrapper'>
+  <div>
+  </div>
+</div>
+<footer style="margin-top:300px;">
+<h3 class="avo-title"> AVO </h3>
+<a href="/">
+  <img width="25px" height="25px" style="padding-top:10px; padding-right:5px;" src="../img/instagram-logo.png">
+</a>
+<a href="/">
+  <img width="25px" height="25px" style="padding-top:10px; padding-right:5px;" src="../img/facebook-logo.png">
+</a>
+
+<a href="/">
+  <img width="25px" height="25px" style="padding-top:10px; padding-right:5px;" src="../img/twitter-logo.png">
+</a>
+
+
+<p class="footer-content1">avo@gmail.com</p>
+<p class="footer-content2">@ 2022 Review service from AVO</p>
+</footer>
+
+<!-- 하단 푸터 끝 -->
+
+
+</body>
+</html>

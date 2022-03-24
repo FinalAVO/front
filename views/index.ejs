@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Review</title>
+  <link rel="stylesheet"  type="text/css" href="..css/barReal.css"/>
+  <link rel="stylesheet"  type="text/css" href="css/index.css"/>
+  <link rel="stylesheet"  type="text/css" href="css/bar.css"/>
+
+  <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+
+
+  <style>
+
+  a {
+    text-decoration-line : none;
+  }
+
+
+  .keyword-search{
+    padding-top: 10px;
+    padding-left: 10px;
+  }
+
+  #btn_toggle{
+    width:55px;
+    height: 30px;
+    font-size:10px;
+    border:1px solid #ddd;
+    background-color:#2F5971;
+    border-radius:5px;
+    color:#fff;
+    font-weight:bold;
+  }
+  #Toggle{
+    font-size:10px;
+    color: #666;
+  }
+
+
+  .select1{
+    padding-right: 5px;
+    width: 50px;
+    height: 30px;
+    text-align: center;
+    font-size: 10px;
+  }
+
+  </style>
+
+</head>
+
+<body>
+
+  <!-- 상단바   -->
+
+  <div class="bar">
+    <a href="/">
+      <img width="120px" height="110px" style="padding-top:6px; padding-left: 60px; float:left;" src="img/reviewer!.png">
+    </a>
+
+    <!-- 메뉴바 마우스 오버 -->
+    <ul id="font" style="float:right; padding-right: 70px; padding-top:40px; color:gray;">
+      <li><a href="/guest/gu_search">Search</a></li>
+      <li><a href="/member/my_app">My app</a></li>
+      <li><a href="/member/my_report">Report</a></li>
+      <% if(session.loginData) { %>
+        <li><a href="/user/logout">Logout</a></li>
+      <% } else { %>
+        <li><a href="/login/login">Login</a></li>
+      <% } %>
+      </ul>
+
+      </div>
+
+      <br>
+      <hr>
+
+      <!-- 상단바 끝 -->
+
+
+
+
+      <!--
+      <a href="/search.html">
+      <img width="130px" style="padding-left: 800px; padding-bottom: 40px;" src="img/review_button.png">
+    </a>
+
+    <a href="/search.html">
+    <img width="130px" style="padding-left: 800px; padding-bottom: 40px;" src="img/review_button.png">
+  </a>
+
+  <a href="/analysis.html">
+  <img  width="130px" style="padding-left: 30px; padding-bottom: 40px;" src="img/analysis_button.png">
+</a>
+-->
+
+
+<body>
+
+
+
+
+  <div style="padding-top: 0;">
+    <img width="90%" src="img/main.png">
+  </div>
+
+  <br/>
+
+
+
+
+<br/>
+<br/>
+<br/>
+
+
+<!-- 하단 푸터 시작 -->
+<div id='wrapper'>
+  <div>
+  </div>
+</div>
+<footer>
+<h3 class="avo-title"> AVO </h3>
+<a href="/">
+  <img width="25px" height="25px" style="padding-top:10px; padding-right:5px;" src="../img/instagram-logo.png">
+</a>
+<a href="/">
+  <img width="25px" height="25px" style="padding-top:10px; padding-right:5px;" src="../img/facebook-logo.png">
+</a>
+
+<a href="/">
+  <img width="25px" height="25px" style="padding-top:10px; padding-right:5px;" src="../img/twitter-logo.png">
+</a>
+
+
+<p class="footer-content1">reviewer3566@gmail.com</p>
+<p class="footer-content2">@ 2022 Review service from AVO</p>
+</footer>
+
+<!-- 하단 푸터 끝 -->
+
+</body>
+</html>

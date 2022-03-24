@@ -1,0 +1,112 @@
+* {
+  margin: 0;
+  padding: 0;
+  }
+
+body {
+
+  font-family: 'Noto Sans KR';
+}
+
+
+li {
+  list-style: none;
+  float: left;
+  margin-right: 30px;
+  color: #2F5971;
+  }
+
+a {
+  text-decoration: none;
+  text-decoration-line : none;
+  color: black;
+  font: "Noto Sans KR";
+  }
+
+ul > li {
+  font-size: 16px;
+  line-height: 30px;
+  }
+ul > li > a {
+  display: inline-block;
+  position: relative;
+  }
+ul > li > a:after {
+  content:"";
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: 0;
+  height: 2px;
+  background-color: #2F5971;
+  transition: all .5s;
+  }
+
+ul > li > a:before {
+  content:"";
+  position: absolute;
+  right: 50%;
+  bottom: 0;
+  width: 0;
+  height: 2px;
+  background-color: #2F5971;
+  transition: all .5s;
+  }
+ul > li > a:hover:after {
+  width: 50%
+  }
+ul > li > a:hover:before {
+  width: 50%
+}
+
+#font {
+  font-family: 'Noto Sans KR';
+  padding-bottom: 0;
+}
+
+
+}
+
+.bar{
+  position: fixed;
+  background-color: white;
+  height: 120px;
+  width:100%;
+}
+
+body {
+  margin:0;
+  padding: 0;
+}
+
+
+#wrapper{
+  height: auto;
+  min-height: 100%;
+  padding-bottom: 150px;
+}
+footer{
+  bottom:0;
+  height: 150px;
+  position : relative;
+  transform : translateY(-100%);
+  background-color: white;
+  color:#2F5971;
+}
+
+.avo-title{
+  font-size: 18px;
+  padding-top: 20px;
+  font-weight: bold;
+}
+.footer-content1{
+  font-size: 12px;
+  bottom: 0;
+  padding-top: 10px;
+}
+
+.footer-content2{
+  font-size: 12px;
+  bottom: 0;
+  padding-top: 10px;
+}

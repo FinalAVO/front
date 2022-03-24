@@ -1,0 +1,91 @@
+select {
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  appearance: none;
+  width: 70px;
+  height: 35px;
+  font-size: 9pt;
+  font-weight: 400;
+  line-height: 1.5;
+  color: #444;
+  background-color: rgb(233, 233, 233);
+  padding: .6em.1.4em.5em.8em;
+  margin: 0;
+  border:0;
+  border-radius: 15px;
+  box-shadow: 0 1px 0 1px rgba(0,0,0,.04);
+  text-align: center;
+}
+
+select:hover {
+  border-color: #888;
+}
+
+select:focus {
+  border-color: #aaa;
+  box-shadow: 0 0 1px 3px rgba(59, 153, 252, .7);
+  box-shadow: 0 0 0 3px -moz-mac-focusring;
+  color: #222;
+  outline: none;
+}
+
+select:disabled {
+  opacity: 0.5;
+}
+
+label {
+  font-family: "Noto Sans KR", sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.3;
+  color: #444;
+  margin-right: 0.5em;
+}
+
+hr {
+  display: true;
+  border: 1px;
+  height: 3px;
+  bachground-color: gray;
+}
+
+.input-box{
+
+  width: 500px;
+  height: 32px;
+  font-size: 15px;
+  border: 0;
+  border-radius: 15px;
+  outline: none;
+  padding-left: 10px;
+  background-color: rgb(233, 233, 233);
+  box-shadow: 0 1px 0 1px rgba(0,0,0,.04);
+
+}
+
+.search-box{
+
+  width: 80px;
+  height: 35px;
+  background-color: rgb(233, 233, 233);
+  border-radius: 15px;
+  border: 4px solid rgb(233, 233, 233);
+  box-shadow: 0 1px 0 1px rgba(0,0,0,.04);
+}
+
+.bar{
+    position: fixed;
+    background-color: white;
+    height: 120px;
+    width:100%;
+    z-index: 4;
+}
+
+body{
+  margin: 0;
+  height: 0px;
+  background-color: #F1F2EC;
+  text-align: center;
+  align-items: center;
+
+}

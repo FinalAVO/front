@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>Review</title>
+<link rel="stylesheet"  type="text/css" href="../css/barReal.css"/>
+<link rel="stylesheet"  type="text/css" href="../css/index.css"/>
+<link rel="stylesheet"  type="text/css" href="../css/bar.css"/>
+
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+
+<style>
+
+a {
+  text-decoration-line : none;
+}
+
+#btn_toggle{
+  font-size:10px;
+  padding:8px 12px;
+  border:1px solid #ddd;
+  background-color:#015c93;
+  border-radius:5px;
+  color:#fff;
+  font-weight:bold;
+}
+#Toggle{
+  font-size:14px;
+  color: #666;
+}
+
+.hifilter{
+  width:300px;
+  list-style-type: none;
+  font-size: 12px;
+  margin-right: 8px;
+  display: inline;
+}
+
+.date-box {
+  width: 200px;
+  height: 32px;
+  font-size: 12px;
+  text-align: center;
+  border: 0;
+  border-radius: 15px;
+  outline: none;
+  padding-left: 10px;
+  background-color: rgb(233, 233, 233);
+  box-shadow: 0 1px 0 1px rgba(0,0,0,.04);
+}
+
+.bd00Bbs th a {
+  background:url(../image/common/ico/arrow_0.gif) 100% 50% no-repeat;
+  padding-right:16px;
+  display:inline-block
+}
+.bd00Bbs th a.reverse {
+  background:url(../image/common/ico/arrow_1.gif) 100% 50% no-repeat;
+}
+
+</style>
+
+<script>
+  $(document).ready(function(){
+    $("input[name=Sbtn]").click(function(){
+      alert("앱 이름을 입력해주세요!");
+    });
+  });
+</script>
+
+</head>
+
+
+<body>
+
+
+  <!-- 상단바   -->
+
+  <div class="bar">
+    <a href="/">
+      <img width="120px" height="110px" style="padding-top:6px; padding-left: 60px; float:left;" src="../img/reviewer!.png">
+    </a>
+
+    <!-- 메뉴바 마우스 오버 -->
+    <ul id="font" style="float:right; padding-right: 70px; padding-top:40px; color:gray;">
+      <li><a href="/guest/gu_search">Search</a></li>
+      <li><a href="/member/my_app">My app</a></li>
+      <li><a href="/member/my_report">Report</a></li>
+      <% if(session.loginData) { %>
+        <li><a href="/user/logout">Logout</a></li>
+      <% } else { %>
+        <li><a href="/login/login">Login</a></li>
+      <% } %>
+      </ul>
+
+      </div>
+
+  <br>
+  <hr>
+
+    <!-- 상단바 끝 -->
+
+    <br>
+  <hr>
+<hr>
+
+<!-- 1. Review Crawling 리뷰 가져오기 -->
+
+<div style="padding-top:100px;">
+<form method='post' name='userForm2' target='targetURL2' style="text-align:center; padding-top: 20px;">
+
+  <input class="input-box" name="app_name" maxlengh="10" placeholder=" 앱 아이디 입력 (10자리 숫자)" >
+  <input class="search-box" name="Sbtn" type='button' value="Google"
+  onclick='document.targetURL2.location.href="/review/url?app_name="+document.userForm2.app_name.value+"&star="+document.userForm2.star.value+"&filter="+document.userForm2.filter.value+"&date="+document.userForm2.date.value+"&os=android"'/>
+  <!-- 검색어(filter), 정렬조건(condition), os , 날짜 (date)추가하기 -->
+  <input class="search-box" name="Sbtn" type='button' value="Apple"
+  onclick='document.targetURL2.location.href="/review/url?url_id="+document.userForm2.url_id.value+"&star="+document.userForm2.star.value+"&filter="+document.userForm2.filter.value+"&date="+document.userForm2.date.value+"&os=ios"'/>
+  <!-- <input class="search-box" type='submit' value="Apple"> -->
+
+</form>
+</div>
+
+  <!-- toggle-->
+<div>
+  <button id="btn_toggle">▼</button>
+  <div id="Toggle" style="display:none;"></div>
+    <br/>
+</div>
+  <!-- toggle-->
+
+<div>
+<form>
+  <ul class="hifilter">별점별 검색
+    <select id="star" name="star">
+      <option value="0" selected="selected">별점</option>
+      <option value="0">전체</option>
+      <option value="1">1점 이상</option>
+      <option value="2">2점 이상</option>
+      <option value="3">3점 이상</option>
+      <option value="4">4점 이상</option>
+      <option value="5">5점 이상</option>
+    </select>
+  </ul>
+
+  <ul class="hifilter">키워드 검색
+    <input class="input-box" style="width:200px; font-size:12px; textalign:center;" name="filter" maxlengh="10" placeholder=" 키워드 입력" />
+  </ul>
+
+</form>
+</div>
+
+
+
+
+<br>
+<br>
+
+<div style="float:left;">
+
+<ul class="hifilter">날짜 정렬
+  <input type='button' id='date-button' naem='condition' onclick='changeBtnName1()' value='▼'/>
+  <input type="hidden" id="hiddenDate" value="-DATE"/>
+</ul>
+
+
+<ul class="hifilter">별점 정렬
+  <input type='button' id='star-button' naem='condition' onclick='changeBtnName2()'value='▼'/>
+  <input type="hidden" id="hiddenStar" value="-STAR"/>
+</ul>
+
+<ul class="hifilter">추천수 정렬
+  <input type='button' id='like-button' naem='condition' onclick='changeBtnName3()' value='▼'/>
+  <input type="hidden" id="hiddenLike" value="-LIKE"/>
+</ul>
+
+</div>
+
+
+
+
+
+<!-- iframe -->
+<div style="text-align: center;">
+  <iframe name=targetURL2 class="iframe-preview center" width="90%" height="500" align="center"
+  style="border:none; border-radius: 10px; align-items:center; text-align:center; align-items:center;" src="/review">
+  </iframe>
+</div>
+
+
+<div>
+
+  <br>
+  <hr>
+  <br>
+
+  <h3> > 어플 키워드 분석결과 보기 < </h3>
+  <a href="/gu_wordcloud.html">
+    <img  width="300px" style="padding-bottom: 40px;" src="../img/key.png"/>
+  </a>
+
+</div>
+
+
+<br>
+<br>
+<br>
+
+
+<script>
+
+<!-- toggle-->
+
+$(function (){
+  $("#btn_toggle").click(function (){
+    console.log('hello');
+    $("#Toggle").toggle();
+  });
+});
+
+
+<!-- toggle -->
+
+<!-- 날짜 정렬 -->
+
+  function changeBtnName1() {
+    const btnElement
+    = document.getElementById('date-button');
+    const realVal
+    = document.getElementById('hiddenDate');
+
+    if(btnElement.value == "▼"){
+      btnElement.value = "▲";
+      realVal.value = "DATE";
+      document.targetURL2.location.href="/review/url?app_name="+document.userForm2.app_name.value+"&star="+document.userForm2.star.value;
+    }else{
+      btnElement.value = "▼";
+      realVal.value = "-DATE";
+    }
+  }
+
+<!-- 날짜 정렬 -->
+
+
+<!-- 별점 정렬 -->
+
+  function changeBtnName2() {
+    const btnElement
+    = document.getElementById('star-button');
+    const realVal
+    = document.getElementById('hiddenStar');
+
+    if(btnElement.value == "▼"){
+      btnElement.value = "▲";
+      realVal.value = "STAR";
+    }else{
+      btnElement.value = "▼";
+      realVal.value = "-STAR";
+    }
+  }
+
+<!-- 별점 정렬 -->
+
+
+<!-- 추천수 정렬 -->
+
+  function changeBtnName3() {
+    const btnElement
+    = document.getElementById('like-button');
+    const realVal
+    = document.getElementById('hiddenLike');
+
+    if(btnElement.value == "▼"){
+      btnElement.value = "▲";
+      realVal.value = "LIKE";
+    }else{
+      btnElement.value = "▼";
+      realVal.value = "-LIKE";
+    }
+  }
+
+<!-- 추천수 정렬 -->
+
+</script>
+
+
+
+<!-- 하단 푸터 시작 -->
+<div id='wrapper'>
+  <div>
+  </div>
+</div>
+<footer>
+<h3 class="avo-title"> AVO </h3>
+<a href="/">
+  <img width="25px" height="25px" style="padding-top:10px; padding-right:5px;" src="../img/instagram-logo.png">
+</a>
+<a href="/">
+  <img width="25px" height="25px" style="padding-top:10px; padding-right:5px;" src="../img/facebook-logo.png">
+</a>
+
+<a href="/">
+  <img width="25px" height="25px" style="padding-top:10px; padding-right:5px;" src="../img/twitter-logo.png">
+</a>
+
+
+<p class="footer-content1">avo@gmail.com</p>
+<p class="footer-content2">@ 2022 Review service from AVO</p>
+</footer>
+
+<!-- 하단 푸터 끝 -->
+
+
+
+
+
+</body>
+</html>

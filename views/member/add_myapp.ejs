@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<title>Review</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+<link rel="stylesheet"  type="text/css" href="../css/index.css"/>
+<link rel="stylesheet"  type="text/css" href="../css/bar.css"/>
+<link rel="stylesheet"  type="text/css" href="../css/report.css"/>
+<link rel="stylesheet"  type="text/css" href="../css/drop-down.css"/>
+<link rel="stylesheet"  type="text/css" href="../css/popup.css"/>
+
+  <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+
+<style>
+
+body{
+  height: 100vh;
+}
+h2{
+
+  margin-top: 25px;
+
+  color:#2F5971;
+}
+span{
+  font-size: 12px;
+  color: #A3A8AA;
+}
+
+.myapp-btn{
+  font-size: 12px;
+  color: #fff;
+  background-color: #2F5971;
+  font-weight: bold;
+  height: 40px;
+  width: 120px;
+  border: none;
+  border-radius: 20px;
+  margin-top: 200px;
+  margin-bottom: 10px;
+
+}
+
+.search-img{
+  background-image: url("../img/search.png");
+  background-position: right 10px bottom 5px;
+  background-size: 20px;
+  background-repeat: no-repeat;
+}
+
+
+
+
+.center {
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%,-50%);
+}
+
+
+#recommend {
+  text-align: center;
+	margin-top: 5px;
+	position: absolute;
+	background: white;
+  border-radius: 5px;
+
+}
+
+.item {
+	height: 1.8em;
+	width: 500px;
+	outline: none;
+}
+
+.item:hover {
+	color: #9baec8;
+}
+.text {
+	font-weight: bold;
+}
+.invisible {
+	display: none;
+  text-align: center;
+}
+</style>
+
+
+
+</head>
+
+
+<body>
+  <!-- 상단바   -->
+
+  <div class="bar">
+    <a href="/">
+      <img width="120px" height="110px" style="padding-top:6px; padding-left: 60px; float:left;" src="../img/reviewer!.png">
+    </a>
+
+    <!-- 메뉴바 마우스 오버 -->
+    <ul id="font" style="float:right; padding-right: 70px; padding-top:40px; color:gray;">
+      <li><a href="/guest/gu_search">Search</a></li>
+      <li><a href="/member/my_app">My app</a></li>
+      <li><a href="/member/my_report">Report</a></li>
+      <% if(session.loginData) { %>
+        <li><a href="/user/logout">Logout</a></li>
+      <% } else { %>
+        <li><a href="/login/login">Login</a></li>
+      <% } %>
+      </ul>
+
+      </div>
+
+  <br>
+  <hr>
+
+    <!-- 상단바 끝 -->
+
+
+    <!-- 마이앱 등록 시작 -->
+  <div>
+    <div>
+      <h2 style="margin-top:140px; margin-bottom:25px;"> My App 등록</h2>
+        <span> My app으로 등록하면 앱 리뷰 관리를 더욱 편리하게 할 수 있습니다. <br>검색창에 앱 이름을 입력해주세요.<span>
+    </div>
+
+    <form method="post" action="/review/url" target="targetURL2">
+
+      <div style="display:inline;" class="center">
+
+        <input autocomplete="false" class="input-box search-img" id="app_name" name="app_name" style="margin-top:100px; text-align:center; position: relative;" maxlength="10" placeholder="앱 이름 입력">
+          <div id="recommend" class="invisible">
+            <div class="item"><span class="text"></span></div>
+      			<div class="item"><span class="text"></span></div>
+      			<div class="item"><span class="text"></span></div>
+          </div>
+        </div>
+
+      <!-- <div style="text-align: center;">
+        <iframe id="targetURL2" name="targetURL2" class="iframe-preview center" width="600px" height="100" align="center" style="border:none; text-align:center; align-items:center;" src="/app_add">
+        </iframe>
+      </div> -->
+    </form>
+
+</div>
+  <div class="wrap">
+    <a href="#pop_info_1" class="btn_open myapp-btn">내 어플로 등록하기</a>
+  </div>
+      <div id="pop_info_1" class="pop_wrap" style="display:none;">
+        <div class="pop_inner">
+          <h3>등록 완료!</h3><br/>
+            <p class="ok-txt">이제 My App 에서 리뷰 관리가 가능합니다!<br/>다양한 분석 기능을 활용하여 내 어플을 관리해보세요.</p>
+              <button type="button" class="btn_close" onclick="location.href='/member/my_app';">닫기</button>
+        </div>
+      </div>
+
+
+<script>
+    const inputBox = document.querySelector("input");
+    const recommendBox = document.querySelector("#recommend");
+    const texts = document.querySelectorAll(".text");
+
+    inputBox.addEventListener("keyup", (e) => {
+    	if (e.target.value.length > 0) {
+    		recommendBox.classList.remove('invisible');
+    		texts.forEach((textEl) => {
+    			textEl.textContent = e.target.value;
+    		});
+    	} else {
+    		recommendBox.classList.add('invisible');
+    	}
+    });
+
+    var target = document.querySelectorAll('.btn_open');
+var btnPopClose = document.querySelectorAll('.pop_wrap .btn_close');
+var targetID;
+
+// 팝업 열기
+for(var i = 0; i < target.length; i++){
+  target[i].addEventListener('click', function(){
+    targetID = this.getAttribute('href');
+    document.querySelector(targetID).style.display = 'block';
+  });
+}
+
+// 팝업 닫기
+for(var j = 0; j < target.length; j++){
+  btnPopClose[j].addEventListener('click', function(){
+    this.parentNode.parentNode.style.display = 'none';
+  });
+}
+</script>
+
+
+<!-- 하단 푸터 시작 -->
+<div id='wrapper'>
+</div>
+<footer>
+<h3 class="avo-title"> AVO </h3>
+<a href="/">
+  <img width="25px" height="25px" style="padding-top:10px; padding-right:5px;" src="../img/instagram-logo.png">
+</a>
+<a href="/">
+  <img width="25px" height="25px" style="padding-top:10px; padding-right:5px;" src="../img/facebook-logo.png">
+</a>
+
+<a href="/">
+  <img width="25px" height="25px" style="padding-top:10px; padding-right:5px;" src="../img/twitter-logo.png">
+</a>
+
+
+<p class="footer-content1">reviewer3566@gmail.com</p>
+<p class="footer-content2">@ 2022 Review service from AVO</p>
+</footer>
+
+<!-- 하단 푸터 끝 -->
+
+
+</body>
+</html>
