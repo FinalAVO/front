@@ -4,14 +4,13 @@ const phantom = require("phantom");
 const mime = require('mime');
 const fs = require('fs');
 const path = require('path');
-const html_to_pdf = require('html-pdf-node');
 const mysql = require('mysql');
 
 const app = express();
 
 
 app.get("/", (req, res) =>{
-  let mysql_rawdata = fs.readFileSync('/data/node/review/config/mysql.json');
+  let mysql_rawdata = fs.readFileSync('/data/front/config/mysql.json');
   let mysql_json = JSON.parse(mysql_rawdata);
 
   const rdsConnection = mysql.createConnection({

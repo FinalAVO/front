@@ -161,9 +161,9 @@ function getCheckboxValue()  {
       <br>
       <p><label class="report-c"><input class="report-c" type="checkbox" name="nb" value="03"> 리소스 사용량</label></p>
       <br>
-      <p><label class="report-c"><input class="report-c" type="checkbox" name="nb" value="04">  속도</label></p>
+      <p><label class="report-c"><input class="report-c" type="checkbox" name="nb" value="04">  속도 &nbsp</label></p>
       <br>
-      <p><label class="report-c"><input class="report-c" type="checkbox" name="nb" value="05">  안정성</label></p>
+      <p><label class="report-c"><input class="report-c" type="checkbox" name="nb" value="05">  안정성 &nbsp</label></p>
       <br>
       <p><label class="report-c"><input class="report-c" type="checkbox" name="nb" value="05">  제거</label></p>
       <br>
@@ -177,14 +177,23 @@ function getCheckboxValue()  {
 
 
 <script>
-$(document).ready(function(){
-    var currentPosition = parseInt($("#slidemenu").css("top"));
-    $(window).scroll(function() {
-        var position = $(window).scrollTop(); // 현재 스크롤바의 위치값을 반환합니다.
-        $("#slidemenu").stop().animate({"top":position+currentPosition+"px"},750);
-    });
-});
 
+// 기본 위치(top)값
+var floatPosition = parseInt($("#slidemenu").css('top'))
+
+// scroll 인식
+$(window).scroll(function() {
+
+    // 현재 스크롤 위치
+    var currentTop = $(window).scrollTop();
+    var bannerTop = currentTop + floatPosition + "px";
+
+    //이동 애니메이션
+    $("#slidemenu").stop().animate({
+      "top" : bannerTop
+    }, 500);
+
+}).scroll();
 
 window.onload=()=>{
       document.querySelector('.dropbtn_click').onclick = ()=>{

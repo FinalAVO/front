@@ -8,6 +8,7 @@
 <link rel="stylesheet"  type="text/css" href="../css/index.css"/>
 <link rel="stylesheet"  type="text/css" href="../css/bar.css"/>
 <link rel="stylesheet"  type="text/css" href="../css/report.css"/>
+<link rel="stylesheet"  type="text/css" href="../css/drop-down.css"/>
 
 <style>
 
@@ -40,7 +41,7 @@ a {
       <li><a href="/member/my_app">My app</a></li>
       <li><a href="/member/my_report">Report</a></li>
       <% if(session.loginData) { %>
-        <li><a href="/user/logout">Logout</a></li>
+        <li><a href="/user/logout"><img width="100px" height="60px;" src="../img/my.png" class="my_page"></a></li>
       <% } else { %>
         <li><a href="/login/login">Login</a></li>
       <% } %>
@@ -48,30 +49,79 @@ a {
 
       </div>
 
-  <br>
-  <hr>
+  <br/>
+  <hr/>
 
-    <!-- 상단바 끝 -->
+  <!-- 상단바 끝 -->
 
-    <!-- 사이드 바 -->
-  <div class="side-menu">
-    <ol>
-      <br/>
-      <span class="app-name">app1</span>
-      <span class="app-name">></span>
-      <br/>
-      <br/>
-      <li><a class="menu" href="/member/my_search">전체리뷰 살펴보기</a></li>
-      <li><a class="menu" href="/member/my_wordcloud">리뷰 키워드</a></li>
-      <li><a class="menu" href="/member/my_report">주제별 보고서 받기</a></li>
-      <li><a class="menu" href="#">인기 많은 리뷰</a></li>
-    </ol>
-  </div>
+  <!-- 사이드 바 -->
+<div class="side-menu">
+  <ol>
+    <br/>
+    <span class="app-name">App1</span>
 
-  <!-- 사이드바 끝 -->
+    <div style="display:inline;">
+      <input type="button" class="other-app" id="otherapp_btn" value=">"/>
+    </div>
+
+    <br/>
+    <br/>
+    <li><a class="menu" href="/member/my_search">전체리뷰 살펴보기</a></li>
+    <li><a class="menu" href="/member/my_wordcloud">리뷰 키워드</a></li>
+    <li><a class="menu" href="/member/my_report">주제별 보고서 받기</a></li>
+    <li><a class="menu" href="#">인기 많은 리뷰</a></li>
+  </ol>
+</div>
+
+<!-- 사이드바 끝 -->
 
   <br>
 <hr>
+<!--다른 앱 선택 드롭다운-->
+<div style="position:absolute;">
+  <div id="btn_toggle" class="dropdown" style="display:none; position:fixed;">
+    <button class="dropbtn">
+      <span class="dropbtn_content" style="font-size:10px;">Other App</span>
+      <span class="dropbtn_click" style="font-family: Material Icons; font-size : 16px; color : #ffffff; float:right;"
+        onclick="dropdown()">arrow_drop_down</span>
+    </button>
+    <div class="dropdown-content">
+      <div class="fastfood" onclick="showMenu(this.innerText)">App2</div>
+      <div class="fastfood" onclick="showMenu(this.innerText)">App3</div>
+      <div class="fastfood" onclick="showMenu(this.innerText)">App4</div>
+      <div class="fastfood" onclick="showMenu(this.innerText)">App5</div>
+      <div class="fastfood" onclick="showMenu(this.innerText)">App2</div>
+      <div class="fastfood" onclick="showMenu(this.innerText)">App3</div>
+      <div class="fastfood" onclick="showMenu(this.innerText)">App4</div>
+      <div class="fastfood" onclick="showMenu(this.innerText)">App5</div>
+    </div>
+  </div>
+</div>
+
+<script>
+
+$(document).ready(function(){
+  $('#otherapp_btn').click(function(){
+
+  const btnElement
+  = document.getElementById('otherapp_btn');
+  const otherapp
+  = document.getElementById('btn_toggle');
+
+  if(otherapp.style.display=='none'){
+    otherapp.style.display= 'inline';
+
+  }else{
+    otherapp.style.display='none';
+
+  }
+
+})
+})
+
+</script>
+<!-- 다른 앱 선택 드롭다운 끝 -->
+
 
 <!-- 1. Review Crawling 리뷰 가져오기 -->
 
@@ -88,7 +138,9 @@ a {
 <br>
 <div>
 
+
 <script>
+
 
     var width = 960,
         height = 500,
