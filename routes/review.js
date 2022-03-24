@@ -4,7 +4,6 @@ const phantom = require("phantom");
 const mime = require('mime');
 const fs = require('fs');
 const path = require('path');
-const html_to_pdf = require('html-pdf-node');
 
 const app = express();
 
