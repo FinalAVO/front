@@ -135,26 +135,10 @@ $(document).ready(function(){
 })
 
 
-function getCheckboxValue()  {
-  // 선택된 목록 가져오기
-  const query = 'input[name="nb"]:checked';
-  const selectedEls =
-  document.querySelectorAll(query);
-
-  // 선택된 목록에서 value 찾기
-  let result = '';
-  selectedEls.forEach((el) => {
-    result += el.value + ' ';
-  });
-  // 출력
-  document.getElementById('result').innerText
-  = result;
-}
-
 
 </script>
 
-    <form method="post" action="/review/chart" target="targetURL2">
+    <form method="get" action="/review/chart" target="targetURL2">
       <p><label class="report-c"><input class="report-c" type="checkbox" name="nb" value="01">  디자인</label></p>
       <br>
       <p><label class="report-c"><input class="report-c" type="checkbox" name="nb" value="02">  프로필</label></p>
@@ -170,10 +154,22 @@ function getCheckboxValue()  {
       <p><label class="report-c"><input class="report-c" type="checkbox" name="nb" value="05">  평점분석</label></p>
       <br>
       <!-- <p><input class="report-btn" type="submit" value="보고서 검색"></p> -->
-      <p><button onclick='getCheckboxValue()'> 보고서 검색</button>
+      <p><button id = "checkbtn"> 보고서 검색</button>
     </form>
 
+    <script>
+      const btn = document.querySelector('#checkbtn');
+      btn.addEventListener('click', (event) => {
+          let checkboxes = document.querySelectorAll('input[name="nb"]:checked');
+          let values = [];
+          checkboxes.forEach((checkbox) => {
+              values.push(checkbox.value);
+          });
+          alert(values);
+      });
+    </script>
 </div>
+
 
 
 <script>

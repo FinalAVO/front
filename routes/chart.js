@@ -33,6 +33,17 @@ app.get("/", (req, res) =>{
       var threeStar = result2[0]["three_star"];
       var fourStar = result2[0]["four_star"];
       var fiveStar = result2[0]["five_star"];
+      var start_date = result1[0]["start_date"]
+      var end_date = result1[0]["end_date"]
+      var avg_star_DESIGN = result1[0]["avg_star"]
+      var avg_star_PROFILE = result1[1]["avg_star"]
+      var avg_star_RESOURCE = result1[2]["avg_star"]
+      var avg_star_SPEED = result1[3]["avg_star"]
+      var avg_star_SAFETY = result1[4]["avg_star"]
+      var avg_star_REMOVE = result1[5]["avg_star"]
+      var avg_star_UPDATE = result1[6]["avg_star"]
+
+      var a_review = Number(result2[0]["count"]) - (Number(result1[0]["count"]) + Number(result1[1]["count"]) + Number(result1[2]["count"]) + Number(result1[3]["count"]) + Number(result1[4]["count"]) + Number(result1[5]["count"]) + Number(result1[6]["count"]));
 
 
       var template = `
@@ -191,8 +202,34 @@ app.get("/", (req, res) =>{
       <p class="star-txt-title"> (전체 별점 대비 주제별 별점 평균을 보여줍니다.)</p>
       </br>
       <div class="star-box">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+        <canvas id="mybarChart"></canvas>
 
+        <script>
+        var xValues = ["Italy", "France", "Spain", "USA", "Argentina"];
+        var yValues = [55, 49, 44, 24, 15];
+        var barColors = ["red", "green","blue","orange","brown"];
 
+        new Chart("mybarChart", {
+          type: "horizontalBar",
+          data: {
+            labels: xValues,
+            datasets: [{
+              backgroundColor: barColors,
+              data: yValues
+            }]
+          },
+          options: {
+            legend: {display: false},
+            title: {
+              display: true,
+              text: "World Wine Production 2018"
+            }
+          }
+        });
+        </script>
+
+      </div>
       </div>
       </div>
 
@@ -202,74 +239,83 @@ app.get("/", (req, res) =>{
       <p class="count-txt-title"> (주제별 리뷰가 전체 리뷰에서 차지하는 비율을 보여줍니다.)</p>
       </br>
       <div class="count-box">
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
-      <canvas id="pieChart"></canvas>
-
-      <script>
-      var xValues1 = ["Italy", "France", "Spain", "USA", "Argentina"];
-      var yValues2 = [55, 49, 44, 24, 15];
-      var barColors3 = [
-        "#b91d47",
-        "#00aba9",
-        "#2b5797",
-        "#e8c3b9",
-        "#1e7145"
-      ];
-
-      new Chart("pieChart", {
-        type: "pie",
-        data: {
-          labels: xValues1,
-          datasets: [{
-            backgroundColor: barColors3,
-            data: yValues2
-          }]
-        },
-        options: {
-          title: {
-            display: true,
-            text: "World Wide Wine Production 2018"
-          }
-        }
-      });
-      </script>
-
-      </div>
-      </div>
-
-      <!-- 2. 기간별 별점 변화도-->
-      <div style="float:left;">
-      <p class="star-title"> 기간별 별점 변화도 </p>
-      <p class="star-txt-title"> (기간별로 변화한 별점 현황을 보여줍니다..)</p>
-      </br>
-      <div class="star-box">
         <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
-        <canvas id="myChart"></canvas>
+        <canvas id="pieChart"></canvas>
 
         <script>
-          var xValues = [50,60,70,80,90,100,110,120,130,140,150];
-          var yValues = [7,8,8,9,9,9,10,11,14,14,15];
+        var xValues1 = ["COUNT", "${result1[0]["subject"]}", "${result1[1]["subject"]}", "${result1[2]["subject"]}", "${result1[3]["subject"]}", "${result1[4]["subject"]}", "${result1[5]["subject"]}", "${result1[6]["subject"]}"];
+        var yValues2 = [${a_review} , "${result1[0]["count"]}", "${result1[1]["count"]}", "${result1[2]["count"]}", "${result1[3]["count"]}", "${result1[4]["count"]}", "${result1[5]["count"]}", "${result1[6]["count"]}"];
+        var barColors3 = [
+          "#b91d47",
+          "#00aba9",
+          "#2b5797",
+          "#e8c3b9",
+          "#1e7145",
+          "#fff123"
+        ];
 
-          new Chart("myChart", {
-            type: "line",
-            data: {
-              labels: xValues,
-              datasets: [{
-                fill: false,
-                lineTension: 0,
-                backgroundColor: "rgba(0,0,255,1.0)",
-                borderColor: "rgba(0,0,255,0.1)",
-                data: yValues
-              }]
+        new Chart("pieChart", {
+          type: "pie",
+          data: {
+            labels: xValues1,
+            datasets: [{
+              backgroundColor: barColors3,
+              data: yValues2
+            }]
+          },
+          options: {
+            plugins: {
+            datalabels: {
+            color: 'black',
+            font: {
+            weight: 'bold'
             },
-            options: {
-              legend: {display: false},
-              scales: {
-                yAxes: [{ticks: {min: 6, max:16}}],
-              }
+            formatter: function(value, context) {
+            return Math.round(value) + '개';
+            title: {
+              display: true,
+              text: "주제별 리뷰 비율"
             }
-          });
+          }
+        });
         </script>
+
+        </div>
+        </div>
+
+        <!-- 2. 기간별 별점 변화도-->
+        <div style="float:left;">
+        <p class="star-title"> 기간별 별점 변화도 </p>
+        <p class="star-txt-title"> (기간별로 변화한 별점 현황을 보여줍니다..)</p>
+        </br>
+        <div class="star-box">
+          <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+          <canvas id="myChart"></canvas>
+
+          <script>
+            var xValues = [${start_date} ${end_date}];
+            var yValues = [1,2,3,4,5];
+
+            new Chart("myChart", {
+              type: "line",
+              data: {
+                labels: xValues,
+                datasets: [{
+                  fill: false,
+                  lineTension: 0,
+                  backgroundColor: "rgba(0,0,255,1.0)",
+                  borderColor: "rgba(0,0,255,0.1)",
+                  data: yValues
+                }]
+              },
+              options: {
+                legend: {display: false},
+                scales: {
+                  yAxes: [{ticks: {min: 6, max:16}}],
+                }
+              }
+            });
+          </script>
       </div>
       </div>
 
@@ -285,82 +331,82 @@ app.get("/", (req, res) =>{
          <canvas id="canvas" height="50"></canvas>
          <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.min.js"></script>
          <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@0.7.0"></script>
-    <script>
-        new Chart(document.getElementById("canvas"), {
-        type: 'horizontalBar',
-        data: {
-                labels: ['CURRENT'],
-                datasets: [{
-                label: '1점',
-                data: [${oneStar}],
-                borderColor: "rgba(209, 216, 224, 1)",
-                backgroundColor: "rgba(209, 216, 224, 0.5)",
-                },
-                {
-                label: '2점',
-                data: [${twoStar}],
-                borderColor: "rgba(75, 101, 132, 1)",
-                backgroundColor: "rgba(75, 101, 132, 0.5)",
-                },
-                {
-                label: '3점',
-                data: [${threeStar}],
-                borderColor: "rgba(209, 216, 224, 1)",
-                backgroundColor: "rgba(209, 216, 224, 0.5)",
-                },
-                {
-                label: '4점',
-                data: [${fourStar}],
-                borderColor: "rgba(75, 101, 132, 1)",
-                backgroundColor: "rgba(75, 101, 132, 0.5)",
-                },
-                {
-                label: '5점',
-                data: [${fiveStar}],
-                borderColor: "rgba(209, 216, 224, 1)",
-                backgroundColor: "rgba(209, 216, 224, 0.5)",
-                }]
-        },
-        options: {
-                title: { display: false,
-                        text: 'In My Mind'
-                },
-                responsive: true,
-                tooltips: {
-                enabled: false
-                },
-                hover: {
-                mode: 'nearest',
-                intersect: true
-                },
-                legend: {
-                display: true
-                },
-                scales: {
-                xAxes: [{
-                        display: false,
-                        stacked: true,
-                        barThickness: 6
-                }],
-                yAxes: [{
-                        display: false,
-                        stacked: true,
-                        barThickness: 30
-                }]
-                },
-                plugins: {
-                datalabels: {
-                color: 'black',
-                font: {
-                weight: 'bold'
-                },
-                formatter: function(value, context) {
-                return Math.round(value) + '개';
-                }
-                }
-                }
-        }
-        });
+         <script>
+            new Chart(document.getElementById("canvas"), {
+            type: 'horizontalBar',
+            data: {
+                    labels: ['CURRENT'],
+                    datasets: [{
+                    label: '1점',
+                    data: [${oneStar}],
+                    borderColor: "rgba(209, 216, 224, 1)",
+                    backgroundColor: "rgba(209, 216, 224, 0.5)",
+                    },
+                    {
+                    label: '2점',
+                    data: [${twoStar}],
+                    borderColor: "rgba(75, 101, 132, 1)",
+                    backgroundColor: "rgba(75, 101, 132, 0.5)",
+                    },
+                    {
+                    label: '3점',
+                    data: [${threeStar}],
+                    borderColor: "rgba(209, 216, 224, 1)",
+                    backgroundColor: "rgba(209, 216, 224, 0.5)",
+                    },
+                    {
+                    label: '4점',
+                    data: [${fourStar}],
+                    borderColor: "rgba(75, 101, 132, 1)",
+                    backgroundColor: "rgba(75, 101, 132, 0.5)",
+                    },
+                    {
+                    label: '5점',
+                    data: [${fiveStar}],
+                    borderColor: "rgba(209, 216, 224, 1)",
+                    backgroundColor: "rgba(209, 216, 224, 0.5)",
+                    }]
+            },
+            options: {
+                    title: { display: true,
+                            text: '평점 점유율'
+                    },
+                    responsive: true,
+                    tooltips: {
+                    enabled: false
+                    },
+                    hover: {
+                    mode: 'nearest',
+                    intersect: true
+                    },
+                    legend: {
+                    display: true
+                    },
+                    scales: {
+                    xAxes: [{
+                            display: false,
+                            stacked: true,
+                            barThickness: 6
+                    }],
+                    yAxes: [{
+                            display: false,
+                            stacked: true,
+                            barThickness: 30
+                    }]
+                    },
+                    plugins: {
+                    datalabels: {
+                    color: 'black',
+                    font: {
+                    weight: 'bold'
+                    },
+                    formatter: function(value, context) {
+                    return Math.round(value) + '개';
+                    }
+                    }
+                    }
+            }
+            });
 
         </script>
 
