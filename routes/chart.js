@@ -108,10 +108,9 @@ app.get("/", (req, res) =>{
       }
 
       .star-box{
-
         float: left;
         width: 800px;
-        height: 150px;
+        height: auto;
         background-color: #CECECE;
         margin:10px 500px 0 0px;
       }
@@ -154,7 +153,7 @@ app.get("/", (req, res) =>{
       .star2-box{
         float: left;
         width: 800px;;
-        height: 150px;
+        height: auto;
         background-color: #CECECE;
         margin:10px 500px 0 0px;
       }
@@ -192,7 +191,8 @@ app.get("/", (req, res) =>{
       <p class="star-txt-title"> (전체 별점 대비 주제별 별점 평균을 보여줍니다.)</p>
       </br>
       <div class="star-box">
-      chartjs
+
+
       </div>
       </div>
 
@@ -201,7 +201,39 @@ app.get("/", (req, res) =>{
       <p class="count-title" > 주제별 리뷰 비율 </p>
       <p class="count-txt-title"> (주제별 리뷰가 전체 리뷰에서 차지하는 비율을 보여줍니다.)</p>
       </br>
-      <div class="count-box"> chartjs
+      <div class="count-box">
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+      <canvas id="pieChart"></canvas>
+
+      <script>
+      var xValues1 = ["Italy", "France", "Spain", "USA", "Argentina"];
+      var yValues2 = [55, 49, 44, 24, 15];
+      var barColors3 = [
+        "#b91d47",
+        "#00aba9",
+        "#2b5797",
+        "#e8c3b9",
+        "#1e7145"
+      ];
+
+      new Chart("pieChart", {
+        type: "pie",
+        data: {
+          labels: xValues1,
+          datasets: [{
+            backgroundColor: barColors3,
+            data: yValues2
+          }]
+        },
+        options: {
+          title: {
+            display: true,
+            text: "World Wide Wine Production 2018"
+          }
+        }
+      });
+      </script>
+
       </div>
       </div>
 
@@ -210,7 +242,34 @@ app.get("/", (req, res) =>{
       <p class="star-title"> 기간별 별점 변화도 </p>
       <p class="star-txt-title"> (기간별로 변화한 별점 현황을 보여줍니다..)</p>
       </br>
-      <div class="star-box"> chartjs
+      <div class="star-box">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+        <canvas id="myChart"></canvas>
+
+        <script>
+          var xValues = [50,60,70,80,90,100,110,120,130,140,150];
+          var yValues = [7,8,8,9,9,9,10,11,14,14,15];
+
+          new Chart("myChart", {
+            type: "line",
+            data: {
+              labels: xValues,
+              datasets: [{
+                fill: false,
+                lineTension: 0,
+                backgroundColor: "rgba(0,0,255,1.0)",
+                borderColor: "rgba(0,0,255,0.1)",
+                data: yValues
+              }]
+            },
+            options: {
+              legend: {display: false},
+              scales: {
+                yAxes: [{ticks: {min: 6, max:16}}],
+              }
+            }
+          });
+        </script>
       </div>
       </div>
 
