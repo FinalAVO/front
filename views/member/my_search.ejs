@@ -132,7 +132,44 @@
       <li><a href="/member/my_app">My app</a></li>
       <li><a href="/member/my_report">Report</a></li>
       <% if(session.loginData) { %>
-        <li><a href="/user/logout"><img width="100px" height="60px;" src="../img/my.png" class="my_page"></a></li>
+        <div style="display:inline;">
+          <li><input type="image" class="my-logo" id="mypage_btn" style=" height:45px;"src="../img/my.png"></li>
+        </div>
+        <!--다른 앱 선택 드롭다운-->
+        <div style="position:absolute;">
+          <div id="mypage_toggle" class="dropdown2" style="display:none; position:fixed;">
+            <button class="dropbtn" style="top: 60px; left: 245px; width:120px;">
+              <span class="dropbtn_content" style="font-size:10px;">hu 님</span>
+              <span class="dropbtn_click" style="font-family: Material Icons; font-size : 16px; color : #ffffff; float:right;"
+                onclick="dropdown()">arrow_drop_down</span>
+            </button>
+            <div class="dropdown-content" style="top: 100px; left: 245px; width:120px; padding:0;">
+              <div class="fastfood" onclick="showMenu(this.innerText)"><a class="my-txt" href="/mypage/my_main">회원정보수정</div>
+              <div onclick="showMenu(this.innerText)"><a class="my-txt" href="/user/logout">로그아웃</a></div>
+            </div>
+          </div>
+        </div>
+        <script>
+        $(document).ready(function(){
+          $('#mypage_btn').click(function(){
+
+          const btnElement
+          = document.getElementById('mypage_btn');
+          const otherapp
+          = document.getElementById('mypage_toggle');
+
+          if(otherapp.style.display=='none'){
+            otherapp.style.display= 'inline';
+
+          }else{
+            otherapp.style.display='none';
+
+          }
+
+        })
+        })
+        </script>
+        <!-- 다른 앱 선택 드롭다운 끝 -->
       <% } else { %>
         <li><a href="/login/login">Login</a></li>
       <% } %>
@@ -192,7 +229,7 @@
 
   <!-- 1. Review Crawling 리뷰 가져오기 -->
 
-  <div style="padding-top:100px;">
+  <div style="padding-top:35px;">
     <form method="post" action="/review/url" target="targetURL2">
       <div style="display:inline;">
         <input class="input-box" id="app_name" name="app_name" maxlength="10" placeholder="앱 아이디 입력 (10자리 숫자)"/>
@@ -319,9 +356,9 @@
 
   <br/>
 
-  <div style="float:left; margin-top:50px;">
+  <div style="float:left; margin-top:35px;">
 
-  <ul class="hifilter" style="margin-left:280px;">날짜 정렬
+  <ul class="hifilter" style="margin-left:245px;">날짜 정렬
     <input type='button' class="filter-btn" id='date-button' naem='condition' onclick='changeBtnName1()' value='▼'/>
     <input type="hidden" id="hiddenDate" value="-DATE"/>
   </ul>
@@ -344,6 +381,7 @@
   <!-- 날짜 정렬 -->
 
     function changeBtnName1() {
+      console.log($('#name').val());
       const btnElement
       = document.getElementById('date-button');
       const realVal
@@ -352,10 +390,11 @@
       if(btnElement.value == "▼"){
         btnElement.value = "▲";
         realVal.value = "DATE";
-        document.targetURL2.location.href="/review/url?app_name="+document.userForm2.app_name.value+"&star="+document.userForm2.star.value;
+        document.targetURL2.location.href="/search/re_search?app_name=&star="+$('#star').val()+"&filter="+$('#filter').val()+"&condition=DATE";
       }else{
         btnElement.value = "▼";
         realVal.value = "-DATE";
+        document.targetURL2.location.href="/search/re_search?app_name=&star="+$('#star').val()+"&filter="+$('#filter').val()+"&condition=-DATE";
       }
     }
 
@@ -373,9 +412,11 @@
       if(btnElement.value == "▼"){
         btnElement.value = "▲";
         realVal.value = "STAR";
+        document.targetURL2.location.href="/search/re_search?app_name=&star="+$('#star').val()+"&filter="+$('#filter').val()+"&condition=STAR";
       }else{
         btnElement.value = "▼";
         realVal.value = "-STAR";
+        document.targetURL2.location.href="/search/re_search?app_name=&star="+$('#star').val()+"&filter="+$('#filter').val()+"&condition=-STAR";
       }
     }
 
@@ -393,9 +434,11 @@
       if(btnElement.value == "▼"){
         btnElement.value = "▲";
         realVal.value = "LIKE";
+        document.targetURL2.location.href="/search/re_search?app_name=&star="+$('#star').val()+"&filter="+$('#filter').val()+"&condition=LIKE";
       }else{
         btnElement.value = "▼";
         realVal.value = "-LIKE";
+        document.targetURL2.location.href="/search/re_search?app_name=&star="+$('#star').val()+"&filter="+$('#filter').val()+"&condition=-LIKE";
       }
     }
 

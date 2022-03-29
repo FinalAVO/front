@@ -7,11 +7,23 @@ const path = require('path');
 
 const app = express();
 
+const mysql = require('mysql');
+let mysql_rawdata = fs.readFileSync('/data/front/config/mysql.json');
+let mysql_json = JSON.parse(mysql_rawdata);
+
+const rdsConnection = mysql.createConnection({
+  host     : mysql_json["host"],
+  user     : mysql_json["user"],
+  password : mysql_json["password"],
+  database : mysql_json["database"]
+});
+
+
 
 // 비회원
 
 app.get('/test', (req, res) => {
-  res.render('test.ejs');
+  res.render('test.ejs', {session: req.session});
 })
 
 app.get('/', (req, res) => {
@@ -21,7 +33,7 @@ app.get('/', (req, res) => {
 })
 
 app.get('/guest/gu_search', (req, res) => {
-  res.render('guest/gu_search.ejs', { session: req.session });
+  res.render('guest/gu_search.ejs', { session: req.session, name: req.session.appData });
 });
 
 
@@ -74,11 +86,57 @@ app.get('/login/findPwCheck', (req, res) => {
 // 회원
 
 app.get('/member/my_app', (req, res) => {
-  res.render('member/my_app.ejs', { session: req.session });
+  if(req.session.loginData){
+    var user_id = req.session.loginData
+
+    sql = 'SELECT * FROM user_app WHERE user_id = ?';
+    rdsConnection.query(sql, [user_id], function(err, result){
+      res.render('member/my_app.ejs', { session: req.session, data: result });
+    });
+
+  }else{
+    res.writeHead(200, {'Content-Type': 'text/html;charset=UTF-8'});
+    template = `<script>
+    alert('로그인 후 이용해주세요!');
+    location.href="/login/login"
+    </script>`;
+    res.end(template);
+  }
 });
 
+app.get('/member/register_app', (req, res) => {
+
+  var url = "http://3.34.14.98:3000/register";
+
+  axios.post(url,
+    {
+      app_name: req.query.app_name,
+      user_id: req.session.loginData,
+    }
+  ).then(function(response){
+    var user_id = req.session.loginData
+    sql = 'SELECT * FROM user_app WHERE user_id = ?';
+    rdsConnection.query(sql, [user_id], function(err, result){
+      res.render('member/my_app.ejs', { session: req.session, data: result });
+    });
+  }).catch(function(error){
+    console.log(error);
+    res.send(error)
+  })
+});
+
+
 app.get('/member/my_report', (req, res) => {
-  res.render('member/my_report.ejs', { session: req.session });
+  if(req.session.loginData){
+    res.render('member/my_report.ejs', { session: req.session });
+  }else{
+    res.writeHead(200, {'Content-Type': 'text/html;charset=UTF-8'});
+    template = `<script>
+    alert('로그인 후 이용해주세요!');
+    location.href="/login/login"
+    </script>`;
+    res.end(template);
+  }
 });
 
 app.get('/member/my_search', (req, res) => {
@@ -527,6 +585,13 @@ app.post('/review/url', (req, response) => {
     axios.get(url).then(function (res){
       console.log(res.data);
       app_name = encodeURI(res.data);
+      var real_app = res.data;
+      req.session.appData = real_app;
+      req.session.save(error => {
+        if(error) console.log('error : ' + error);
+      });
+      console.log(req.session.appData);
+      console.log(req.session);
       url = 'http://3.37.3.24/search?app_name=' + app_name + '&filter=' + filter + '&condition=' + condition + '&os=' + os + '&date=' + date;
       //url = 'http://3.37.3.24/test2';
       callback();
@@ -540,7 +605,7 @@ app.post('/review/url', (req, response) => {
       <title>Result</title>
       <meta charset="utf-8">
       <link rel="stylesheet"  type="text/css" href="./review_table.css"/>
-
+      <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
       <style>
       h2 {
         text-align: center;
@@ -550,6 +615,15 @@ app.post('/review/url', (req, response) => {
 
 
       </style>
+
+      <script>
+          $(function(){
+            window.parent.postMessage(
+            { functionName : 'closeLoading' },
+            'http://3.37.3.24/guest/gu_search'
+            );
+          })
+        </script>
       </head>
       <body>
       <div>
@@ -569,9 +643,8 @@ app.post('/review/url', (req, response) => {
 
   var sec_req = function(){
     axios.get(url).then(function (resp){
-      if(resp){
+      if(resp.data != ""){
         var result = resp.data;
-        console.log(resp.data);
         var template = `
 
         <!doctype html>
@@ -579,7 +652,7 @@ app.post('/review/url', (req, response) => {
         <head>
         <title>Result</title>
         <meta charset="utf-8">
-
+        <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
         <style>
 
         table {
@@ -587,16 +660,30 @@ app.post('/review/url', (req, response) => {
           width: 100%;
           border-top: 1px solid #444444;
           border-collapse: collapse;
-          table-layout: fixed;
         }
         th, td {
-          border-bottom: 1px solid #444444;
+          border-bottom: 1px solid #424242;
           padding: 10px;
         }
 
         tr {
           backgraoud-color: gray;
         }
+
+        .app-name{
+          position:fixed;
+          top:0
+          margin:0;
+        }
+
+        .tr-title{
+          background-color:#2F5971;
+          color:white;
+          textalign:center;
+          margin-top:50px;
+          width:100%;
+        }
+
         .title-st{
 
           backgraoud-color: gray;
@@ -607,33 +694,62 @@ app.post('/review/url', (req, response) => {
           backgraoud-color: whith;
         }
 
+
+
+        thead {
+          position: sticky;
+          top: 100px;;
+          width:100%;
+          background-color:#2F5971;
+          color:white;
+        }
         </style>
+
+        <script>
+            $(function(){
+              window.parent.postMessage(
+              { functionName : 'closeLoading' },
+              'http://3.37.3.24/guest/gu_search'
+              );
+            })
+          </script>
+
+
         </head>
         <body>
 
-        <div class="review-table">
-        <h2>${result[0]['APP_NAME']}</h2>
-        <table class="review-table" style="border="1"  margin: auto; text-align: center; table-layout: fixed;">
-        <tr class="title-st">
+        <div>
+        <h2 class="app-name" style="margin-left:5px;margin-top:0;top:0; left:0;padding-top:30px;padding-bottom:30px; background-color: #F1F2EC; width:100%;height:50px;">${result[0]['APP_NAME']}</h2>
+        </div>
+
+        <div style="margin-top:100px;">
+
+        <table class="review-table" style="border="1"  height="85px;" text-align: center; table-layout:auto; margin-top:80px; position:relative;">
+        <tr class="title-st tr-title">
+        <thead style="table-layout:auto;width:100%;margin-top:30px;">
         <th width="15%"> 유저 이름 </th>
         <th width="15%"> 날짜 </th>
         <th width="5%"> 별점 </th>
         <th width="5%"> 추천 </th>
         <th width="60%"> 내용 </th>
-        </tr>`;
+        </thead>
+        <tr height="15px;">
+        </tr>
+        </div>`;
         for(var i=0 ; i < result.length ; i++){
           if(result[i]['STAR'] >= star){
             template += `
-            <tr>
-            <th>${result[i]['USER']}</th>
-            <th>${result[i]['DATE'].slice(0,10)}</th>
-            <th>${result[i]['STAR']}</th>
-            <th>${result[i]['LIKE']}</th>
-            <th>${result[i]['COMMENT']}</th>
+            <tr style=" margin-top:40px;">
+            <th width="15%">${result[i]['USER']}</th>
+            <th width="15%">${result[i]['DATE'].slice(0,10)}</th>
+            <th width="5%">${result[i]['STAR']}</th>
+            <th width="5%">${result[i]['LIKE']}</th>
+            <th width="60%">${result[i]['COMMENT']}</th>
             </tr>`
           }
         }
         template +=`</table>
+
         </div>
 
 

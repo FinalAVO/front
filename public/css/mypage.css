@@ -1,0 +1,61 @@
+.my-page-title{
+  text-align:center;
+  font-size: 14px;
+  font-weight:bold;
+  margin-top: 50px;
+}
+
+.my-main-hr{
+  border-top:1px solid gray;
+  margin-top: 70px;
+}
+
+
+.my-main-title{
+float: left;
+margin-left: 30px;
+font-size: 14px;
+color:gray;
+margin-top:20px;
+margin-bottom: 20px;
+
+}
+.my-main-txt{
+  float: left;
+  margin-left: 30px;
+  color:#2F5971;
+  font-size: 16px;
+  font-weight: bold;
+  margin-top:20px;
+  margin-bottom: 20px;
+
+}
+
+.basic_info{
+  float: left;
+  margin-left: 230px;
+  margin-top: 50px;
+  width: 80%;
+  height: 200px;
+  background-color: white;
+  border-radius: 50px;
+  box-shadow:5px 5px 5px 5px #C4C4C4;
+}
+
+.preferences{
+  display: flex;
+  float: left;
+  margin-left: 230px;
+  margin-top: 20px;
+  width: 80%;
+  height: 200px;
+  background-color: white;
+  border-radius: 50px;
+  box-shadow:5px 5px 5px 5px #C4C4C4;
+}
+
+.agree_chk{
+  padding: 0 5px 5px 5px;
+  margin-top: 30px;
+  font-size: 16px;
+}

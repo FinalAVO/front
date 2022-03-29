@@ -92,6 +92,57 @@
 
 </style>
 
+
+<!-- 로딩창 -->
+<script>
+$(function() {
+function Loading() {
+  var maskHeight = $(document).height();
+  var maskWidth  = window.document.body.clientWidth;
+
+  var mask       = "<div id='mask' style='position:absolute; z-index:9000; background-color:#000000; display:none; left:0; top:0;'></div>";
+  var loadingImg ='';
+
+  loadingImg +=" <div id='loadingImg'>";
+  loadingImg +=" <img src='../../img/spinner.gif' style='position:absolute; z-index:9500; text-align:center; display:block; margin-top:300px; margin-left:750px;'/>";
+  loadingImg +="</div>";
+
+  $('body')
+  .append(mask)
+
+  $('#mask').css({
+    'width' : maskWidth,
+    'height': maskHeight,
+    'opacity' :'0.3'
+  });
+
+  $('#mask').show();
+
+  $('.loadingImg').append(loadingImg);
+  $('#loadingImg').show();
+}
+
+function closeLoading() {
+  $('#mask, #loadingImg').hide();
+  $('#mask, #loadingImg').remove();
+}
+
+$('.search-box').click(function(){
+  Loading();
+});
+
+window.addEventListener( 'message', (e) => {
+    // 전달 된 데이터
+    console.log( e.data.functionName );
+
+    // 부모창의 함수 실행
+    if( e.data.functionName === 'closeLoading' ){
+      closeLoading();
+    }
+});
+
+});
+</script>
 </head>
 <body>
   <!-- 상단바   -->
@@ -119,6 +170,9 @@
   <hr/>
 
   <!-- 상단바 끝 -->
+
+  <!-- 로딩 -->
+  <div id="map" class="loadingImg"></div>
 
   <!-- 1. Review Crawling 리뷰 가져오기 -->
   <h4 style="text-align: center">
@@ -152,7 +206,7 @@
         </select>
 
         <span style="padding-left:10px;"> 키워드 검색 </span>
-        <input class="input-box" style="width:200px; font-size:12px; textalign:center; padding-left:10px;" name="filter" maxlengh="10" placeholder=" 키워드를 입력하세요" />
+        <input class="input-box" style="width:200px; font-size:12px; textalign:center; padding-left:10px;" name="filter" id="filter" maxlengh="10" placeholder=" 키워드를 입력하세요" />
       </div>
       <script>
       $(function (){
@@ -190,7 +244,7 @@
 
 
   <div style="float:left;">
-
+    <input type="hidden" id="real_app" value="<%=name %>" >
   <ul class="hifilter" style="margin-left:78px;">날짜 정렬
     <input type='button' class="filter-btn" id='date-button' naem='condition' onclick='changeBtnName1()' value='▼'/>
     <input type="hidden" id="hiddenDate" value="-DATE"/>
@@ -214,6 +268,7 @@
   <!-- 날짜 정렬 -->
 
     function changeBtnName1() {
+      console.log($('#name').val());
       const btnElement
       = document.getElementById('date-button');
       const realVal
@@ -222,10 +277,11 @@
       if(btnElement.value == "▼"){
         btnElement.value = "▲";
         realVal.value = "DATE";
-        document.targetURL2.location.href="/review/url?app_name="+document.userForm2.app_name.value+"&star="+document.userForm2.star.value;
+        document.targetURL2.location.href="/search/re_search?app_name=&star="+$('#star').val()+"&filter="+$('#filter').val()+"&condition=DATE";
       }else{
         btnElement.value = "▼";
         realVal.value = "-DATE";
+        document.targetURL2.location.href="/search/re_search?app_name=&star="+$('#star').val()+"&filter="+$('#filter').val()+"&condition=-DATE";
       }
     }
 
@@ -243,9 +299,11 @@
       if(btnElement.value == "▼"){
         btnElement.value = "▲";
         realVal.value = "STAR";
+        document.targetURL2.location.href="/search/re_search?app_name=&star="+$('#star').val()+"&filter="+$('#filter').val()+"&condition=STAR";
       }else{
         btnElement.value = "▼";
         realVal.value = "-STAR";
+        document.targetURL2.location.href="/search/re_search?app_name=&star="+$('#star').val()+"&filter="+$('#filter').val()+"&condition=-STAR";
       }
     }
 
@@ -263,9 +321,11 @@
       if(btnElement.value == "▼"){
         btnElement.value = "▲";
         realVal.value = "LIKE";
+        document.targetURL2.location.href="/search/re_search?app_name=&star="+$('#star').val()+"&filter="+$('#filter').val()+"&condition=LIKE";
       }else{
         btnElement.value = "▼";
         realVal.value = "-LIKE";
+        document.targetURL2.location.href="/search/re_search?app_name=&star="+$('#star').val()+"&filter="+$('#filter').val()+"&condition=-LIKE";
       }
     }
 
@@ -289,7 +349,7 @@
     <br/>
 
     <h3> > 어플 키워드 분석결과 보기 < </h3>
-    <a href="/analysis.html">
+    <a href="/review/chart/wordcloud">
       <img  width="300px" style="padding-bottom: 40px;" src="../img/key.png"/>
     </a>
 

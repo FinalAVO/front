@@ -109,25 +109,22 @@ span{
         <hr class="hr1">
     </div>
 
-    <div class="myapp-box" style="margin-left:80px;">
-      <img width="175px" height="165px" style="margin-top:30px; margin-bottom:15px;" src="../img/reviewer!.png">
-      <h3 style="margin-top:15px; margin-bottom:15px;">App1</h3>
-      <span> 앱설명입니다.어플설명입니다.앱설명입니다.어플설명입니다.앱설명입니다.어플설명입니다.</span>
-    </div>
-
-    <div class="myapp-box">
-      <img width="175px" height="165px" style="margin-top:30px; margin-bottom:15px;" src="../img/reviewer!.png">
-      <h3 style="margin-top:15px; margin-bottom:15px;">App2</h3>
-      <span> 앱설명입니다.어플설명입니다.앱설명입니다.어플설명입니다.앱설명입니다.어플설명입니다.</span>
-    </div>
-
-    <div class="myapp-box">
-      <img width="175px" height="165px" style="margin-top:30px; margin-bottom:15px;" src="../img/reviewer!.png">
-      <h3 style="margin-top:15px; margin-bottom:15px;">App3</h3>
-      <span> 앱설명입니다.어플설명입니다.앱설명입니다.어플설명입니다.앱설명입니다.어플설명입니다.</span>
-    </div>
-
-
+    <!-- 마이 앱 리스트 -->
+    <% if(session.loginData) { %>
+      <% for(let i = 0; i < data.length; i++) { %>
+        <div class="myapp-box" style="margin-left:80px;">
+          <img width="175px" height="165px" style="margin-top:30px; margin-bottom:15px;" src="<%= data[i].app_img %>">
+          <h3 style="margin-top:15px; margin-bottom:15px;"> <%= data[i].app_name %> </h3>
+          <span> 로그인 되었습니다! </span>
+        </div>
+    <%  } %>
+    <% } else { %>
+      <div class="myapp-box" style="margin-left:80px;">
+        <img width="175px" height="165px" style="margin-top:30px; margin-bottom:15px;" src="../img/reviewer!.png">
+        <h3 style="margin-top:15px; margin-bottom:15px;">App1</h3>
+        <span> 로그인 하십시오! </span>
+      </div>
+    <% } %>
 
     <!-- 하단 푸터 시작 -->
     <div id='wrapper'>
@@ -152,7 +149,7 @@ span{
     <p class="footer-content2">@ 2022 Review service from AVO</p>
     </footer>
 
-    <!-- 하단 푸터 끝 -->
+
 
 
 </body>

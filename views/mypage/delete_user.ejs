@@ -1,15 +1,16 @@
 <!DOCTYPE html>
-<html>
+<html lang="ko">
 <head>
-<meta charset="UTF-8">
-<title>login</title>
-<link rel="stylesheet"  type="text/css" href="../css/bar.css"/>
+<title>Review</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+
 <link rel="stylesheet"  type="text/css" href="../css/index.css"/>
-
-
-<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
-
+<link rel="stylesheet"  type="text/css" href="../css/bar.css"/>
+<link rel="stylesheet"  type="text/css" href="../css/report.css"/>
+<link rel="stylesheet"  type="text/css" href="../css/mypage.css"/>
 <style>
+
 
 #font {
   font-family: 'Pretendard'
@@ -17,13 +18,13 @@
 
 .box1{
   margin: 0 auto;
-  margin-top: 80px;
+  margin-top: 150px;
   align-items:center;
-  width:320px;
-  height: 350px;
+  width:600px;
+  height: 400px;
   background-color: #ffffff;
   border:none;
-  border-radius: 10px;
+  border-radius: 15px;
   align-items:center;
   text-align:center;
   box-shadow: 2px 0 5px #ccc
@@ -33,34 +34,33 @@
 
 
 .loginBtn-wrap{
-    width: 230px;
-    height: 40px;
-    border-radius: 50%;
+  width: 230px;
+  height: 40px;
+  border-radius: 50%;
+  margin-left: 50px;
 }
 
 #loginBtn{
-    width: 100%;
-    height: 100%;
-    text-align: center;
-    align-items: center;
-    font-size: 15px;
-    margin-top: 5px;
-    color: #fff;
-    background-color: #d8d8d8;
-    border: none;
-    border-radius: 3px;
-    outline: 0;
-    cursor: pointer;
-    transition: 0.3s ease;
+  width: 100%;
+  height: 100%;
+  font-size: 15px;
+  margin-top: 0px;
+  color: #fff;
+  background-color: #d8d8d8;
+  border: none;
+  border-radius: 3px;
+  outline: 0;
+  cursor: pointer;
+  transition: 0.3s ease;
 }
 
 #loginBtn:hover{
-    background-color: #2F5971;
+  background-color: #2F5971;
 
 }
 
 .email-input{
-  width: 180px;
+  width: 300px;
   height: 30px;
   border: 2px inset gray;
   border-radius: 20px;
@@ -71,10 +71,14 @@
 
 </style>
 
+
+
+
+
 </head>
 
-<body>
 
+<body>
   <!-- 상단바   -->
 
   <div class="bar">
@@ -137,59 +141,76 @@
   <hr/>
 
   <!-- 상단바 끝 -->
-<br/>
-<br/>
-<br/>
-<br/>
 
-<!-- 로그인 -->
-
-<h3 style="padding-top: 60px;" id="font"> 아이디 / 비밀번호 찾기 </h3>
-<hr>
-<p style="padding-top:10px;" id="font"> 회원가입시 등록한 개발자 이름, 아이디, 이메일을 입력하세요.</p>
-
-<!-- 아이디 찾기 박스 -->
-<div class ="box1" style="align-items:center; textalign:center;">
-  <br>
-  <p id="font" style="margin-top:10px;"> 비밀번호 찾기 </p>
-  <br>
-  <div style="margin-top:55px;">
-    <span style="font-Size:14px;" id="font" > 인증번호 </span>
-      <input type="text" class="email-input" name="findId" placeholder=" 인증번호를 입력해주세요"/>
+    <!-- 사이드 바 -->
+  <div class="side-menu">
+    <ol>
+      <br/>
+      <span class="my-page-title">회원정보 수정</span>
+      <br/>
+      <br/>
+      <li><a class="menu" href="/mypage/my_main">기본정보</a></li>
+      <li><a class="menu" href="/mypage/security">보안</a></li>
+    </ol>
   </div>
 
-<br>
+  <!-- 사이드바 끝 -->
 
-  <div class="loginBtn-wrap" style="textalign:center; margin-top:70px; margin-left:45px;">
-    <button type="submit" id="loginBtn" style="float:right;" onclick="location.href='/login/findPwCheck'">인증번호 확인</button>
-  </div>
-</div>
+<br/>
 
-<!-- 하단 푸터 시작 -->
-<div id='wrapper'>
   <div>
+    <h3 style="float:left; margin-left:270px; margin-top:30px;"> 탈퇴 <h3>
   </div>
-</div>
-<footer style="margin-top:300px;">
-<h3 class="avo-title"> AVO </h3>
-<a href="/">
-  <img width="25px" height="25px" style="padding-top:10px; padding-right:5px;" src="../img/instagram-logo.png">
-</a>
-<a href="/">
-  <img width="25px" height="25px" style="padding-top:10px; padding-right:5px;" src="../img/facebook-logo.png">
-</a>
 
-<a href="/">
-  <img width="25px" height="25px" style="padding-top:10px; padding-right:5px;" src="../img/twitter-logo.png">
-</a>
+  <hr style="background-color: #2F5971;
+  height: 2px;
+  margin-top: 20px;
+  width: 100%;
+  float: left;">
 
 
-<p class="footer-content1">avo@gmail.com</p>
-<p class="footer-content2">@ 2022 Review service from AVO</p>
-</footer>
 
-<!-- 하단 푸터 끝 -->
+  <div class ="box1" style=" align-items:center;">
+    <br>
+    <p id="font" style="margin-top:60px;"> 회원 탈퇴를 하시면 개인정보, 저장된 리뷰데이터 등이 모두 삭제됩니다.<br> 그래도 탈퇴하시겠습니까? </p>
+    <br>
+    <div style="margin-top:50px;">
+      <span style="float:left; margin-top:5px; margin-left:50px;color:#2F5971; font-size:16px;" id="font" > 비밀번호 확인 </span>
+      <input type="text" style="margin-left:22px;" class="email-input" name="findId" />
+    </div>
 
 
+    <br>
+
+    <div class="loginBtn-wrap" style="textalign:center; margin-top:70px; margin-left:190px;">
+      <button type="submit" id="loginBtn" style="float:right;" onclick="location.href='/login/login">탈퇴</button>
+    </div>
+  </div>
+
+
+  <!-- 하단 푸터 시작 -->
+  <div id='wrapper'>
+    <div>
+    </div>
+  </div>
+  <footer>
+  <h3 class="avo-title"> AVO </h3>
+  <a href="/">
+    <img width="25px" height="25px" style="padding-top:10px; padding-right:5px;" src="../img/instagram-logo.png">
+  </a>
+  <a href="/">
+    <img width="25px" height="25px" style="padding-top:10px; padding-right:5px;" src="../img/facebook-logo.png">
+  </a>
+
+  <a href="/">
+    <img width="25px" height="25px" style="padding-top:10px; padding-right:5px;" src="../img/twitter-logo.png">
+  </a>
+
+
+  <p class="footer-content1">avo@gmail.com</p>
+  <p class="footer-content2">@ 2022 Review service from AVO</p>
+  </footer>
+
+  <!-- 하단 푸터 끝 -->
 </body>
 </html>

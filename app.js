@@ -33,6 +33,30 @@ app.use(
   })
 );
 
+app.use(
+  session({
+    key: "appData",
+    secret: "appSecret",
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      expires: 60 * 3 * 1,
+    },
+  })
+);
+
+app.use(
+  session({
+    key: "csvData",
+    secret: "appSecret",
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      expires: 60 * 3 * 1,
+    },
+  })
+);
+
 var restful = require('./routes/review.js');
 app.use('/', restful);
 

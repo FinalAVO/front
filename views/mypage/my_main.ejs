@@ -8,30 +8,7 @@
 <link rel="stylesheet"  type="text/css" href="../css/index.css"/>
 <link rel="stylesheet"  type="text/css" href="../css/bar.css"/>
 <link rel="stylesheet"  type="text/css" href="../css/report.css"/>
-
-<style>
-
-.my-page-title{
-  text-align:center;
-  font-size: 14px;
-  font-weight:bold;
-  margin-top: 50px;
-}
-
-.my-main-hr{
-  border-top:1px solid gray;
-  margin-top: 70px;
-}
-
-
-.my-main-title{
-
-}
-.my-main-txt{
-
-}
-</style>
-
+<link rel="stylesheet"  type="text/css" href="../css/mypage.css"/>
 
 
 
@@ -53,7 +30,44 @@
       <li><a href="/member/my_app">My app</a></li>
       <li><a href="/member/my_report">Report</a></li>
       <% if(session.loginData) { %>
-        <li><a href="/user/logout">Logout</a></li>
+        <div style="display:inline;">
+          <li><input type="image" class="my-logo" id="mypage_btn" style=" height:45px;"src="../img/my.png"></li>
+        </div>
+        <!--다른 앱 선택 드롭다운-->
+        <div style="position:absolute;">
+          <div id="mypage_toggle" class="dropdown2" style="display:none; position:fixed;">
+            <button class="dropbtn" style="top: 60px; left: 245px; width:120px;">
+              <span class="dropbtn_content" style="font-size:10px;">hu 님</span>
+              <span class="dropbtn_click" style="font-family: Material Icons; font-size : 16px; color : #ffffff; float:right;"
+                onclick="dropdown()">arrow_drop_down</span>
+            </button>
+            <div class="dropdown-content" style="top: 100px; left: 245px; width:120px; padding:0;">
+              <div class="fastfood" onclick="showMenu(this.innerText)"><a class="my-txt" href="/mypage/my_main">회원정보수정</div>
+              <div onclick="showMenu(this.innerText)"><a class="my-txt" href="/user/logout">로그아웃</a></div>
+            </div>
+          </div>
+        </div>
+        <script>
+        $(document).ready(function(){
+          $('#mypage_btn').click(function(){
+
+          const btnElement
+          = document.getElementById('mypage_btn');
+          const otherapp
+          = document.getElementById('mypage_toggle');
+
+          if(otherapp.style.display=='none'){
+            otherapp.style.display= 'inline';
+
+          }else{
+            otherapp.style.display='none';
+
+          }
+
+        })
+        })
+        </script>
+        <!-- 다른 앱 선택 드롭다운 끝 -->
       <% } else { %>
         <li><a href="/login/login">Login</a></li>
       <% } %>
@@ -61,10 +75,10 @@
 
       </div>
 
-  <br>
-  <hr>
+  <br/>
+  <hr/>
 
-    <!-- 상단바 끝 -->
+  <!-- 상단바 끝 -->
 
     <!-- 사이드 바 -->
   <div class="side-menu">
@@ -73,8 +87,7 @@
       <span class="my-page-title">회원정보 수정</span>
       <br/>
       <br/>
-      <li><a class="menu" href="/mypage/basic_information">기본정보</a></li>
-      <li><a class="menu" href="/mypage/preferences">환경설정</a></li>
+      <li><a class="menu" href="/mypage/my_main">기본정보</a></li>
       <li><a class="menu" href="/mypage/security">보안</a></li>
     </ol>
   </div>
@@ -84,20 +97,75 @@
 <br/>
 
   <div>
-    <h3 style="float:left; margin-left:230px; margin-top:30px;"> 기본정보 <h3>
+    <h3 style="float:left; margin-left:270px; margin-top:30px;"> 기본정보 <h3>
   </div>
-  <div>
-    <hr class="my-main-hr">
-  </div>
-  <div>
-    <p class="my-main-title">ID</p>
-    <p class="my-main-txt">hu..</p>
+
+  <hr style="background-color: #2F5971;
+  height: 2px;
+  margin-top: 20px;
+  width: 100%;
+  float: left;">
+
+  <div class="basic_info">
+
+        <p class="my-main-title">ID</p>
+
+
+        <p class="my-main-txt">hu..</p>
+
+
+        <p class="my-main-title">e-mail</p>
+
+
+        <p class="my-main-txt">wjdgn0373@naver.com</p>
+
+
   </div>
 
   <div>
-    <p class="my-main-title">e-mail</p>
-    <p class="my-main-txt">wjdgn0373@naver.com</p>
+    <h3 style="float:left; margin-left:270px; margin-top:30px;"> 알림설정 <h3>
   </div>
 
+  <hr style="background-color: #2F5971;
+  height: 2px;
+  margin-top: 20px;
+  width: 100%;
+  float: left;">
+
+  <div class="preferences">
+
+        <input type="checkbox" id="mail" name="news_letter" class="agree_chk" style="margin-left:30px;"/>
+        <label class="agree_chk" style="margin-top:25px;">[선택]메일 알림 기능</label>
+
+        <input type="checkbox" id="sms" name="news_letter" class="agree_chk"/>
+        <label class="agree_chk" style="margin-top:25px;">[선택]SMS 알림 기능</label>
+
+  </div>
+
+
+  <!-- 하단 푸터 시작 -->
+  <div id='wrapper'>
+    <div>
+    </div>
+  </div>
+  <footer>
+  <h3 class="avo-title"> AVO </h3>
+  <a href="/">
+    <img width="25px" height="25px" style="padding-top:10px; padding-right:5px;" src="../img/instagram-logo.png">
+  </a>
+  <a href="/">
+    <img width="25px" height="25px" style="padding-top:10px; padding-right:5px;" src="../img/facebook-logo.png">
+  </a>
+
+  <a href="/">
+    <img width="25px" height="25px" style="padding-top:10px; padding-right:5px;" src="../img/twitter-logo.png">
+  </a>
+
+
+  <p class="footer-content1">avo@gmail.com</p>
+  <p class="footer-content2">@ 2022 Review service from AVO</p>
+  </footer>
+
+  <!-- 하단 푸터 끝 -->
 </body>
 </html>
