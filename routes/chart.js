@@ -33,17 +33,43 @@ app.get("/", (req, res) =>{
       var threeStar = result2[0]["three_star"];
       var fourStar = result2[0]["four_star"];
       var fiveStar = result2[0]["five_star"];
-      var start_date = result1[0]["start_date"]
-      var end_date = result1[0]["end_date"]
-      var avg_star_DESIGN = result1[0]["avg_star"]
-      var avg_star_PROFILE = result1[1]["avg_star"]
-      var avg_star_RESOURCE = result1[2]["avg_star"]
-      var avg_star_SPEED = result1[3]["avg_star"]
-      var avg_star_SAFETY = result1[4]["avg_star"]
-      var avg_star_REMOVE = result1[5]["avg_star"]
-      var avg_star_UPDATE = result1[6]["avg_star"]
+      var start_date = result2[0]["start_date"]
+      var end_date = result2[0]["end_date"]
 
       var a_review = Number(result2[0]["count"]) - (Number(result1[0]["count"]) + Number(result1[1]["count"]) + Number(result1[2]["count"]) + Number(result1[3]["count"]) + Number(result1[4]["count"]) + Number(result1[5]["count"]) + Number(result1[6]["count"]));
+
+      var date1 = new Date(result1[0]["end_date"]);
+      var date2 = new Date(result1[0]["start_date"]);
+      var diffDate = date1.getTime() - date2.getTime();
+      var dateDays = Math.abs(diffDate / (1000 * 3600 * 24));
+      console.log(dateDays);
+
+      function formatDate(date) {
+        var d = new Date(date), month = '' + (d.getMonth() + 1), day = '' + d.getDate(), year = d.getFullYear();
+        if (month.length < 2)
+          month = '0' + month;
+        if (day.lengh < 2)
+          day = '0' + day;
+
+        return [year, month, day].join('-');
+      }
+
+      var center_date = dateDays/2
+      var stdate = formatDate(date2);
+      var edate = formatDate(date1);
+      var center = new Date(date2.setDate(date2.getDate() + center_date));
+      var cdate = formatDate(center);
+      console.log(center);
+
+      console.log(stdate);
+      console.log(cdate);
+      console.log(edate);
+
+      //
+      // console.log(date1); //edate
+      // console.log(date2); //stdate
+      // console.log(formatDate(date1));
+      // console.log(formatDate(date2));
 
 
       var template = `
@@ -240,6 +266,7 @@ app.get("/", (req, res) =>{
       </br>
       <div class="count-box">
         <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@0.7.0"></script>
         <canvas id="pieChart"></canvas>
 
         <script>
@@ -264,20 +291,29 @@ app.get("/", (req, res) =>{
             }]
           },
           options: {
-            plugins: {
-            datalabels: {
-            color: 'black',
-            font: {
-            weight: 'bold'
-            },
-            formatter: function(value, context) {
-            return Math.round(value) + '개';
-            title: {
-              display: true,
-              text: "주제별 리뷰 비율"
-            }
+                  title: { display: true,
+                          text: '주제별 리뷰 비율(개)'
+                  },
+                  responsive: true,
+                  tooltips: {
+                  enabled: true
+                  },
+                  legend: {
+                  display: true
+                  },
+                  plugins: {
+                  datalabels: {
+                  color: 'black',
+                  font: {
+                  weight: 'bold'
+                  },
+                  formatter: function(value, context) {
+                  return Math.round(value);
+                  }
+                  }
+                  }
           }
-        });
+          });
         </script>
 
         </div>
@@ -293,8 +329,8 @@ app.get("/", (req, res) =>{
           <canvas id="myChart"></canvas>
 
           <script>
-            var xValues = [${start_date} ${end_date}];
-            var yValues = [1,2,3,4,5];
+            var xValues = ["${stdate}", "${cdate}", "${edate}"];
+            var yValues = [1, 2, 4];
 
             new Chart("myChart", {
               type: "line",
@@ -311,7 +347,7 @@ app.get("/", (req, res) =>{
               options: {
                 legend: {display: false},
                 scales: {
-                  yAxes: [{ticks: {min: 6, max:16}}],
+                  yAxes: [{ticks: {min: 0, max:5}}],
                 }
               }
             });
@@ -401,7 +437,7 @@ app.get("/", (req, res) =>{
                     weight: 'bold'
                     },
                     formatter: function(value, context) {
-                    return Math.round(value) + '개';
+                    return Math.round(value);
                     }
                     }
                     }
