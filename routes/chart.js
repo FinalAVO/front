@@ -460,7 +460,86 @@ app.get("/", (req, res) =>{
     });
   });
 
+app.get('/wordcloud', (req, res) => {
+  if(req.session.loginData){
+    var user_id = req.session.loginData;
+  }else{
+    var rand = "";
+    for(var i = 0; i < 6; i++){
+      rand += String(Math.floor(Math.random() * (9 - 0)) + 0);
+    }
+    var user_id = "A" + rand;
+  }
 
+  console.log(req.session.appData);
+  if(req.session.appData != null){
+    var collection_name = req.session.appData;
+  }else{
+    res.end();
+  }
+
+  var date = req.query.date;
+  console.log("original date in wordcloud : " + date);
+  if(!date || date == "undefined"){
+    var e_date = new Date();
+    if((e_date.getMonth() + 1) >= 10){
+      end_date = e_date.getFullYear() + '-' + (e_date.getMonth() + 1) + '-' + e_date.getDate();
+    }else{
+      end_date = e_date.getFullYear() + '-0' + (e_date.getMonth() + 1) + '-' + e_date.getDate();
+    }
+    console.log(end_date);
+    var s_date = new Date(e_date.setMonth(e_date.getMonth() - 3));
+    if((s_date.getMonth() + 1) >= 10){
+      start_date = s_date.getFullYear() + '-' + (s_date.getMonth() + 1) + '-' + s_date.getDate();
+    }else{
+      start_date = s_date.getFullYear() + '-0' + (s_date.getMonth() + 1) + '-' + s_date.getDate();
+    }
+    console.log(start_date);
+  }else{
+    var start_date = date.slice(0,11);
+    console.log(start_date);
+    var end_date = date.slice(13);
+    console.log(end_date);
+  }
+
+  var url = "http://13.125.125.198:3000/wordcount";
+  axios.post(url,
+    {
+      collection_name: collection_name,
+      user_id: user_id,
+      start_date: start_date,
+      end_date: end_date
+    }
+  ).then(function(response){
+    console.log(response.data);
+    var filename = response.data;
+    const downloadFile = (fileName, callback) => {
+      const params = {
+        Bucket: 's3-001bucket',
+        Key: response.data,
+      };
+        s3.getObject(params, function(err, data) {
+          if (err) { throw err;}
+          fs.writeFileSync(fileName, data.Body);
+          callback('done');
+        });
+    };
+    downloadFile("public/" + response.data, function(message){
+      if(message == "done"){
+        req.session.csvData = response.data;
+        req.session.save(error => {
+          if(error) console.log('error : ' + error);
+        });
+        res.redirect('/test');
+      }else{
+        res.end();
+      }
+    });
+  }).catch(function(error){
+    console.log(error);
+    res.send(error)
+  })
+})
 
 });
 
