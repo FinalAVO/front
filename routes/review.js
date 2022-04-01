@@ -82,6 +82,18 @@ app.get('/login/findPwCheck', (req, res) => {
   res.render('login/findPwCheck.ejs', { session: req.session });
 });
 
+app.get('/mypage/pw_change', (req, res) => {
+  res.render('mypage/pw_change.ejs', { session: req.session });
+});
+
+app.get('/mypage/email_change', (req, res) => {
+  res.render('mypage/email_change.ejs', { session: req.session });
+});
+
+app.get('/mypage/delete_user', (req, res) => {
+  res.render('mypage/delete_user.ejs', { session: req.session });
+});
+
 
 // 회원
 
