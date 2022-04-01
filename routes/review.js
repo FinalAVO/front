@@ -125,10 +125,57 @@ app.get('/member/register_app', (req, res) => {
   })
 });
 
+app.get('/member/remove_app', (req, res) => {
+  var user_id = req.session.loginData
+  var db_name = req.query.db_name
+
+  sql = 'DELETE FROM user_app WHERE user_id = "' + user_id + '" and db_name = "' + db_name + '"';
+  rdsConnection.query(sql, function(err){
+    sql = 'SELECT * FROM user_app WHERE user_id = ?';
+    rdsConnection.query(sql, [user_id], function(err, result){
+      res.render('member/my_app.ejs', { session: req.session, data: result });
+    });
+  });
+});
+
 
 app.get('/member/my_report', (req, res) => {
   if(req.session.loginData){
-    res.render('member/my_report.ejs', { session: req.session });
+    var user_id = req.session.loginData
+    var db_name = req.query.db_name
+
+    if (!db_name){
+      var sql = 'SELECT * FROM user_app WHERE user_id = ?';
+      rdsConnection.query(sql, [user_id], function(err, result){
+        if (result.length == 0){
+          res.writeHead(200, {'Content-Type': 'text/html;charset=UTF-8'});
+          template = `<script>
+          alert('앱 등록 후 이용해주세요!');
+          location.href="/member/my_app"
+          </script>`;
+          res.end(template);
+        } else {
+          db_name = result[0].db_name
+          var sql1 = 'SELECT * FROM user_app WHERE user_id = "' + user_id + '" and db_name = "' + db_name + '"';
+          rdsConnection.query(sql1, function(err, my_app){
+            var sql2 = 'SELECT * FROM user_app WHERE user_id = "' + user_id + '"';
+            rdsConnection.query(sql2, function(err, app_list){
+              res.render('member/my_report.ejs', { session: req.session , my_app: my_app, app_list: app_list});
+            });
+          });
+        }
+      });
+    } else {
+      var sql1 = 'SELECT * FROM user_app WHERE user_id = "' + user_id + '" and db_name = ' + db_name;
+      rdsConnection.query(sql1, function(err, my_app){
+        var sql2 = 'SELECT * FROM user_app WHERE user_id = "' + user_id + '"';
+        rdsConnection.query(sql2, function(err, app_list){
+          res.render('member/my_report.ejs', { session: req.session , my_app: my_app, app_list: app_list});
+        });
+      });
+    }
+
+
   }else{
     res.writeHead(200, {'Content-Type': 'text/html;charset=UTF-8'});
     template = `<script>
@@ -140,11 +187,31 @@ app.get('/member/my_report', (req, res) => {
 });
 
 app.get('/member/my_search', (req, res) => {
-  res.render('member/my_search.ejs', { session: req.session });
+  var user_id = req.session.loginData
+  var db_name = req.query.db_name
+
+  var sql1 = 'SELECT * FROM user_app WHERE user_id = "' + user_id + '" and db_name = ' + db_name;
+  rdsConnection.query(sql1, function(err, my_app){
+    var sql2 = 'SELECT * FROM user_app WHERE user_id = "' + user_id + '"';
+    rdsConnection.query(sql2, function(err, app_list){
+      res.render('member/my_search.ejs', { session: req.session , my_app: my_app, app_list: app_list});
+    });
+  });
+
 });
 
 app.get('/member/my_wordcloud', (req, res) => {
-  res.render('member/my_wordcloud.ejs', { session: req.session });
+  var user_id = req.session.loginData
+  var db_name = req.query.db_name
+
+  var sql1 = 'SELECT * FROM user_app WHERE user_id = "' + user_id + '" and db_name = ' + db_name;
+  rdsConnection.query(sql1, function(err, my_app){
+    var sql2 = 'SELECT * FROM user_app WHERE user_id = "' + user_id + '"';
+    rdsConnection.query(sql2, function(err, app_list){
+      res.render('member/my_wordcloud.ejs', { session: req.session , my_app: my_app, app_list: app_list});
+    });
+  });
+
 });
 
 app.get('/member/add_myapp', (req, res) => {
@@ -800,29 +867,29 @@ app.get('/pdfCreate', (req, res) => {
   function slowfunc2(callback){
     console.log("pdf create Start");
 
-    var url = "http://3.37.3.24/review/report";
+    var url = "http://3.37.3.24/review/chart";
     phantom.create().then(function (ph) {
       ph.createPage().then(function (page) {
         page
         .open(
           url
         )
-        .then(function (status) {
-          page.render("test2.pdf").then(function () {
+        .then(setTimeout(function (status) {
+          page.render("report.pdf")
+          .then(function () {
             console.log("Page Rendered");
             ph.exit();
+            callback();
           });
-        });
+        }, 2000));
       });
     });
-
-    callback();
   }
 
   var sec_func = function(){
     console.log("pdf download Start");
 
-    var file = "/data/node/review/test2.pdf";
+    var file = "/data/front/report.pdf";
 
     try {
       if (fs.existsSync(file)) { // 파일이 존재하는지 체크

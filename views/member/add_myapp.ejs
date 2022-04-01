@@ -102,27 +102,31 @@ span{
 
   <div class="bar">
     <a href="/">
-      <img width="120px" height="110px" style="padding-top:6px; padding-left: 60px; float:left;" src="../img/reviewer!.png">
+      <img width="155px" height="49px" style="top:0;padding-top:15px; padding-left: 25px; float:left;" src="../img/logo.gif">
     </a>
 
     <!-- 메뉴바 마우스 오버 -->
-    <ul id="font" style="float:right; padding-right: 70px; padding-top:40px; color:gray;">
+    <ul id="font" style="float:right; padding-right: 30px; padding-top:32px; color:gray;">
       <li><a href="/guest/gu_search">Search</a></li>
       <li><a href="/member/my_app">My app</a></li>
       <li><a href="/member/my_report">Report</a></li>
+      <li><a href="/mypage/my_main">Mypage</a></li>
       <% if(session.loginData) { %>
-        <li><a href="/user/logout">Logout</a></li>
+        <div style="display:inline;">
+          <li style="margin-right:7px;color:white;"><a href="/user/logout" style="color:white;">Logout</a></li>
+        </div>
+
       <% } else { %>
-        <li><a href="/login/login">Login</a></li>
+        <li style="margin-right:12px;color:white;"><a href="/login/login" style="color:white;">Login</a></li>
       <% } %>
       </ul>
 
       </div>
 
-  <br>
-  <hr>
+  <br/>
+  <hr/>
 
-    <!-- 상단바 끝 -->
+  <!-- 상단바 끝 -->
 
 
     <!-- 마이앱 등록 시작 -->

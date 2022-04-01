@@ -76,10 +76,28 @@ hr {
 .bar{
     position: fixed;
     background-color: white;
-    height: 120px;
+    height: 80px;
     width:100%;
     z-index: 4;
+    background-image: url( "../img/bar-bg.gif" );
+    background-size: 100% 100%;
 }
+.bar-index{
+    position: fixed;
+    background-color: none;
+    height: 80px;
+    width:100%;
+    z-index: 4;
+    background-image: url( "../img/bar-bg.gif" );
+    background-size: 100% 100%;
+}
+
+.bar-index.activated{
+    background-color:white;
+    -webkit-box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+    -moz-box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+  }
 
 body{
   margin: 0;

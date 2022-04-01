@@ -1,20 +1,21 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<title>Review</title>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Review</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-<link rel="stylesheet"  type="text/css" href="../css/index.css"/>
-<link rel="stylesheet"  type="text/css" href="../css/bar.css"/>
-<link rel="stylesheet"  type="text/css" href="../css/report.css"/>
-<link rel="stylesheet"  type="text/css" href="../css/drop-down.css"/>
+  <link rel="stylesheet"  type="text/css" href="../css/index.css"/>
+  <link rel="stylesheet"  type="text/css" href="../css/bar.css"/>
+  <link rel="stylesheet"  type="text/css" href="../css/report.css"/>
+  <link rel="stylesheet"  type="text/css" href="../css/drop-down.css"/>
+  <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
 
-<style>
+  <style>
 
-a {
-  text-decoration-line : none;
-}
+  a {
+    text-decoration-line : none;
+  }
 
 
 
@@ -32,55 +33,22 @@ a {
 
   <div class="bar">
     <a href="/">
-      <img width="120px" height="110px" style="padding-top:6px; padding-left: 60px; float:left;" src="../img/reviewer!.png">
+      <img width="155px" height="49px" style="top:0;padding-top:15px; padding-left: 25px; float:left;" src="../img/logo.gif">
     </a>
 
     <!-- 메뉴바 마우스 오버 -->
-    <ul id="font" style="float:right; padding-right: 70px; padding-top:40px; color:gray;">
+    <ul id="font" style="float:right; padding-right: 30px; padding-top:32px; color:gray;">
       <li><a href="/guest/gu_search">Search</a></li>
       <li><a href="/member/my_app">My app</a></li>
       <li><a href="/member/my_report">Report</a></li>
+      <li><a href="/mypage/my_main">Mypage</a></li>
       <% if(session.loginData) { %>
         <div style="display:inline;">
-          <li><input type="image" class="my-logo" id="mypage_btn" style=" height:45px;"src="../img/my.png"></li>
+          <li style="margin-right:7px;color:white;"><a href="/user/logout" style="color:white;">Logout</a></li>
         </div>
-        <!--다른 앱 선택 드롭다운-->
-        <div style="position:absolute;">
-          <div id="mypage_toggle" class="dropdown2" style="display:none; position:fixed;">
-            <button class="dropbtn" style="top: 60px; left: 245px; width:120px;">
-              <span class="dropbtn_content" style="font-size:10px;">hu 님</span>
-              <span class="dropbtn_click" style="font-family: Material Icons; font-size : 16px; color : #ffffff; float:right;"
-                onclick="dropdown()">arrow_drop_down</span>
-            </button>
-            <div class="dropdown-content" style="top: 100px; left: 245px; width:120px; padding:0;">
-              <div class="fastfood" onclick="showMenu(this.innerText)"><a class="my-txt" href="/mypage/my_main">회원정보수정</div>
-              <div onclick="showMenu(this.innerText)"><a class="my-txt" href="/user/logout">로그아웃</a></div>
-            </div>
-          </div>
-        </div>
-        <script>
-        $(document).ready(function(){
-          $('#mypage_btn').click(function(){
 
-          const btnElement
-          = document.getElementById('mypage_btn');
-          const otherapp
-          = document.getElementById('mypage_toggle');
-
-          if(otherapp.style.display=='none'){
-            otherapp.style.display= 'inline';
-
-          }else{
-            otherapp.style.display='none';
-
-          }
-
-        })
-        })
-        </script>
-        <!-- 다른 앱 선택 드롭다운 끝 -->
       <% } else { %>
-        <li><a href="/login/login">Login</a></li>
+        <li style="margin-right:12px;color:white;"><a href="/login/login" style="color:white;">Login</a></li>
       <% } %>
       </ul>
 
@@ -90,160 +58,181 @@ a {
   <hr/>
 
   <!-- 상단바 끝 -->
-  <!-- 사이드 바 -->
-<div class="side-menu">
-  <ol>
-    <br/>
-    <span class="app-name">App1</span>
+        <!-- 사이드 바 -->
+        <div class="side-menu">
+          <ol>
+            <br/>
+            <span class="app-name"><%= my_app[0].app_name %></span>
 
-    <div style="display:inline;">
-      <input type="button" class="other-app" id="otherapp_btn" value=">"/>
-    </div>
+            <div style="display:inline;">
+              <input type="button" class="other-app" id="otherapp_btn" value=">"/>
+            </div>
 
-    <br/>
-    <br/>
-    <li><a class="menu" href="/member/my_search">전체리뷰 살펴보기</a></li>
-    <li><a class="menu" href="/member/my_wordcloud">리뷰 키워드</a></li>
-    <li><a class="menu" href="/member/my_report">주제별 보고서 받기</a></li>
-    <li><a class="menu" href="#">인기 많은 리뷰</a></li>
-  </ol>
-</div>
+            <br/>
+            <br/>
+            <li><a class="menu" href="/member/my_search?db_name='<%= my_app[0].db_name %>'">전체리뷰 살펴보기</a></li>
+            <li><a class="menu" href="/member/my_wordcloud?db_name='<%= my_app[0].db_name %>'">리뷰 키워드</a></li>
+            <li><a class="menu" href="/member/my_report?db_name='<%= my_app[0].db_name %>'">주제별 보고서 받기</a></li>
+            <li><a class="menu" href="#">인기 많은 리뷰</a></li>
+          </ol>
+        </div>
 
-<!-- 사이드바 끝 -->
+        <!-- 사이드바 끝 -->
 
-  <br>
-<hr>
-<!--다른 앱 선택 드롭다운-->
-<div style="position:absolute;">
-  <div id="btn_btn_toggle" class="dropdown" style="display:none; position:fixed;">
-    <button class="dropbtn">
-      <span class="dropbtn_content" style="font-size:10px;">Other App</span>
-      <span class="dropbtn_click" style="font-family: Material Icons; font-size : 16px; color : #ffffff; float:right;"
-        onclick="dropdown()">arrow_drop_down</span>
-    </button>
-    <div class="dropdown-content">
-      <div class="fastfood" onclick="showMenu(this.innerText)">App2</div>
-      <div class="fastfood" onclick="showMenu(this.innerText)">App3</div>
-      <div class="fastfood" onclick="showMenu(this.innerText)">App4</div>
-      <div class="fastfood" onclick="showMenu(this.innerText)">App5</div>
-      <div class="fastfood" onclick="showMenu(this.innerText)">App2</div>
-      <div class="fastfood" onclick="showMenu(this.innerText)">App3</div>
-      <div class="fastfood" onclick="showMenu(this.innerText)">App4</div>
-      <div class="fastfood" onclick="showMenu(this.innerText)">App5</div>
-    </div>
-  </div>
-</div>
+        <br>
+        <hr>
+        <!--다른 앱 선택 드롭다운-->
+        <div style="position:absolute;">
+          <div id="btn_btn_toggle" class="dropdown" style="display:none; position:fixed;">
+            <button class="dropbtn">
+              <span class="dropbtn_content" style="font-size:10px;">Other App</span>
+              <span class="dropbtn_click" style="font-family: Material Icons; font-size : 16px; color : #ffffff; float:right;"
+              onclick="dropdown()">arrow_drop_down</span>
+            </button>
+            <div class="dropdown-content">
+              <% for(let i = 0; i < app_list.length; i++) { %>
+                <a href="/member/my_report?db_name='<%= app_list[i].db_name %>'"><div class="fastfood" onclick="showMenu(this.innerText)"><%= app_list[i].app_name %></div></a>
+              <%  } %>
+            </div>
+          </div>
+        </div>
 
-<script>
+        <script>
 
-$(document).ready(function(){
-  $('#otherapp_btn').click(function(){
+        $(document).ready(function(){
+          $('#otherapp_btn').click(function(){
 
-  const btnElement
-  = document.getElementById('otherapp_btn');
-  const otherapp
-  = document.getElementById('btn_btn_toggle');
+            const btnElement
+            = document.getElementById('otherapp_btn');
+            const otherapp
+            = document.getElementById('btn_btn_toggle');
 
-  if(otherapp.style.display=='none'){
-    otherapp.style.display= 'inline';
+            if(otherapp.style.display=='none'){
+              otherapp.style.display= 'inline';
 
-  }else{
-    otherapp.style.display='none';
+            }else{
+              otherapp.style.display='none';
 
-  }
+            }
 
-})
-})
-</script>
-<!-- 다른 앱 선택 드롭다운 끝 -->
+          })
+        })
+      </script>
+      <!-- 다른 앱 선택 드롭다운 끝 -->
 
 
-<!-- 1. Review Crawling 리뷰 가져오기 -->
+      <!-- 1. Review Crawling 리뷰 가져오기 -->
 
 
 
-<script src="https://d3js.org/d3.v3.min.js"></script>
-<script src="https://rawgit.com/jasondavies/d3-cloud/master/build/d3.layout.cloud.js" type="text/JavaScript"></script>
+      <script src="https://d3js.org/d3.v3.min.js"></script>
+      <script src="https://rawgit.com/jasondavies/d3-cloud/master/build/d3.layout.cloud.js" type="text/JavaScript"></script>
 
-<br>
-<hr style="background-color: gray; height: 1px;">
-<h4> 리뷰 키워드 페이지</h4>
-<br>
-<br>
-<br>
-<div>
-
-
-<script>
+      <br>
+      <hr style="background-color: gray; height: 1px;">
+      <h4> 리뷰 키워드 페이지</h4>
+      <br>
+      <br>
+      <br>
+      <div>
 
 
-    var width = 960,
-        height = 500,
-        center
+        <script src="https://d3js.org/d3.v3.min.js"></script>
+        <script src="https://rawgit.com/jasondavies/d3-cloud/master/build/d3.layout.cloud.js" type="text/JavaScript"></script>
+        <script>
+        const width = 1200
+        const height = 800
 
-    var svg = d3.select("body").append("svg")
+        var svg = d3.select("body").append("svg")
         .attr("width", width)
         .attr("height", height);
-    d3.csv("wc.csv", function (data) {
-        showCloud(data)
-        setInterval(function(){
-             showCloud(data)
-        },2000)
-    });
-    //scale.linear: 선형적인 스케일로 표준화를 시킨다.
-    //domain: 데이터의 범위, 입력 크기
-    //range: 표시할 범위, 출력 크기
-    //clamp: domain의 범위를 넘어간 값에 대하여 domain의 최대값으로 고정시킨다.
-    wordScale = d3.scale.linear().domain([0, 100]).range([0, 100]).clamp(true);
-    var keywords = ["운", "망", "겜"]
-    var svg = d3.select("svg")
-                .append("g")
-                .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")")
+        d3.csv("../<%= session.csvData %>", function (data) {
+          showCloud(data)
+        });
+        //scale.linear: 선형적인 스케일로 표준화를 시킨다.
+        //domain: 데이터의 범위, 입력 크기
+        //range: 표시할 범위, 출력 크기
+        //clamp: domain의 범위를 넘어간 값에 대하여 domain의 최대값으로 고정시킨다.
+        wordScale = d3.scale.linear().domain([0, 100]).range([30, 150]).clamp(true);
+        var keywords = []
+        var svg = d3.select("svg")
+        .append("g")
+        .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")")
 
-    function showCloud(data) {
-        d3.layout.cloud().size([width, height])
-            //클라우드 레이아웃에 데이터 전달
-            .words(data)
-            .rotate(function (d) {
-                return d.text.length > 3 ? 0 : 90;
-            })
-            //스케일로 각 단어의 크기를 설정
-            .fontSize(function (d) {
-                return wordScale(d.frequency);
-            })
-            //클라우드 레이아웃을 초기화 > end이벤트 발생 > 연결된 함수 작동
-            .on("end", draw)
-            .start();
+        function showCloud(data) {
+          keywords = [data[0].text, data[1].text, data[2].text]
+          d3.layout.cloud().size([width, height])
+          //클라우드 레이아웃에 데이터 전달
+          .words(data)
+          .rotate(function (d) {
+            return d.text.length > 3 ? 0 : 0;
+          })
+          //스케일로 각 단어의 크기를 설정
+          .fontSize(function (d) {
+            return wordScale(d.frequency);
+          })
+          //클라우드 레이아웃을 초기화 > end이벤트 발생 > 연결된 함수 작동
+          .on("end", draw)
+          .start();
 
-        function draw(words) {
+          function draw(words) {
             var cloud = svg.selectAll("text").data(words)
             //Entering words
             cloud.enter()
-                .append("text")
-                .style("font-family", "overwatch")
-                .style("fill", function (d) {
-                    return (keywords.indexOf(d.text) > -1 ? "#fbc280" : "#405275");
-                })
-                .style("fill-opacity", .5)
-                .attr("text-anchor", "middle")
-                .attr('font-size', 1)
-                .text(function (d) {
-                    return d.text;
-                });
+            .append("text")
+            .style("fill", function (d) {
+              return (keywords.indexOf(d.text) > -1 ? "#fbc280" : "#405275");
+            })
+            .style("fill-opacity", .5)
+            .attr("text-anchor", "middle")
+            .attr('font-size', 1)
+            .text(function (d) {
+              return d.text;
+            })
+            .on("mouseover", handleMouseOver)
+            .on("mouseout", handleMouseOut);
             cloud
-                .transition()
-                .duration(600)
-                .style("font-size", function (d) {
-                    return d.size + "px";
-                })
-                .attr("transform", function (d) {
-                    return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
-                })
-                .style("fill-opacity", 1);
+            .transition()
+            .duration(600)
+            .style("font-size", function (d) {
+              return d.size + "px";
+            })
+            .attr("transform", function (d) {
+              return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
+            })
+            .style("fill-opacity", 1)
+          }
         }
-    }
-</script>
-</div>
 
-</body>
-</html>
+        function handleMouseOver(d) {  // Add interactivity
+          console.log("hello");
+
+          // Use D3 to select element, change color and size
+          d3.select(this).style("fill-opacity", 0)
+
+          // Specify where to put label of text
+          svg.append("text").attr({
+            id: "t" + d.x + "-" + d.y,
+            x: function() { return d.x - 120; },
+            y: function() { return d.y; }
+          })
+          .attr('font-size', 200)
+          .text(function() {
+            return d.frequency;  // Value of the text
+          });
+        }
+
+        function handleMouseOut(d) {
+          console.log("bye");
+          // Use D3 to select element, change color back to normal
+          d3.select(this).style("fill-opacity", 1)
+
+          // Select text by id and then remove
+          d3.select("#t" + d.x + "-" + d.y).remove();  // Remove text location
+        }
+
+        </script>
+      </div>
+
+    </body>
+    </html>

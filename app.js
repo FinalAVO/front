@@ -28,7 +28,7 @@ app.use(
     resave: false,
     saveUninitialized: false,
     cookie: {
-      expires: 60 * 60 * 24,
+      expires: 3600 * 1000,
     },
   })
 );
@@ -40,7 +40,7 @@ app.use(
     resave: false,
     saveUninitialized: false,
     cookie: {
-      expires: 60 * 3 * 1,
+      expires: 180 * 1000,
     },
   })
 );
@@ -52,7 +52,7 @@ app.use(
     resave: false,
     saveUninitialized: false,
     cookie: {
-      expires: 60 * 3 * 1,
+      expires: 60 * 1000,
     },
   })
 );

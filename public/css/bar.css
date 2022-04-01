@@ -12,7 +12,7 @@ body {
 li {
   list-style: none;
   float: left;
-  margin-right: 30px;
+  margin-right: 65px;
   color: #2F5971;
   }
 
@@ -67,12 +67,7 @@ ul > li > a:hover:before {
 
 }
 
-.bar{
-  position: fixed;
-  background-color: white;
-  height: 120px;
-  width:100%;
-}
+
 
 body {
   margin:0;
@@ -91,8 +86,16 @@ footer{
   height: 150px;
   position : relative;
   transform : translateY(-100%);
-  background-color: white;
-  color:#2F5971;
+  background-color: #white;
+  color:#white;
+}
+.footer-index{
+  bottom:0;
+  height: 150px;
+  position : relative;
+  transform : translateY(-100%);
+  background-color: #F1F2EC;
+  color:#white;
 }
 
 .avo-title{

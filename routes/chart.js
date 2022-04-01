@@ -24,7 +24,7 @@ app.get("/", (req, res) =>{
   database : mysql_json["database"]
   });
 
-  var user_id = '이선일'
+  var user_id = '이정후'
   // var query = req.query.url_id;
   var sql = 'SELECT * FROM star_report WHERE user_id = ?';
   var sql2 = 'SELECT * FROM star_share_report WHERE user_id = ?';
@@ -37,38 +37,67 @@ app.get("/", (req, res) =>{
       var threeStar = result2[0]["three_star"];
       var fourStar = result2[0]["four_star"];
       var fiveStar = result2[0]["five_star"];
+      var start_date = result2[0]["start_date"]
+      var end_date = result2[0]["end_date"]
+
+      var a_review = Number(result2[0]["count"]) - (Number(result1[0]["count"]) + Number(result1[1]["count"]) + Number(result1[2]["count"]) + Number(result1[3]["count"]) + Number(result1[4]["count"]) + Number(result1[5]["count"]) + Number(result1[6]["count"]));
+
+      var date1 = new Date(result1[0]["end_date"]);
+      var date2 = new Date(result1[0]["start_date"]);
+      var diffDate = date1.getTime() - date2.getTime();
+      var dateDays = Math.abs(diffDate / (1000 * 3600 * 24));
+      console.log(dateDays);
+
+      function formatDate(date) {
+        var d = new Date(date), month = '' + (d.getMonth() + 1), day = '' + d.getDate(), year = d.getFullYear();
+        if (month.length < 2)
+          month = '0' + month;
+        if (day.lengh < 2)
+          day = '0' + day;
+
+        return [year, month, day].join('-');
+      }
+
+      var center_date = dateDays/2
+      var stdate = formatDate(date2);
+      var edate = formatDate(date1);
+      var center = new Date(date2.setDate(date2.getDate() + center_date));
+      var cdate = formatDate(center);
+      console.log(center);
+
+      console.log(stdate);
+      console.log(cdate);
+      console.log(edate);
+
+      //
+      // console.log(date1); //edate
+      // console.log(date2); //stdate
+      // console.log(formatDate(date1));
+      // console.log(formatDate(date2));
 
 
       var template = `
-
       <!doctype html>
       <html>
       <head>
       <title>Result</title>
       <meta charset="utf-8">
       <link rel="stylesheet"  type="text/css" href="./review_table.css"/>
-
       <style>
-
       .report-title-box{
         margin:0px 0 0 0px;
       }
-
       .report-title{
         float: left;
         margin:0px 0 0 0;
       }
-
       .title-hr{
         background-color: #2F5971;
         height: 3px;
         margin-top: 20px;
         width: 100%;
         float: left;
-
       }
-
-
       .real-report{
         margin:15px 0 0 0px;
       }
@@ -77,7 +106,6 @@ app.get("/", (req, res) =>{
         width:800px;
         margin:15px 500px 0 0px;
       }
-
       .wordcount{
         display:flex;
         float: left;
@@ -88,8 +116,6 @@ app.get("/", (req, res) =>{
         font-size: 14px;
         border-radius: 15px;
       }
-
-
       .keyword-title{
         display:flex;
         float: left;
@@ -97,20 +123,17 @@ app.get("/", (req, res) =>{
         color: gray;
         margin:7px 100px 7px 0;
       }
-
       .star-title{
         float: left;
         margin:30px 0 0 0px;
         font-size: 14px;
       }
-
       .star-txt-title{
         float: left;
         margin:32px 0 0 10px;
         font-size: 11px;
         color:gray;
       }
-
       .star-box{
         float: left;
         width: 800px;
@@ -118,20 +141,17 @@ app.get("/", (req, res) =>{
         background-color: #CECECE;
         margin:10px 500px 0 0px;
       }
-
       .count-title{
         float: left;
         margin:30px 0 0 0px;
         font-size: 14px;
       }
-
       .count-txt-title{
         float: left;
         margin:32px 0 0 10px;
         font-size: 11px;
         color:gray;
       }
-
       .count-box{
         display:left;
         float: left;
@@ -140,20 +160,17 @@ app.get("/", (req, res) =>{
         background-color: #CECECE;
         margin:10px 500px 0 0px;
       }
-
       .star2-title{
         float: left;
         margin:30px 0 0 0px;
         font-size: 14px;
       }
-
       .star2-txt-title{
         float: left;
         margin:32px 0 0 10px;
         font-size: 11px;
         color:gray;
       }
-
       .star2-box{
         float: left;
         width: 800px;;
@@ -161,13 +178,11 @@ app.get("/", (req, res) =>{
         background-color: #CECECE;
         margin:10px 500px 0 0px;
       }
-
       </style>
       </head>
       <body>
       <div>
       <!-- 보고서 가져오기 -->
-
       <div class="report-title-box">
       <h2 class="report-title"> App1 </h2>
       <h2 class="report-title"> _Review Report </h2>
@@ -175,7 +190,6 @@ app.get("/", (req, res) =>{
       <hr class="title-hr">
       </div>
       </div>
-
       <!-- 1. 키워드 워드카운트  -->
       <div style="margin-right:800px;">
       <div class="keyword-box">
@@ -187,7 +201,6 @@ app.get("/", (req, res) =>{
       <h3 class="wordcount">#보고서 </h3>
       </div>
       </div>
-
       <div class="real-report">
       <!-- 2. 주제별 평점 분석 -->
       <div style="float:left;">
@@ -196,12 +209,27 @@ app.get("/", (req, res) =>{
       </br>
       <div class="star-box">
         <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-annotation/0.5.7/chartjs-plugin-annotation.min.js"></script>
         <canvas id="mybarChart"></canvas>
-
         <script>
-        var xValues = ["Italy", "France", "Spain", "USA", "Argentina"];
-        var yValues = [55, 49, 44, 24, 15];
-        var barColors = ["red", "green","blue","orange","brown"];
+        var xValues = ["${result1[0]["subject"]}", "${result1[1]["subject"]}", "${result1[2]["subject"]}", "${result1[3]["subject"]}", "${result1[4]["subject"]}", "${result1[5]["subject"]}", "${result1[6]["subject"]}"];
+        var yValues = ["${result1[0]["avg_star"]}", "${result1[1]["avg_star"]}", "${result1[2]["avg_star"]}", "${result1[3]["avg_star"]}", "${result1[4]["avg_star"]}", "${result1[5]["avg_star"]}", "${result1[6]["avg_star"]}"];
+
+        var barColors = [];
+        `;
+
+        for(var i = 0; i < result1.length; i++){
+          if(result1[i]["avg_star"] < result2[0]["avg_star"]){
+            template += `
+            barColors.push('red')
+            `
+          } else {
+            template += `
+            barColors.push('blue')
+            `
+          }
+        }
+        template += `
 
         new Chart("mybarChart", {
           type: "horizontalBar",
@@ -213,19 +241,39 @@ app.get("/", (req, res) =>{
             }]
           },
           options: {
-            legend: {display: false},
+            annotation: {
+              annotations: [
+                {
+                  type: 'line',
+                  scaleID: "x-axis-0",
+                  value: "${result2[0]["avg_star"]}",
+                  mode: "vertical",
+                  borderColor: "red",
+                  borderWidth: 1,
+                }
+              ]
+            },
+            scales: {
+              xAxes: [{
+                ticks: {
+                  min: 0,
+                  max: 5
+                }
+              }]
+            },
+            legend: {
+              display: false
+            },
             title: {
               display: true,
-              text: "World Wine Production 2018"
+              text: "주제별 별점 분석"
             }
           }
         });
         </script>
-
       </div>
       </div>
       </div>
-
       <!-- 3. 주제별 리뷰 비율-->
       <div style="float:left; ">
       <p class="count-title" > 주제별 리뷰 비율 </p>
@@ -233,19 +281,12 @@ app.get("/", (req, res) =>{
       </br>
       <div class="count-box">
         <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@0.7.0"></script>
         <canvas id="pieChart"></canvas>
-
         <script>
-        var xValues1 = ["Italy", "France", "Spain", "USA", "Argentina"];
-        var yValues2 = [55, 49, 44, 24, 15];
-        var barColors3 = [
-          "#b91d47",
-          "#00aba9",
-          "#2b5797",
-          "#e8c3b9",
-          "#1e7145"
-        ];
-
+        var xValues1 = ["COUNT", "${result1[0]["subject"]}", "${result1[1]["subject"]}", "${result1[2]["subject"]}", "${result1[3]["subject"]}", "${result1[4]["subject"]}", "${result1[5]["subject"]}", "${result1[6]["subject"]}"];
+        var yValues2 = [${a_review} , "${result1[0]["count"]}", "${result1[1]["count"]}", "${result1[2]["count"]}", "${result1[3]["count"]}", "${result1[4]["count"]}", "${result1[5]["count"]}", "${result1[6]["count"]}"];
+        var barColors3 = ["#b91d47", "#00aba9", "#2b5797", "#e8c3b9", "#1e7145", "#fff123"];
         new Chart("pieChart", {
           type: "pie",
           data: {
@@ -256,17 +297,32 @@ app.get("/", (req, res) =>{
             }]
           },
           options: {
-            title: {
-              display: true,
-              text: "World Wide Wine Production 2018"
-            }
+                  title: { display: true,
+                          text: '주제별 리뷰 비율(개)'
+                  },
+                  responsive: true,
+                  tooltips: {
+                  enabled: true
+                  },
+                  legend: {
+                  display: true
+                  },
+                  plugins: {
+                  datalabels: {
+                  color: 'black',
+                  font: {
+                  weight: 'bold'
+                  },
+                  formatter: function(value, context) {
+                  return Math.round(value);
+                  }
+                  }
+                  }
           }
-        });
+          });
         </script>
-
         </div>
         </div>
-
         <!-- 2. 기간별 별점 변화도-->
         <div style="float:left;">
         <p class="star-title"> 기간별 별점 변화도 </p>
@@ -275,11 +331,9 @@ app.get("/", (req, res) =>{
         <div class="star-box">
           <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
           <canvas id="myChart"></canvas>
-
           <script>
-            var xValues = [50,60,70,80,90,100,110,120,130,140,150];
-            var yValues = [7,8,8,9,9,9,10,11,14,14,15];
-
+            var xValues = ["${stdate}", "${cdate}", "${edate}"];
+            var yValues = [1, 2, 4];
             new Chart("myChart", {
               type: "line",
               data: {
@@ -295,17 +349,13 @@ app.get("/", (req, res) =>{
               options: {
                 legend: {display: false},
                 scales: {
-                  yAxes: [{ticks: {min: 6, max:16}}],
+                  yAxes: [{ticks: {min: 0, max:5}}],
                 }
               }
             });
           </script>
       </div>
       </div>
-
-
-
-
       <!-- 5. 평점 점유율-->
       <div style="float:left;">
       <p class="star2-title" > 평점 점유율 </p>
@@ -352,8 +402,8 @@ app.get("/", (req, res) =>{
                     }]
             },
             options: {
-                    title: { display: false,
-                            text: 'In My Mind'
+                    title: { display: true,
+                            text: '평점 점유율'
                     },
                     responsive: true,
                     tooltips: {
@@ -385,29 +435,23 @@ app.get("/", (req, res) =>{
                     weight: 'bold'
                     },
                     formatter: function(value, context) {
-                    return Math.round(value) + '개';
+                    return Math.round(value);
                     }
                     }
                     }
             }
             });
-
         </script>
-
       </div>
       </div>
       </div>
-
-
       </div>
-
       </body>
       </html>
       `;
       res.end(template);
     });
   });
-});
 
 app.get('/wordcloud', (req, res) => {
   if(req.session.loginData){
@@ -480,6 +524,78 @@ app.get('/wordcloud', (req, res) => {
           if(error) console.log('error : ' + error);
         });
         res.redirect('/test');
+      }else{
+        res.end();
+      }
+    });
+  }).catch(function(error){
+    console.log(error);
+    res.send(error)
+  })
+})
+
+});
+app.get('/wordcloud_member', (req, res) => {
+  if(req.session.loginData){
+    var user_id = req.session.loginData;
+  }
+
+  console.log(req.session.appData);
+  var collection_name = req.query.db_name;
+
+  var date = req.query.date;
+  console.log("original date in wordcloud_member : " + date);
+  if(!date || date == "undefined"){
+    var e_date = new Date();
+    if((e_date.getMonth() + 1) >= 10){
+      end_date = e_date.getFullYear() + '-' + (e_date.getMonth() + 1) + '-' + e_date.getDate();
+    }else{
+      end_date = e_date.getFullYear() + '-0' + (e_date.getMonth() + 1) + '-' + e_date.getDate();
+    }
+    console.log(end_date);
+    var s_date = new Date(e_date.setMonth(e_date.getMonth() - 3));
+    if((s_date.getMonth() + 1) >= 10){
+      start_date = s_date.getFullYear() + '-' + (s_date.getMonth() + 1) + '-' + s_date.getDate();
+    }else{
+      start_date = s_date.getFullYear() + '-0' + (s_date.getMonth() + 1) + '-' + s_date.getDate();
+    }
+    console.log(start_date);
+  }else{
+    var start_date = date.slice(0,11);
+    console.log(start_date);
+    var end_date = date.slice(13);
+    console.log(end_date);
+  }
+
+  var url = "http://13.125.125.198:3000/wordcount";
+  axios.post(url,
+    {
+      collection_name: collection_name,
+      user_id: user_id,
+      start_date: start_date,
+      end_date: end_date
+    }
+  ).then(function(response){
+    console.log(response.data);
+    var filename = response.data;
+    const downloadFile = (fileName, callback) => {
+      const params = {
+        Bucket: 's3-001bucket',
+        Key: response.data,
+      };
+        s3.getObject(params, function(err, data) {
+          if (err) { throw err;}
+          fs.writeFileSync(fileName, data.Body);
+          callback('done');
+        });
+    };
+    downloadFile("public/" + response.data, function(message){
+      if(message == "done"){
+        req.session.csvData = response.data;
+        req.session.save(error => {
+          if(error) console.log('error : ' + error);
+        });
+        res.redirect('/member/my_wordcloud');
       }else{
         res.end();
       }

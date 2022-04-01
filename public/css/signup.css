@@ -39,6 +39,7 @@ ul{
 
 .form_txtInput{
   margin-right: 20px;
+  width: 100%;
 }
 .blind {
   display:block;
@@ -53,7 +54,7 @@ ul{
   left:50%;
 }
 .wrap.wd668{
-  max-width:628px;
+  max-width:800px;
   align-items: center;
   left:50%;
 }
@@ -65,9 +66,12 @@ ul{
   width:100%;
 }
 .sub_tit_txt{
-  margin:50px 0 20px 20px;
+  margin:0px 0 20px 20px;
    color: #2f2f2f;
    font-size: 25px;
+ }
+ #withReviewer{
+   margin-left: 18px;
  }
 .wrap.wd668.line .sub_tit_txt{
   margin:0px 0 20px px;
@@ -95,6 +99,7 @@ ul{
 .btn_wrap{
   text-align:center;
   margin:40px 0 30px;
+  border-radius: 35px;
 }
 .btn_wrap a{
   color: #fff;
@@ -180,9 +185,23 @@ ul{
   color:#9a9a9a;
   display: block;margin:0 0 45px 20px;
 }
+.rela{
+  position: relative;
+}
+.absol{
+  position: absolute;
+  margin-left: 350px;
+  top: 6px;
+}
+.go_left_span{
+  float: left;
+  margin-left: 10px;
+  margin-top: 7px;
+}
 .join_form{
   width:100%;
   max-width:668px;
+  margin-left: 48px;
 }
 .join_form table {
   border-spacing: 0;
@@ -193,6 +212,7 @@ ul{
 }
 .join_form table input{
   border:1px solid #ececec;
+  border-radius: 35px;
   font-size:14px;
   color:#4c4c4c;
   height:20px;
@@ -414,14 +434,6 @@ ul{
   .join_form table{
     width:100%;
   }
-  .join_form table input{
-    border:1px solid #ececec;
-    font-size:14px;
-    color:#4c4c4c;
-    height:37px;
-    padding:10px;
-    width:100%;
-  }
   .join_form table input.email{
     width: 50%;
     display: inline-block;
@@ -464,9 +476,6 @@ ul{
   }
   .btn_wrap a,.btn_wrap a.wide{
     width:auto;margin:0;
-  }
-  .btn_wrap{
-    overflow: hidden;
   }
   .join_form.idpwFind table td select{
     width:30%;

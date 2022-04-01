@@ -5,15 +5,28 @@
   <title>Review</title>
   <link rel="stylesheet"  type="text/css" href="css/index.css"/>
   <link rel="stylesheet"  type="text/css" href="css/bar.css"/>
-  
+
   <link rel="stylesheet"  type="text/css" href="css/drop-down.css"/>
   <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
-
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
 
   <style>
+  body{
+    background-color: white;
+    height: 100vh;
 
+    background-size: 100% 110%;
+    top:0;
+    background-repeat: no-repeat;
+  }
   a {
     text-decoration-line : none;
+  }
+
+  .test{
+    background-image: url(../img/reviewer_6.gif);
+    background-size: 100% 100%;
+    top:0;
   }
 
 
@@ -46,7 +59,64 @@
     font-size: 10px;
   }
 
+
+  *{margin:0;padding:0;}
+  ul,li{list-style:none;}
+  .slide{
+      text-align: center;
+      margin-top: 56px;
+      width:100%;
+      height:100%;
+      overflow:hidden;
+      margin-bottom: 0px;
+  }
+  /* width */
+  .slide ul{width:100%; height:100%;}
+  .slide li{width:100%; height:100%;}
+  .slide li:nth-child(1){background:none;}
+  .slide li:nth-child(2){background:none;}
   </style>
+
+
+  <script>
+    $(function(){
+      $(window).scroll(function(){
+        var navbar = $(this).scrollTop();
+        console.log(navbar);
+        var $header = $('.bar-index');
+        if(navbar > 35){
+          $header.addClass('activated');
+        }else{
+          $header.removeClass('activated');
+        }
+      })
+    })
+    </script>
+    <script>
+    const all = ele => document.querySelectorAll(ele)
+    const one = ele => document.querySelector(ele)
+    const slide = _ => {
+      const wrap = one('.slide') // .slide 선택
+      const target = wrap.children[0] // .slide ul 선택
+      const len = target.children.length // .slide li 갯수
+      // .slide ul의 너비 조정
+      target.style.cssText = `width:calc(100% * ${len});display:flex;transition:1s`
+      // .slide li의 너비 조정
+      Array.from(target.children)
+      .forEach(ele => ele.style.cssText = `width:calc(100% / ${len});`)
+      // 화면 전환 실행
+      let pos = 0
+      setInterval(() => {
+        pos = (pos + 1) % len // 장면 선택
+        target.style.marginLeft = `${-pos * 100}%`
+      }, 10000) // 1500 = 1500ms = 1.5sec. 즉, 1.5초 마다 실행
+    }
+    window.onload = function () {
+      slide()
+    }
+    </script>
+
+
 
 </head>
 
@@ -54,57 +124,24 @@
 
   <!-- 상단바   -->
 
-  <div class="bar">
+  <div class="bar-index">
     <a href="/">
-      <img width="120px" height="110px" style="padding-top:6px; padding-left: 60px; float:left;" src="../img/reviewer!.png">
+      <img width="155px" height="49px" style="top:0;padding-top:15px; padding-left: 25px; float:left;" src="../img/logo.gif">
     </a>
 
     <!-- 메뉴바 마우스 오버 -->
-    <ul id="font" style="float:right; padding-right: 70px; padding-top:40px; color:gray;">
+    <ul id="font" style="float:right; padding-right: 30px; padding-top:32px; color:gray;">
       <li><a href="/guest/gu_search">Search</a></li>
       <li><a href="/member/my_app">My app</a></li>
       <li><a href="/member/my_report">Report</a></li>
+      <li><a href="/mypage/my_main">Mypage</a></li>
       <% if(session.loginData) { %>
         <div style="display:inline;">
-          <li><input type="image" class="my-logo" id="mypage_btn" style=" height:45px;"src="../img/my.png"></li>
+          <li style="margin-right:7px;color:white;"><a href="/user/logout" style="color:white;">Logout</a></li>
         </div>
-        <!--다른 앱 선택 드롭다운-->
-        <div style="position:absolute;">
-          <div id="mypage_toggle" class="dropdown2" style="display:none; position:fixed;">
-            <button class="dropbtn" style="top: 60px; left: 245px; width:120px;">
-              <span class="dropbtn_content" style="font-size:10px;">hu 님</span>
-              <span class="dropbtn_click" style="font-family: Material Icons; font-size : 16px; color : #ffffff; float:right;"
-                onclick="dropdown()">arrow_drop_down</span>
-            </button>
-            <div class="dropdown-content" style="top: 100px; left: 245px; width:120px; padding:0;">
-              <div class="fastfood" onclick="showMenu(this.innerText)"><a class="my-txt" href="/mypage/my_main">회원정보수정</div>
-              <div onclick="showMenu(this.innerText)"><a class="my-txt" href="/user/logout">로그아웃</a></div>
-            </div>
-          </div>
-        </div>
-        <script>
-        $(document).ready(function(){
-          $('#mypage_btn').click(function(){
 
-          const btnElement
-          = document.getElementById('mypage_btn');
-          const otherapp
-          = document.getElementById('mypage_toggle');
-
-          if(otherapp.style.display=='none'){
-            otherapp.style.display= 'inline';
-
-          }else{
-            otherapp.style.display='none';
-
-          }
-
-        })
-        })
-        </script>
-        <!-- 다른 앱 선택 드롭다운 끝 -->
       <% } else { %>
-        <li><a href="/login/login">Login</a></li>
+        <li style="margin-right:12px;color:white;"><a href="/login/login" style="color:white;">Login</a></li>
       <% } %>
       </ul>
 
@@ -135,16 +172,18 @@
 
 <body>
 
-
-
-
-  <div style="padding-top: 0;">
-    <img width="90%" src="img/main.png">
+<!-- 배너 -->
+  <div class="slide">
+  <ul>
+      <li><img src="../img/test1.png" style="height:925px;"> </li>
+      <li><img src="../img/test2.jpg" style="width: 2000px;height:1000px;"> </li>
+    </ul>
   </div>
+
 
   <br/>
 
-
+<!-- 배너 끝 -->
 
 
 <br/>
@@ -157,7 +196,7 @@
   <div>
   </div>
 </div>
-<footer>
+<footer class="footer-index">
 <h3 class="avo-title"> AVO </h3>
 <a href="/">
   <img width="25px" height="25px" style="padding-top:10px; padding-right:5px;" src="../img/instagram-logo.png">

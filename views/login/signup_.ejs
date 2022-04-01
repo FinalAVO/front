@@ -149,55 +149,22 @@ var user_id = $()
 
   <div class="bar">
     <a href="/">
-      <img width="120px" height="110px" style="padding-top:6px; padding-left: 60px; float:left;" src="../img/reviewer!.png">
+      <img width="155px" height="49px" style="top:0;padding-top:15px; padding-left: 25px; float:left;" src="../img/logo.gif">
     </a>
 
     <!-- 메뉴바 마우스 오버 -->
-    <ul id="font" style="float:right; padding-right: 70px; padding-top:40px; color:gray;">
+    <ul id="font" style="float:right; padding-right: 30px; padding-top:32px; color:gray;">
       <li><a href="/guest/gu_search">Search</a></li>
       <li><a href="/member/my_app">My app</a></li>
       <li><a href="/member/my_report">Report</a></li>
+      <li><a href="/mypage/my_main">Mypage</a></li>
       <% if(session.loginData) { %>
         <div style="display:inline;">
-          <li><input type="image" class="my-logo" id="mypage_btn" style=" height:45px;"src="../img/my.png"></li>
+          <li style="margin-right:7px;color:white;"><a href="/user/logout" style="color:white;">Logout</a></li>
         </div>
-        <!--다른 앱 선택 드롭다운-->
-        <div style="position:absolute;">
-          <div id="mypage_toggle" class="dropdown2" style="display:none; position:fixed;">
-            <button class="dropbtn" style="top: 60px; left: 245px; width:120px;">
-              <span class="dropbtn_content" style="font-size:10px;">hu 님</span>
-              <span class="dropbtn_click" style="font-family: Material Icons; font-size : 16px; color : #ffffff; float:right;"
-                onclick="dropdown()">arrow_drop_down</span>
-            </button>
-            <div class="dropdown-content" style="top: 100px; left: 245px; width:120px; padding:0;">
-              <div class="fastfood" onclick="showMenu(this.innerText)"><a class="my-txt" href="/mypage/my_main">회원정보수정</div>
-              <div onclick="showMenu(this.innerText)"><a class="my-txt" href="/user/logout">로그아웃</a></div>
-            </div>
-          </div>
-        </div>
-        <script>
-        $(document).ready(function(){
-          $('#mypage_btn').click(function(){
 
-          const btnElement
-          = document.getElementById('mypage_btn');
-          const otherapp
-          = document.getElementById('mypage_toggle');
-
-          if(otherapp.style.display=='none'){
-            otherapp.style.display= 'inline';
-
-          }else{
-            otherapp.style.display='none';
-
-          }
-
-        })
-        })
-        </script>
-        <!-- 다른 앱 선택 드롭다운 끝 -->
       <% } else { %>
-        <li><a href="/login/login">Login</a></li>
+        <li style="margin-right:12px;color:white;"><a href="/login/login" style="color:white;">Login</a></li>
       <% } %>
       </ul>
 

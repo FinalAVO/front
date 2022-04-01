@@ -69,6 +69,19 @@ span{
 }
 </style>
 
+<script>
+  function remove_app(objButton){
+    location.href = "/member/remove_app?db_name=" + objButton.value;
+    // alert(objButton.value)
+  }
+
+  function goToReport(objA){
+    alert(objA.value);
+    // localtion.href = "/member/my_report?db_name=" + objA.value;
+  }
+
+</script>
+
 
 
 </head>
@@ -79,27 +92,31 @@ span{
 
   <div class="bar">
     <a href="/">
-      <img width="120px" height="110px" style="padding-top:6px; padding-left: 60px; float:left;" src="../img/reviewer!.png">
+      <img width="155px" height="49px" style="top:0;padding-top:15px; padding-left: 25px; float:left;" src="../img/logo.gif">
     </a>
 
     <!-- 메뉴바 마우스 오버 -->
-    <ul id="font" style="float:right; padding-right: 70px; padding-top:40px; color:gray;">
+    <ul id="font" style="float:right; padding-right: 30px; padding-top:32px; color:gray;">
       <li><a href="/guest/gu_search">Search</a></li>
       <li><a href="/member/my_app">My app</a></li>
       <li><a href="/member/my_report">Report</a></li>
+      <li><a href="/mypage/my_main">Mypage</a></li>
       <% if(session.loginData) { %>
-        <li><a href="/user/logout">Logout</a></li>
+        <div style="display:inline;">
+          <li style="margin-right:7px;color:white;"><a href="/user/logout" style="color:white;">Logout</a></li>
+        </div>
+
       <% } else { %>
-        <li><a href="/login/login">Login</a></li>
+        <li style="margin-right:12px;color:white;"><a href="/login/login" style="color:white;">Login</a></li>
       <% } %>
       </ul>
 
       </div>
 
-  <br>
-  <hr>
+  <br/>
+  <hr/>
 
-    <!-- 상단바 끝 -->
+  <!-- 상단바 끝 -->
 
 
     <!-- 마이앱 시작 -->
@@ -110,21 +127,16 @@ span{
     </div>
 
     <!-- 마이 앱 리스트 -->
-    <% if(session.loginData) { %>
-      <% for(let i = 0; i < data.length; i++) { %>
-        <div class="myapp-box" style="margin-left:80px;">
-          <img width="175px" height="165px" style="margin-top:30px; margin-bottom:15px;" src="<%= data[i].app_img %>">
-          <h3 style="margin-top:15px; margin-bottom:15px;"> <%= data[i].app_name %> </h3>
-          <span> 로그인 되었습니다! </span>
-        </div>
-    <%  } %>
-    <% } else { %>
-      <div class="myapp-box" style="margin-left:80px;">
-        <img width="175px" height="165px" style="margin-top:30px; margin-bottom:15px;" src="../img/reviewer!.png">
-        <h3 style="margin-top:15px; margin-bottom:15px;">App1</h3>
-        <span> 로그인 하십시오! </span>
-      </div>
-    <% } %>
+
+    <% for(let i = 0; i < data.length; i++) { %>
+          <div class="myapp-box" style="margin-left:80px;">
+            <a href="/member/my_report?db_name='<%= data[i].db_name %>'"><img width="175px" height="165px" style="margin-top:30px; margin-bottom:15px;" src="<%= data[i].app_img %>"></a>
+            <a href="/member/my_report?db_name='<%= data[i].db_name %>'"><h3 style="margin-top:15px; margin-bottom:15px;"> <%= data[i].app_name %> </h3></a>
+            </br>
+            <a href="/member/remove_app?db_name=<%= data[i].db_name %>"><button class="btn_open myapp-btn"> 어플 삭제하기 </button></a>
+          </div>
+        <%  } %>
+
 
     <!-- 하단 푸터 시작 -->
     <div id='wrapper'>
