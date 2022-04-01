@@ -79,7 +79,7 @@
     <br/>
     <br/>
     <li><a class="menu" href="/member/my_search?db_name='<%= my_app[0].db_name %>'">전체리뷰 살펴보기</a></li>
-    <li><a class="menu" href="/review/chart//wordcloud_member?db_name='<%= my_app[0].db_name %>'">리뷰 키워드</a></li>
+    <li><a class="menu" href="/review/chart/wordcloud_member?db_name='<%= my_app[0].db_name %>'">리뷰 키워드</a></li>
     <li><a class="menu" href="/member/my_report?db_name='<%= my_app[0].db_name %>'">주제별 보고서 받기</a></li>
     <li><a class="menu" href="#">인기 많은 리뷰</a></li>
   </ol>
@@ -136,43 +136,28 @@ $(document).ready(function(){
 })
 
 
-function getCheckboxValue()  {
-  // 선택된 목록 가져오기
-  const query = 'input[name="nb"]:checked';
-  const selectedEls =
-  document.querySelectorAll(query);
-
-  // 선택된 목록에서 value 찾기
-  let result = '';
-  selectedEls.forEach((el) => {
-    result += el.value + ' ';
-  });
-  // 출력
-  document.getElementById('result').innerText
-  = result;
-}
 
 
 </script>
 
-    <form method="post" action="/review/chart" target="targetURL2">
-      <p><label class="report-c"><input class="report-c" type="checkbox" name="nb" value="01">  디자인</label></p>
-      <br>
-      <p><label class="report-c"><input class="report-c" type="checkbox" name="nb" value="02">  프로필</label></p>
-      <br>
-      <p><label class="report-c"><input class="report-c" type="checkbox" name="nb" value="03"> 리소스 사용량</label></p>
-      <br>
-      <p><label class="report-c"><input class="report-c" type="checkbox" name="nb" value="04">  속도 &nbsp</label></p>
-      <br>
-      <p><label class="report-c"><input class="report-c" type="checkbox" name="nb" value="05">  안정성 &nbsp</label></p>
-      <br>
-      <p><label class="report-c"><input class="report-c" type="checkbox" name="nb" value="05">  제거</label></p>
-      <br>
-      <p><label class="report-c"><input class="report-c" type="checkbox" name="nb" value="05">  평점분석</label></p>
-      <br>
-      <!-- <p><input class="report-btn" type="submit" value="보고서 검색"></p> -->
-      <p><button onclick='getCheckboxValue()' class="search-btn"> 보고서 검색</button>
-    </form>
+<form method="post" action="/review/chart" target="targetURL2">
+<p><label class="report-c"><input class="report-c" type="checkbox" name="design" value="true">  디자인</label></p>
+<br>
+<p><label class="report-c"><input class="report-c" type="checkbox" name="profile" value="true">  프로필</label></p>
+<br>
+<p><label class="report-c"><input class="report-c" type="checkbox" name="resource" value="true"> 리소스 사용량</label></p>
+<br>
+<p><label class="report-c"><input class="report-c" type="checkbox" name="speed" value="true">  속도 &nbsp</label></p>
+<br>
+<p><label class="report-c"><input class="report-c" type="checkbox" name="safety" value="true">  안정성 &nbsp</label></p>
+<br>
+<p><label class="report-c"><input class="report-c" type="checkbox" name="remove" value="true">  제거</label></p>
+<br>
+<p><label class="report-c"><input class="report-c" type="checkbox" name="update" value="true">  평점분석</label></p>
+<br>
+<p><input class="report-btn" type="submit" value="보고서 검색"></p>
+<!-- <p><button onclick="report_search()"> 보고서 검색</button> -->
+</form>
 
 </div>
 

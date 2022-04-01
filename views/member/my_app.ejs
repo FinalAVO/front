@@ -132,6 +132,7 @@ span{
           <div class="myapp-box" style="margin-left:80px;">
             <a href="/member/my_report?db_name='<%= data[i].db_name %>'"><img width="175px" height="165px" style="margin-top:30px; margin-bottom:15px;" src="<%= data[i].app_img %>"></a>
             <a href="/member/my_report?db_name='<%= data[i].db_name %>'"><h3 style="margin-top:15px; margin-bottom:15px;"> <%= data[i].app_name %> </h3></a>
+            <h4 style="margin-top:15px; margin-bottom:15px;"> 앱 등록일: <%= data[i].date.toLocaleDateString('ko-KR') %> </h4>
             </br>
             <a href="/member/remove_app?db_name=<%= data[i].db_name %>"><button class="btn_open myapp-btn"> 어플 삭제하기 </button></a>
           </div>

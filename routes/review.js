@@ -105,24 +105,42 @@ app.get('/member/my_app', (req, res) => {
 });
 
 app.get('/member/register_app', (req, res) => {
+  if(req.session.loginData){
+    var url = "http://3.34.14.98:3000/register";
 
-  var url = "http://3.34.14.98:3000/register";
-
-  axios.post(url,
-    {
-      app_name: req.query.app_name,
-      user_id: req.session.loginData,
-    }
-  ).then(function(response){
-    var user_id = req.session.loginData
-    sql = 'SELECT * FROM user_app WHERE user_id = ?';
-    rdsConnection.query(sql, [user_id], function(err, result){
-      res.render('member/my_app.ejs', { session: req.session, data: result });
-    });
-  }).catch(function(error){
-    console.log(error);
-    res.send(error)
-  })
+    axios.post(url,
+      {
+        app_name: req.query.app_name,
+        user_id: req.session.loginData,
+      }
+    ).then(function(response){
+      if (response.data == "Already exist"){
+        console.log("yolo");
+        res.writeHead(200, {'Content-Type': 'text/html;charset=UTF-8'});
+        template = `<script>
+        alert('이미 등록된 앱 입니다!');
+        location.href="/member/add_myapp"
+        </script>`;
+        res.end(template);
+      } else {
+        var user_id = req.session.loginData
+        sql = 'SELECT * FROM user_app WHERE user_id = ?';
+        rdsConnection.query(sql, [user_id], function(err, result){
+          res.render('member/my_app.ejs', { session: req.session, data: result });
+        });
+      }
+    }).catch(function(error){
+      console.log(error);
+      res.send(error)
+    })
+  } else {
+    res.writeHead(200, {'Content-Type': 'text/html;charset=UTF-8'});
+    template = `<script>
+    alert('로그인 후 이용해주세요!');
+    location.href="/login/login"
+    </script>`;
+    res.end(template);
+  }
 });
 
 app.get('/member/remove_app', (req, res) => {

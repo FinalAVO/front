@@ -14,6 +14,10 @@ const app = express();
 
 
 app.get("/", (req, res) =>{
+  res.send("hello")
+})
+
+app.post("/", (req, res) =>{
   let mysql_rawdata = fs.readFileSync('/data/front/config/mysql.json');
   let mysql_json = JSON.parse(mysql_rawdata);
 
@@ -46,7 +50,7 @@ app.get("/", (req, res) =>{
       var date2 = new Date(result1[0]["start_date"]);
       var diffDate = date1.getTime() - date2.getTime();
       var dateDays = Math.abs(diffDate / (1000 * 3600 * 24));
-      console.log(dateDays);
+
 
       function formatDate(date) {
         var d = new Date(date), month = '' + (d.getMonth() + 1), day = '' + d.getDate(), year = d.getFullYear();
@@ -63,11 +67,6 @@ app.get("/", (req, res) =>{
       var edate = formatDate(date1);
       var center = new Date(date2.setDate(date2.getDate() + center_date));
       var cdate = formatDate(center);
-      console.log(center);
-
-      console.log(stdate);
-      console.log(cdate);
-      console.log(edate);
 
       //
       // console.log(date1); //edate
@@ -476,16 +475,32 @@ app.get('/wordcloud', (req, res) => {
   if(!date || date == "undefined"){
     var e_date = new Date();
     if((e_date.getMonth() + 1) >= 10){
-      end_date = e_date.getFullYear() + '-' + (e_date.getMonth() + 1) + '-' + e_date.getDate();
+      if(e_date.getDate() >= 10){
+        end_date = e_date.getFullYear() + '-' + (e_date.getMonth() + 1) + '-' + e_date.getDate();
+      }else{
+        end_date = e_date.getFullYear() + '-' + (e_date.getMonth() + 1) + '-0' + e_date.getDate();
+      }
     }else{
-      end_date = e_date.getFullYear() + '-0' + (e_date.getMonth() + 1) + '-' + e_date.getDate();
+      if(e_date.getDate() >= 10){
+        end_date = e_date.getFullYear() + '-0' + (e_date.getMonth() + 1) + '-' + e_date.getDate();
+      }else{
+        end_date = e_date.getFullYear() + '-0' + (e_date.getMonth() + 1) + '-0' + e_date.getDate();
+      }
     }
     console.log(end_date);
     var s_date = new Date(e_date.setMonth(e_date.getMonth() - 3));
     if((s_date.getMonth() + 1) >= 10){
-      start_date = s_date.getFullYear() + '-' + (s_date.getMonth() + 1) + '-' + s_date.getDate();
+      if(s_date.getDate() >= 10){
+        start_date = s_date.getFullYear() + '-' + (s_date.getMonth() + 1) + '-' + s_date.getDate();
+      }else{
+        start_date = s_date.getFullYear() + '-' + (s_date.getMonth() + 1) + '-0' + s_date.getDate();
+      }
     }else{
-      start_date = s_date.getFullYear() + '-0' + (s_date.getMonth() + 1) + '-' + s_date.getDate();
+      if(s_date.getDate() >= 10){
+        start_date = s_date.getFullYear() + '-0' + (s_date.getMonth() + 1) + '-' + s_date.getDate();
+      }else{
+        start_date = s_date.getFullYear() + '-0' + (s_date.getMonth() + 1) + '-0' + s_date.getDate();
+      }
     }
     console.log(start_date);
   }else{
@@ -542,22 +557,41 @@ app.get('/wordcloud_member', (req, res) => {
 
   console.log(req.session.appData);
   var collection_name = req.query.db_name;
+  collection_name = collection_name.slice(0, 1);
+  collection_name = collection_name.slice(-1, -2);
+  console.log(collection_name);
 
   var date = req.query.date;
   console.log("original date in wordcloud_member : " + date);
   if(!date || date == "undefined"){
     var e_date = new Date();
     if((e_date.getMonth() + 1) >= 10){
-      end_date = e_date.getFullYear() + '-' + (e_date.getMonth() + 1) + '-' + e_date.getDate();
+      if(e_date.getDate() >= 10){
+        end_date = e_date.getFullYear() + '-' + (e_date.getMonth() + 1) + '-' + e_date.getDate();
+      }else{
+        end_date = e_date.getFullYear() + '-' + (e_date.getMonth() + 1) + '-0' + e_date.getDate();
+      }
     }else{
-      end_date = e_date.getFullYear() + '-0' + (e_date.getMonth() + 1) + '-' + e_date.getDate();
+      if(e_date.getDate() >= 10){
+        end_date = e_date.getFullYear() + '-0' + (e_date.getMonth() + 1) + '-' + e_date.getDate();
+      }else{
+        end_date = e_date.getFullYear() + '-0' + (e_date.getMonth() + 1) + '-0' + e_date.getDate();
+      }
     }
     console.log(end_date);
     var s_date = new Date(e_date.setMonth(e_date.getMonth() - 3));
     if((s_date.getMonth() + 1) >= 10){
-      start_date = s_date.getFullYear() + '-' + (s_date.getMonth() + 1) + '-' + s_date.getDate();
+      if(s_date.getDate() >= 10){
+        start_date = s_date.getFullYear() + '-' + (s_date.getMonth() + 1) + '-' + s_date.getDate();
+      }else{
+        start_date = s_date.getFullYear() + '-' + (s_date.getMonth() + 1) + '-0' + s_date.getDate();
+      }
     }else{
-      start_date = s_date.getFullYear() + '-0' + (s_date.getMonth() + 1) + '-' + s_date.getDate();
+      if(s_date.getDate() >= 10){
+        start_date = s_date.getFullYear() + '-0' + (s_date.getMonth() + 1) + '-' + s_date.getDate();
+      }else{
+        start_date = s_date.getFullYear() + '-0' + (s_date.getMonth() + 1) + '-0' + s_date.getDate();
+      }
     }
     console.log(start_date);
   }else{
