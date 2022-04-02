@@ -68,11 +68,52 @@ app.post("/", (req, res) =>{
       var center = new Date(date2.setDate(date2.getDate() + center_date));
       var cdate = formatDate(center);
 
-      //
-      // console.log(date1); //edate
-      // console.log(date2); //stdate
-      // console.log(formatDate(date1));
-      // console.log(formatDate(date2));
+
+      var xValues = [];
+      var yValues = [];
+
+      for(var i=0; i< result1.length; i++){
+        for (var key in req.body){
+          if(result1[i]["subject"] == key){
+            xValues.push("'" + key + "'")
+            yValues.push(result1[i]["avg_star"])
+          }
+        }
+      }
+      console.log(xValues)
+      console.log(yValues)
+
+
+      var xValues1 = ['"count"'];
+      var yValues2 = [a_review];
+
+      for(var i=0; i< result1.length; i++){
+        for (var key in req.body){
+          if(result1[i]["subject"] == key){
+            xValues1.push("'" + key + "'")
+            yValues2.push(result1[i]["count"])
+          }
+        }
+      }
+
+      console.log(xValues1)
+      console.log(yValues2)
+
+
+      var colors = [];
+
+      var dynamicColors = function() {
+        var r = Math.floor(Math.random() * 255);
+        var g = Math.floor(Math.random() * 255);
+        var b = Math.floor(Math.random() * 255);
+        return '"' + "rgba(" + r + "," + g + "," + b + ",0.3)" + '"';
+      };
+
+      for (var i=0; i<xValues1.length+1; i++){
+        colors.push(dynamicColors());
+      }
+
+      console.log(colors);
 
 
       var template = `
@@ -137,7 +178,7 @@ app.post("/", (req, res) =>{
         float: left;
         width: 800px;
         height: auto;
-        background-color: #CECECE;
+        background-color: none;
         margin:10px 500px 0 0px;
       }
       .count-title{
@@ -156,7 +197,7 @@ app.post("/", (req, res) =>{
         float: left;
         width: 800px;
         height: 500px;
-        background-color: #CECECE;
+        background-color: none;
         margin:10px 500px 0 0px;
       }
       .star2-title{
@@ -174,8 +215,8 @@ app.post("/", (req, res) =>{
         float: left;
         width: 800px;;
         height: auto;
-        background-color: #CECECE;
-        margin:10px 500px 0 0px;
+        background-color: none;
+        margin:10px 500px 100px 0px;
       }
       </style>
       </head>
@@ -207,24 +248,24 @@ app.post("/", (req, res) =>{
       <p class="star-txt-title"> (전체 별점 대비 주제별 별점 평균을 보여줍니다.)</p>
       </br>
       <div class="star-box">
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-annotation/0.5.7/chartjs-plugin-annotation.min.js"></script>
         <canvas id="mybarChart"></canvas>
         <script>
-        var xValues = ["${result1[0]["subject"]}", "${result1[1]["subject"]}", "${result1[2]["subject"]}", "${result1[3]["subject"]}", "${result1[4]["subject"]}", "${result1[5]["subject"]}", "${result1[6]["subject"]}"];
-        var yValues = ["${result1[0]["avg_star"]}", "${result1[1]["avg_star"]}", "${result1[2]["avg_star"]}", "${result1[3]["avg_star"]}", "${result1[4]["avg_star"]}", "${result1[5]["avg_star"]}", "${result1[6]["avg_star"]}"];
+        var xValues = [${xValues}]
+        var yValues = [${yValues}]
 
         var barColors = [];
         `;
 
-        for(var i = 0; i < result1.length; i++){
-          if(result1[i]["avg_star"] < result2[0]["avg_star"]){
+        for(var i = 0; i < xValues.length; i++){
+          if(yValues[i] < result2[0]["avg_star"]){
             template += `
-            barColors.push('red')
+            barColors.push('#b7b7b7')
             `
           } else {
             template += `
-            barColors.push('blue')
+            barColors.push('#ed5f48')
             `
           }
         }
@@ -235,11 +276,15 @@ app.post("/", (req, res) =>{
           data: {
             labels: xValues,
             datasets: [{
-              backgroundColor: barColors,
-              data: yValues
+              data: yValues,
+              barPercentage: 0.5,
+              barThickness: 35,
+              minBarLength: 2,
+              backgroundColor: barColors
             }]
           },
           options: {
+            responsive: true,
             annotation: {
               annotations: [
                 {
@@ -247,8 +292,9 @@ app.post("/", (req, res) =>{
                   scaleID: "x-axis-0",
                   value: "${result2[0]["avg_star"]}",
                   mode: "vertical",
-                  borderColor: "red",
-                  borderWidth: 1,
+                  borderColor: "black",
+                  borderWidth: 2,
+                  borderDash: [2, 5]
                 }
               ]
             },
@@ -264,8 +310,7 @@ app.post("/", (req, res) =>{
               display: false
             },
             title: {
-              display: true,
-              text: "주제별 별점 분석"
+              display: true
             }
           }
         });
@@ -281,41 +326,43 @@ app.post("/", (req, res) =>{
       <div class="count-box">
         <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@0.7.0"></script>
-        <canvas id="pieChart"></canvas>
+        <canvas id="doughnutChart"></canvas>
         <script>
-        var xValues1 = ["COUNT", "${result1[0]["subject"]}", "${result1[1]["subject"]}", "${result1[2]["subject"]}", "${result1[3]["subject"]}", "${result1[4]["subject"]}", "${result1[5]["subject"]}", "${result1[6]["subject"]}"];
-        var yValues2 = [${a_review} , "${result1[0]["count"]}", "${result1[1]["count"]}", "${result1[2]["count"]}", "${result1[3]["count"]}", "${result1[4]["count"]}", "${result1[5]["count"]}", "${result1[6]["count"]}"];
-        var barColors3 = ["#b91d47", "#00aba9", "#2b5797", "#e8c3b9", "#1e7145", "#fff123"];
-        new Chart("pieChart", {
-          type: "pie",
+        var xValues1 = [${xValues1}];
+        var yValues2 = [${yValues2}];
+
+
+        new Chart("doughnutChart", {
+          type: "doughnut",
           data: {
             labels: xValues1,
             datasets: [{
-              backgroundColor: barColors3,
+              backgroundColor: [${colors}],
               data: yValues2
             }]
           },
           options: {
-                  title: { display: true,
-                          text: '주제별 리뷰 비율(개)'
+                  title: {
+                    display: true
                   },
                   responsive: true,
                   tooltips: {
-                  enabled: true
+                    enabled: true
                   },
                   legend: {
-                  display: true
+                    display: true
                   },
                   plugins: {
-                  datalabels: {
-                  color: 'black',
-                  font: {
-                  weight: 'bold'
-                  },
-                  formatter: function(value, context) {
-                  return Math.round(value);
-                  }
-                  }
+                    datalabels: {
+                      color: 'black',
+                      font: {
+                        position: 'outside',
+                        weight: 'bold'
+                      },
+                      formatter: function(value, context) {
+                        return Math.round(value);
+                      }
+                    }
                   }
           }
           });
@@ -372,37 +419,37 @@ app.post("/", (req, res) =>{
                     datasets: [{
                     label: '1점',
                     data: [${oneStar}],
-                    borderColor: "rgba(209, 216, 224, 1)",
-                    backgroundColor: "rgba(209, 216, 224, 0.5)",
+                    borderColor: "#ffd4b0",
+                    backgroundColor: "#ffd4b0",
                     },
                     {
                     label: '2점',
                     data: [${twoStar}],
-                    borderColor: "rgba(75, 101, 132, 1)",
-                    backgroundColor: "rgba(75, 101, 132, 0.5)",
+                    borderColor: "#ffc064",
+                    backgroundColor: "#ffc064",
                     },
                     {
                     label: '3점',
                     data: [${threeStar}],
-                    borderColor: "rgba(209, 216, 224, 1)",
-                    backgroundColor: "rgba(209, 216, 224, 0.5)",
+                    borderColor: "#ff9f36",
+                    backgroundColor: "#ff9f36",
                     },
                     {
                     label: '4점',
                     data: [${fourStar}],
-                    borderColor: "rgba(75, 101, 132, 1)",
-                    backgroundColor: "rgba(75, 101, 132, 0.5)",
+                    borderColor: "#ff8533",
+                    backgroundColor: "#ff8533",
                     },
                     {
                     label: '5점',
                     data: [${fiveStar}],
-                    borderColor: "rgba(209, 216, 224, 1)",
-                    backgroundColor: "rgba(209, 216, 224, 0.5)",
+                    borderColor: "#f25b4c",
+                    backgroundColor: "#f25b4c",
                     }]
             },
             options: {
-                    title: { display: true,
-                            text: '평점 점유율'
+                    title: {
+                      display: true
                     },
                     responsive: true,
                     tooltips: {
