@@ -369,7 +369,7 @@
             var phone = $("#phone").val();
             var ck_phone = /^[0][0-1][0][0-9]{8}/;
 
-            if(!ck_phone.test(콜)){
+            if(!ck_phone.test(phone)){
               $("#phone").focus();
               $('#phone_span').html("휴대폰 번호를 다시 입력해주세요.");
               $("#phone").val('');

@@ -12,11 +12,13 @@
 
 
 .my-main-title{
+width: 80px;
+height: 30px;
 float: left;
 margin-left: 30px;
-font-size: 14px;
+font-size: 18px;
 color:gray;
-margin-top:20px;
+margin-top:25px;
 margin-bottom: 20px;
 
 }
@@ -24,38 +26,100 @@ margin-bottom: 20px;
   float: left;
   margin-left: 30px;
   color:#2F5971;
-  font-size: 16px;
+  font-size: 18px;
   font-weight: bold;
-  margin-top:20px;
+  margin-top:25px;
   margin-bottom: 20px;
 
 }
 
 .basic_info{
-  float: left;
-  margin-left: 230px;
-  margin-top: 50px;
-  width: 80%;
-  height: 200px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 30px;
+  width:600px ;
+  height: 80px;
   background-color: white;
-  border-radius: 50px;
+  border-radius: 30px;
   box-shadow:5px 5px 5px 5px #C4C4C4;
 }
 
 .preferences{
   display: flex;
-  float: left;
-  margin-left: 230px;
-  margin-top: 20px;
-  width: 80%;
-  height: 200px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 30px;
+  width:600px ;
+  height: 140px;
   background-color: white;
-  border-radius: 50px;
+  border-radius: 30px;
   box-shadow:5px 5px 5px 5px #C4C4C4;
 }
 
-.agree_chk{
+.agree_chk_box{
   padding: 0 5px 5px 5px;
-  margin-top: 30px;
-  font-size: 16px;
+  margin-top: 40px;
+  font-size: 18px;
+  display:block;
+  float:left;
+  margin-left:30px;
+}
+
+.agree_chk_lb{
+  padding: 0 5px 5px 5px;
+  margin-top: 50px;
+  font-size: 18px;
+  display:block;
+  float:left;
+  margin-left:10px;
+}
+
+
+.delete-user-btn{
+  cursor:pointer;
+  width:110px;
+  height: 40px;
+  border-radius: 17px;
+  border: none;
+  background-color: #d8d8d8;
+  color:white;
+  float: right;
+  margin: 21px 20px 5px 5px;
+}
+
+.email-change-btn{
+  cursor:pointer;
+  width:110px;
+  height: 40px;
+  border-radius: 17px;
+  border: none;
+  background-color: #2f5971;
+  color:white;
+  float: right;
+  margin: 21px 20px 5px 5px;
+}
+
+
+.pw-change-btn{
+  cursor:pointer;
+  width:110px;
+  height: 40px;
+  border-radius: 17px;
+  border: none;
+  background-color: #2f5971;
+  color:white;
+  float: right;
+  margin: 21px 20px 5px 5px;
+}
+
+.save-btn{
+  cursor:pointer;
+  width:110px;
+  height: 40px;
+  border-radius: 17px;
+  border: none;
+  background-color: #2f5971;
+  color:white;
+  float: right;
+  margin: 50px 20px 5px 470px;
 }

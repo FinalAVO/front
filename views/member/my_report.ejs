@@ -15,21 +15,21 @@
   <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
 
 
-<style>
-.search-btn{
-  margin-top: 30px;
-  margin-left: 5px;
-  float: left;
-  font-size: 12px;
-  color: #fff;
-  background-color: #2F5971;
-  font-weight: bold;
-  height: 30px;
-  width: 90px;
-  border: none;
-  border-radius: 10px;
+  <style>
+  .search-btn{
+    margin-top: 30px;
+    margin-left: 5px;
+    float: left;
+    font-size: 12px;
+    color: #fff;
+    background-color: #2F5971;
+    font-weight: bold;
+    height: 30px;
+    width: 90px;
+    border: none;
+    border-radius: 10px;
 
-}
+  }
 </style>
 </head>
 
@@ -53,135 +53,156 @@
           <li style="margin-right:7px;color:white;"><a href="/user/logout" style="color:white;">Logout</a></li>
         </div>
 
-      <% } else { %>
-        <li style="margin-right:12px;color:white;"><a href="/login/login" style="color:white;">Login</a></li>
-      <% } %>
-      </ul>
+        <% } else { %>
+          <li style="margin-right:12px;color:white;"><a href="/login/login" style="color:white;">Login</a></li>
+          <% } %>
+        </ul>
 
       </div>
 
-  <br/>
-  <hr/>
+      <br/>
+      <hr/>
 
-  <!-- 상단바 끝 -->
+      <!-- 상단바 끝 -->
 
-  <!-- 사이드 바 -->
-<div class="side-menu">
-  <ol>
-    <br/>
-    <span class="app-name"><%= my_app[0].app_name %></span>
+      <!-- 사이드 바 -->
+      <div class="side-menu">
+        <ol>
+
+          <br/>
+          <div id="otherapp_btn" class="app-name-box" style="display:inline; margin-top:20px;">
+            <div style="margin-top:20px; width:180px;display:inline-block;">
+              <span class="app-name"><%= my_app[0].app_name %></span>
+            </div>
+          </div>
+
+          <!--다른 앱 선택 드롭다운-->
+          <div style="position:absolute;">
+            <div id="btn_toggle" class="dropdown" style=" position:fixed;">
+              <button class="dropbtn dropbtn_click" style="right: 170px; top: 0px;">
+                <span class="dropbtn_content dropbtn_click" style="margin-left: 20px;font-size:12px;">Other App</span>
+                <span class="dropbtn_click" style=" font-size : 16px; float:right; color:#2f5971;">></span>
+              </button>
+              <div style="position:sticky; top:0;">
+                <div class="dropdown-content" style="top:0;">
+                  <% for(let i = 0; i < app_list.length; i++) { %>
+                    <a href="/member/my_report?db_name='<%= app_list[i].db_name %>'"><div class="fastfood" onclick="showMenu(this.innerText)"><%= app_list[i].app_name %></div></a>
+                    <%  } %>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+            <!-- 다른 앱 선택 드롭다운 끝 -->
+
+            <div>
+              <hr style="background-color: white;
+              height: 1px;
+              margin-top: 80px;
+              margin-left: 5px;
+              width: 190px;"/>
+            </div>
 
 
-    <div style="display:inline;">
-      <input type="button" class="other-app" id="otherapp_btn" value=">"/>
+            <!--<div style="display:inline;">
+            <input type="image" class="other-app" id="otherapp_btn" src="../img/icon1.png"style="width:18px; height: 18px;">
+          </div>-->
+
+
+          <br/>
+          <br/>
+          <li><a class="menu" href="/member/my_search?db_name='<%= my_app[0].db_name %>'">전체리뷰 살펴보기</a></li>
+          <li class="keyword-btn"><a class="menu" href="/review/chart/wordcloud_member?db_name='<%= my_app[0].db_name %>'">리뷰 키워드</a></li>
+          <li style="background-color:white;"><a  style="color:black;"class="menu" href="/member/my_report?db_name='<%= my_app[0].db_name %>'">주제별 보고서 받기</a></li>
+          <li><a class="menu" href="#">인기 많은 리뷰</a></li>
+        </ol>
+      </div>
+
+      <!-- 사이드바 끝 -->
+
+
+      <!-- 리모컨-->
+
+
+      <div id="slidemenu">
+        <div style="margin-top:20px; ">
+          <span class="report-s"> 주제별 보고서 선택</span>
+          <hr class="menu-hr">
+        </div>
+
+
+        <script>
+
+        $(document).ready(function(){
+          $('#otherapp_btn').click(function(){
+
+            const btnElement
+            = document.getElementById('otherapp_btn');
+            const otherapp
+            = document.getElementById('btn_toggle');
+
+            if(otherapp.style.display=='none'){
+              otherapp.style.display= 'inline';
+
+            }else{
+              otherapp.style.display='none';
+
+            }
+
+          })
+        })
+
+
+
+
+      </script>
+
+      <form method="post" action="/review/chart" target="targetURL2">
+        <p><label class="report-c"><input class="report-c" type="checkbox" name="DESIGN" value="DESIGN">  디자인</label></p>
+        <br>
+        <p><label class="report-c"><input class="report-c" type="checkbox" name="PROFILE" value="PROFILE">  프로필</label></p>
+        <br>
+        <p><label class="report-c"><input class="report-c" type="checkbox" name="RESOURCE" value="RESOURCE"> 리소스 사용량</label></p>
+        <br>
+        <p><label class="report-c"><input class="report-c" type="checkbox" name="SPEED" value="SPEED">  속도 &nbsp</label></p>
+        <br>
+        <p><label class="report-c"><input class="report-c" type="checkbox" name="SAFETY" value="SAFETY">  안정성 &nbsp</label></p>
+        <br>
+        <p><label class="report-c"><input class="report-c" type="checkbox" name="REMOVE" value="REMOVE">  제거</label></p>
+        <br>
+        <p><label class="report-c"><input class="report-c" type="checkbox" name="UPDATE" value="UPDATE">  평점분석</label></p>
+        <br>
+        <p><input class="report-btn keyword-btn" type="submit" value="보고서 검색"></p>
+        <input type="hidden" value="<%= session.loginData %>" name="user_data">
+        <input type="hidden" value="<%= my_app[0].db_name %>" name="collection_name">
+        <input type="hidden" value="<%= my_app[0].app_name %>" name="app_name">
+        <!-- <p><button onclick="report_search()"> 보고서 검색</button> -->
+      </form>
+
     </div>
+    <div id="map" class="loadingImg"></div>
 
-    <br/>
-    <br/>
-    <li><a class="menu" href="/member/my_search?db_name='<%= my_app[0].db_name %>'">전체리뷰 살펴보기</a></li>
-    <li><a class="menu" href="/review/chart/wordcloud_member?db_name='<%= my_app[0].db_name %>'">리뷰 키워드</a></li>
-    <li><a class="menu" href="/member/my_report?db_name='<%= my_app[0].db_name %>'">주제별 보고서 받기</a></li>
-    <li><a class="menu" href="#">인기 많은 리뷰</a></li>
-  </ol>
-</div>
+    <script>
 
-<!-- 사이드바 끝 -->
+    // 기본 위치(top)값
+    var floatPosition = parseInt($("#slidemenu").css('top'))
 
-<!--다른 앱 선택 드롭다운-->
-<div style="position:absolute;">
-  <div id="btn_toggle" class="dropdown" style="display:none; position:fixed;">
-    <button class="dropbtn">
-      <span class="dropbtn_content" style="font-size:10px;">Other App</span>
-      <span class="dropbtn_click" style="font-family: Material Icons; font-size : 16px; color : #ffffff; float:right;"
-        onclick="dropdown()">arrow_drop_down</span>
-    </button>
-    <div class="dropdown-content">
-      <% for(let i = 0; i < app_list.length; i++) { %>
-        <a href="/member/my_report?db_name='<%= app_list[i].db_name %>'"><div class="fastfood" onclick="showMenu(this.innerText)"><%= app_list[i].app_name %></div></a>
-      <%  } %>
-    </div>
-  </div>
-</div>
+    // scroll 인식
+    $(window).scroll(function() {
 
-<!-- 다른 앱 선택 드롭다운 끝 -->
-<!-- 리모컨-->
+      // 현재 스크롤 위치
+      var currentTop = $(window).scrollTop();
+      var bannerTop = currentTop + floatPosition + "px";
 
+      //이동 애니메이션
+      $("#slidemenu").stop().animate({
+        "top" : bannerTop
+      }, 500);
 
-<div id="slidemenu">
-  <div style="margin-top:20px;">
-    <span class="report-s"> 주제별 보고서 선택</span>
-    <hr class="menu-hr">
-  </div>
+    }).scroll();
 
-
-<script>
-
-$(document).ready(function(){
-  $('#otherapp_btn').click(function(){
-
-  const btnElement
-  = document.getElementById('otherapp_btn');
-  const otherapp
-  = document.getElementById('btn_toggle');
-
-  if(otherapp.style.display=='none'){
-    otherapp.style.display= 'inline';
-
-  }else{
-    otherapp.style.display='none';
-
-  }
-
-})
-})
-
-
-
-
-</script>
-
-<form method="post" action="/review/chart" target="targetURL2">
-<p><label class="report-c"><input class="report-c" type="checkbox" name="design" value="true">  디자인</label></p>
-<br>
-<p><label class="report-c"><input class="report-c" type="checkbox" name="profile" value="true">  프로필</label></p>
-<br>
-<p><label class="report-c"><input class="report-c" type="checkbox" name="resource" value="true"> 리소스 사용량</label></p>
-<br>
-<p><label class="report-c"><input class="report-c" type="checkbox" name="speed" value="true">  속도 &nbsp</label></p>
-<br>
-<p><label class="report-c"><input class="report-c" type="checkbox" name="safety" value="true">  안정성 &nbsp</label></p>
-<br>
-<p><label class="report-c"><input class="report-c" type="checkbox" name="remove" value="true">  제거</label></p>
-<br>
-<p><label class="report-c"><input class="report-c" type="checkbox" name="update" value="true">  평점분석</label></p>
-<br>
-<p><input class="report-btn" type="submit" value="보고서 검색"></p>
-<!-- <p><button onclick="report_search()"> 보고서 검색</button> -->
-</form>
-
-</div>
-
-
-<script>
-
-// 기본 위치(top)값
-var floatPosition = parseInt($("#slidemenu").css('top'))
-
-// scroll 인식
-$(window).scroll(function() {
-
-    // 현재 스크롤 위치
-    var currentTop = $(window).scrollTop();
-    var bannerTop = currentTop + floatPosition + "px";
-
-    //이동 애니메이션
-    $("#slidemenu").stop().animate({
-      "top" : bannerTop
-    }, 500);
-
-}).scroll();
-
-window.onload=()=>{
+    window.onload=()=>{
       document.querySelector('.dropbtn_click').onclick = ()=>{
         dropdown();
       }
@@ -226,30 +247,30 @@ window.onload=()=>{
       }
     }
 
-</script>
+  </script>
 
-<div class="iframe-preview" style="display:block;">
-  <iframe id="targetURL2" onload="calcHeight();" name="targetURL2"  frameborder="0" scrolling="no" style="overflow-x:hidden; overflow:auto; width:100%; min-height:500px;"src="/review/chart">
-  </iframe>
-</div>
+  <div class="iframe-preview" style="display:block;">
+    <iframe id="targetURL2" onload="calcHeight();" name="targetURL2"  frameborder="0" scrolling="no" style="overflow-x:hidden; overflow:auto; width:100%; min-height:500px;"src="/review/chart">
+    </iframe>
+  </div>
 
-<script type="text/javascript">
-//<![CDATA[
-function calcHeight(){
- //find the height of the internal page
+  <script type="text/javascript">
+  //<![CDATA[
+  function calcHeight(){
+    //find the height of the internal page
 
- var the_height=
- document.getElementById('targetURL2').contentWindow.
- document.body.scrollHeight;
+    var the_height=
+    document.getElementById('targetURL2').contentWindow.
+    document.body.scrollHeight;
 
- //change the height of the iframe
- document.getElementById('targetURL2').height=
- the_height;
+    //change the height of the iframe
+    document.getElementById('targetURL2').height=
+    the_height;
 
- //document.getElementById('the_iframe').scrolling = "no";
- document.getElementById('targetURL2').style.overflow = "hidden";
-}
-//
+    //document.getElementById('the_iframe').scrolling = "no";
+    document.getElementById('targetURL2').style.overflow = "hidden";
+  }
+  //
 </script>
 
 
@@ -257,62 +278,122 @@ function calcHeight(){
 <div class="wrap" style="position:fixed; right: 30px; bottom: 30px;">
   <a href="#pop_info_1" class="btn_open myapp-btn">보고서 다운로드</a>
 </div>
-    <div id="pop_info_1" class="pop_wrap" style="display:none;">
-      <div class="pop_inner">
-        <h3 class="save-title">보고서 다운로드</h3><br/>
-        <div class="container row">
-            <div class="col-md-1">
-              <p class="ok-txt">- 선택 기간 리뷰분석데이터를 csv 파일로 다운로드 할 수 있습니다.</p>
-            </div>
-            <div class="col-md-1">
-              <p class="ok-txt" style="margin-top:10px;">- 주제별 보고서를 PDF 파일로 다운로드 할 수 있습니다.</p>
-            </div>
-
-            <button type="button" id="csv-dl" class="btn_confirm">CSV 파일 다운로드</button>
-            <button type="button" id="pdf-dl" class="btn_confirm" onclick="location.href='/pdfCreate'">PDF 파일 다운로드</button>
-          </div>
-
-            <span id="msg" style="color:black;"></span>
-            <br/>
-
-            <button type="button" class="btn_close" onclick="location.href='/member/my_report';">닫기</button>
+<div id="pop_info_1" class="pop_wrap" style="display:none;">
+  <div class="pop_inner">
+    <h3 class="save-title">보고서 다운로드</h3><br/>
+    <div class="container row">
+      <div class="col-md-1">
+        <p class="ok-txt">- 선택 기간 리뷰분석데이터를 csv 파일로 다운로드 할 수 있습니다.</p>
       </div>
+      <div class="col-md-1">
+        <p class="ok-txt" style="margin-top:10px;">- 주제별 보고서를 PDF 파일로 다운로드 할 수 있습니다.</p>
+      </div>
+
+      <button type="button" id="csv-dl" class="btn_confirm">CSV 파일 다운로드</button>
+      <button type="button" id="pdf-dl" class="btn_confirm" onclick="location.href='/pdfCreate'">PDF 파일 다운로드</button>
     </div>
 
-    <script>
-        $(function() {
+    <span id="msg" style="color:black;"></span>
+    <br/>
 
-          $('#pdf-dl').click(function(){
-            console.log("hello");
-            $('#msg').html("다운로드 중입니다.");
-            var timerId2 = setInterval(() => $('#msg').html("다운로드 중입니다.."), 1000);
-
-            setTimeout(() => { clearInterval(timerId2); $('#msg').html(""); }, 2000);
-          });
+    <button type="button" class="btn_close" onclick="location.href='/member/my_report';">닫기</button>
+  </div>
+</div>
 
 
 
-          var target = document.querySelectorAll('.btn_open');
-          var btnPopClose = document.querySelectorAll('.pop_wrap .btn_close');
-          var targetID;
+
+<script>
+$(function() {
+function Loading() {
+  var maskHeight = $(document).height();
+  var maskWidth  = window.document.body.clientWidth;
+
+  var mask       = "<div id='mask' style='position:absolute; z-index:9000; background-color:#000000; display:none; left:0; top:0;'></div>";
+  var loadingImg ='';
+
+  loadingImg +=" <div id='loadingImg'>";
+  loadingImg +=" <img src='../../img/spinner.gif' style='position:absolute; z-index:9500; text-align:center; display:block; margin-top:300px; margin-left:50%;'/>";
+  loadingImg +="</div>";
+
+  $('body')
+  .append(mask)
+
+  $('#mask').css({
+    'width' : maskWidth,
+    'height': maskHeight,
+    'opacity' :'0.3'
+  });
+
+  $('#mask').show();
+
+  $('.loadingImg').append(loadingImg);
+  $('#loadingImg').show();
+}
+
+function closeLoading() {
+  $('#mask, #loadingImg').hide();
+  $('#mask, #loadingImg').remove();
+}
+
+$('.keyword-btn').click(function(){
+  Loading();
+});
+
+window.addEventListener( 'message', (e) => {
+    // 전달 된 데이터
+    console.log( e.data.functionName );
+
+    // 부모창의 함수 실행
+    if( e.data.functionName === 'closeLoading' ){
+      closeLoading();
+    }
+});
+
+});
+</script>
 
 
-          // 팝업 열기
-          for(var i = 0; i < target.length; i++){
-            target[i].addEventListener('click', function(){
-              targetID = this.getAttribute('href');
-              document.querySelector(targetID).style.display = 'block';
-            });
-          }
+
+<script>
+$(function() {
+
+  $('#pdf-dl').click(function(){
+    console.log("hello");
+    $('#msg').html("다운로드 중입니다. (7초)");
+    setTimeout(() => $('#msg').html("다운로드 중입니다.. (6초)"), 1000);
+    setTimeout(() => $('#msg').html("다운로드 중입니다... (5초)"), 2000);
+    setTimeout(() => $('#msg').html("다운로드 중입니다. (4초)"), 3000);
+    setTimeout(() => $('#msg').html("다운로드 중입니다.. (3초)"), 4000);
+    setTimeout(() => $('#msg').html("다운로드 중입니다... (2초)"), 5000);
+    setTimeout(() => $('#msg').html("다운로드 중입니다. (1초)"), 6000);
+
+    setTimeout(() => $('#msg').html(""), 7000);
+  });
 
 
-          // 팝업 닫기
-          for(var j = 0; j < target.length; j++){
-            btnPopClose[j].addEventListener('click', function(){
-              this.parentNode.parentNode.style.display = 'none';
-            });
-          }
-        });
-      </script>
+
+  var target = document.querySelectorAll('.btn_open');
+  var btnPopClose = document.querySelectorAll('.pop_wrap .btn_close');
+  var targetID;
+
+
+  // 팝업 열기
+  for(var i = 0; i < target.length; i++){
+    target[i].addEventListener('click', function(){
+      targetID = this.getAttribute('href');
+      document.querySelector(targetID).style.display = 'block';
+    });
+  }
+
+
+  // 팝업 닫기
+  for(var j = 0; j < target.length; j++){
+    btnPopClose[j].addEventListener('click', function(){
+      this.parentNode.parentNode.style.display = 'none';
+    });
+  }
+});
+</script>
 </body>
 </html>

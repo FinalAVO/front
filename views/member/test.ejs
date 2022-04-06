@@ -166,7 +166,7 @@
     <br/>
     <div id="otherapp_btn" class="app-name-box" style="display:inline; margin-top:20px;">
       <div style="margin-top:20px; width:180px;display:inline-block;">
-        <span class="app-name"><%= my_app[0].app_name %></span>
+
       </div>
     </div>
 
@@ -179,9 +179,7 @@
         </button>
         <div style="position:sticky; top:0;">
         <div class="dropdown-content" style="top:0;">
-          <% for(let i = 0; i < app_list.length; i++) { %>
-            <a href="/member/my_report?db_name='<%= app_list[i].db_name %>'"><div class="fastfood" onclick="showMenu(this.innerText)"><%= app_list[i].app_name %></div></a>
-          <%  } %>
+
         </div>
         </div>
 
@@ -201,9 +199,9 @@
 
     <br/>
     <br/>
-    <li><a class="menu" href="/member/my_search?db_name='<%= my_app[0].db_name %>'">전체리뷰 살펴보기</a></li>
-    <li class="keyword-btn"style="background-color:white;"><a style="color:black;" class="menu" href="/review/chart/wordcloud_member?db_name='<%= my_app[0].db_name %>'">리뷰 키워드</a></li>
-    <li><a class="menu" href="/member/my_report?db_name='<%= my_app[0].db_name %>'">주제별 보고서 받기</a></li>
+    <li style="background-color:white;"><a  style="color:black;" class="menu" >전체리뷰 살펴보기</a></li>
+    <li><a class="menu" >리뷰 키워드</a></li>
+    <li><a class="menu" >주제별 보고서 받기</a></li>
     <li><a class="menu" href="#">인기 많은 리뷰</a></li>
   </ol>
 </div>
@@ -214,7 +212,7 @@
   <!-- 1. Review Crawling 리뷰 가져오기 -->
 
   <div class="search-bar" >
-    <form method="post" action="/review/url" target="targetURL2">
+    <form method="post" action="/review/url" target="targetURL2"
 
       <span class="filter-txt" style="padding-left:10px;"> 기간 설정 </span>
       <input type="text" id="demo" name="demo" value="" />
@@ -353,48 +351,7 @@
 
   </script>
 
-  <script>
-  $(function() {
-  function Loading() {
-    var maskHeight = $(document).height();
-    var maskWidth  = window.document.body.clientWidth;
 
-    var mask       = "<div id='mask' style='position:absolute; z-index:9000; background-color:#000000; display:none; left:0; top:0;'></div>";
-    var loadingImg ='';
-
-    loadingImg +=" <div id='loadingImg'>";
-    loadingImg +=" <img src='../../img/spinner.gif' style='position:absolute; z-index:9500; text-align:center; display:block; margin-top:300px; margin-left:50%;'/>";
-    loadingImg +="</div>";
-
-    $('body')
-    .append(mask)
-
-    $('#mask').css({
-      'width' : maskWidth,
-      'height': maskHeight,
-      'opacity' :'0.3'
-    });
-
-    $('#mask').show();
-
-    $('.loadingImg').append(loadingImg);
-    $('#loadingImg').show();
-  }
-
-  function closeLoading() {
-    $('#mask, #loadingImg').hide();
-    $('#mask, #loadingImg').remove();
-  }
-
-  $('.keyword-btn').click(function(){
-    Loading();
-  });
-
-
-  });
-  </script>
-
-  <div id="map" class="loadingImg"></div>
 
 
 
@@ -415,7 +372,7 @@
     var svg = d3.select("body").append("svg")
     .attr("width", width)
     .attr("height", height);
-    d3.csv("../<%= session.csvData %>", function (data) {
+    d3.csv("../A225482A오딘발할라라이징2021-12-282022-03-28wc.csv", function (data) {
       showCloud(data)
     });
     //scale.linear: 선형적인 스케일로 표준화를 시킨다.

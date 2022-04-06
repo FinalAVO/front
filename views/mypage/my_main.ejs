@@ -12,7 +12,6 @@
 
 
 
-
 </head>
 
 
@@ -47,66 +46,70 @@
 
   <!-- 상단바 끝 -->
 
-    <!-- 사이드 바 -->
-  <div class="side-menu">
-    <ol>
-      <br/>
-      <span class="my-page-title">회원정보 수정</span>
-      <br/>
-      <br/>
-      <li><a class="menu" href="/mypage/my_main">기본정보</a></li>
-      <li><a class="menu" href="/mypage/security">보안</a></li>
-    </ol>
+  <div class="top_box_my rela">
   </div>
 
-  <!-- 사이드바 끝 -->
+
 
 <br/>
 
   <div>
-    <h3 style="float:left; margin-left:270px; margin-top:30px;"> 기본정보 <h3>
+    <h3 style="margin-left: auto; margin-right: auto; margin-top:150px;"> 기본정보 <h3>
   </div>
 
-  <hr style="background-color: #2F5971;
-  height: 2px;
-  margin-top: 20px;
-  width: 100%;
-  float: left;">
+
+  <div class="basic_info" style="margin-top:40px;">
+
+        <p class="my-main-title">ID</p>
+        <img src="../img/line.png" style="float:left; height: 50px;margin-left:20px;margin-top:13px;">
+        <p class="my-main-txt">huri</p>
+
+        <button class="delete-user-btn"type="button">계정삭제</button>
+  </div>
 
   <div class="basic_info">
 
-        <p class="my-main-title">ID</p>
-
-
-        <p class="my-main-txt">hu..</p>
-
-
         <p class="my-main-title">e-mail</p>
-
-
+        <img src="../img/line.png" style="float:left; height: 50px;margin-left:20px;margin-top:13px;">
         <p class="my-main-txt">wjdgn0373@naver.com</p>
 
+        <button class="email-change-btn"type="button">이메일 변경</button>
 
   </div>
 
-  <div>
-    <h3 style="float:left; margin-left:270px; margin-top:30px;"> 알림설정 <h3>
+  <div class="basic_info">
+
+        <p class="my-main-title">password</p>
+        <img src="../img/line.png" style="float:left; height: 50px;margin-left:20px;margin-top:13px;">
+        <p class="my-main-txt">**********</p>
+
+        <button class="pw-change-btn"type="button">비밀번호 변경</button>
+
   </div>
 
-  <hr style="background-color: #2F5971;
-  height: 2px;
-  margin-top: 20px;
+  <hr style="background-color: gray;
+  height: 1px;
+  margin-top: 60px;
   width: 100%;
   float: left;">
 
-  <div class="preferences">
 
-        <input type="checkbox" id="mail" name="news_letter" class="agree_chk" style="margin-left:30px;"/>
-        <label class="agree_chk" style="margin-top:25px;">[선택]메일 알림 기능</label>
+  <div>
+    <h3 style="margin-left: auto; margin-right: auto; margin-top:120px;"> 알림설정 <h3>
+  </div>
 
-        <input type="checkbox" id="sms" name="news_letter" class="agree_chk"/>
-        <label class="agree_chk" style="margin-top:25px;">[선택]SMS 알림 기능</label>
+  <div class="preferences" >
+      <div style="position:absolute;">
+        <input type="checkbox" id="mail" name="news_letter" class="agree_chk_box"/>
+        <label class="agree_chk_lb" style="display:inline;float:left;margin-top:32px;">[선택]메일 알림 기능</label>
+      </div>
 
+      <div style="position:absolute;">
+        <input type="checkbox" id="sms" name="news_letter" class="agree_chk_box" style="margin-top:90px;"/>
+        <label class="agree_chk_lb" style="display:inline;float:left; margin-top:80px;">[선택]SMS 알림 기능</label>
+      </div>
+
+      <button class="save-btn"type="button">저장</button>
   </div>
 
 

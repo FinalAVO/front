@@ -33,11 +33,19 @@ app.get('/', (req, res) => {
   }
   console.log(condition);
 
+  var os_filter = []
   var os = req.query.os;
-  if(!os || os == "undefined"){
-    os = "android";
-  }
   console.log(os);
+
+  if(os == "android"){
+    os_filter.push("android")
+  } else if (os == "ios"){
+    os_filter.push("ios")
+  } else {
+    os_filter.push("android")
+    os_filter.push("ios")
+  }
+  console.log(os_filter);
 
   var date = req.query.start_date;
   if(!date || date == "undefined"){
@@ -70,13 +78,13 @@ app.get('/', (req, res) => {
     }else{
       db = database.db('review');
       if(!filter){
-        db.collection(app_name).find({ DATE: { $gte: start_date, $lte: end_date }, OS: os}, { _id: 0 }).sort({ [condition]: sc }).toArray(function(err, result){
+        db.collection(app_name).find({ DATE: { $gte: start_date, $lte: end_date }, OS: { $in: os_filter } }, { _id: 0 }).sort({ [condition]: sc }).toArray(function(err, result){
           if(err) throw err;
-          console.log('review : ' + result);
+          // console.log('review : ' + result);
           res.send(JSON.stringify(result));
         });
       }else{
-        db.collection(app_name).find({ DATE: { $gte: start_date, $lte: end_date }, COMMENT: { $regex: filter }, OS: os }, { _id: 0 }).sort({ [condition]: sc }).toArray(function(err, result){
+        db.collection(app_name).find({ DATE: { $gte: start_date, $lte: end_date }, COMMENT: { $regex: filter }, OS: { $in: os_filter } }, { _id: 0 }).sort({ [condition]: sc }).toArray(function(err, result){
           if(err) throw err;
           console.log('result : ' + result);
           res.send(JSON.stringify(result));
@@ -116,11 +124,18 @@ app.get('/re_search', (req, res) => {
   }
   console.log(condition);
 
+  var os_filter = []
   var os = req.query.os;
-  if(!os || os == "undefined"){
-    os = "android";
+
+  if(os == "android"){
+    os_filter.push("android")
+  } else if (os == "ios"){
+    os_filter.push("ios")
+  } else {
+    os_filter.push("android")
+    os_filter.push("ios")
   }
-  console.log(os);
+  console.log(os_filter);
 
   var date = req.query.start_date;
   if(!date || date == "undefined"){
@@ -153,9 +168,9 @@ app.get('/re_search', (req, res) => {
     }else{
       db = database.db('review');
       if(!filter){
-        db.collection(app_name).find({ DATE: { $gte: start_date, $lte: end_date }, OS: os}, { _id: 0 }).sort({ [condition]: sc }).toArray(function(err, result){
+        db.collection(app_name).find({ DATE: { $gte: start_date, $lte: end_date }, OS: { $in: os_filter } }, { _id: 0 }).sort({ [condition]: sc }).toArray(function(err, result){
           if(err) throw err;
-          console.log('review : ' + result);
+          // console.log('review : ' + result);
           var template = `
 
           <!doctype html>
@@ -238,11 +253,12 @@ app.get('/re_search', (req, res) => {
           <table class="review-table" style="border="1"  height="85px;" text-align: center; table-layout:auto; margin-top:80px; position:relative;">
           <tr class="title-st tr-title">
           <thead style="table-layout:auto;width:100%;margin-top:30px;">
-          <th width="15%"> 유저 이름 </th>
-          <th width="15%"> 날짜 </th>
+          <th width="10%"> 유저 이름 </th>
+          <th width="10%"> 날짜 </th>
           <th width="5%"> 별점 </th>
           <th width="5%"> 추천 </th>
           <th width="60%"> 내용 </th>
+          <th width="10%"> OS </th>
           </thead>
           <tr height="15px;">
           </tr>
@@ -251,11 +267,12 @@ app.get('/re_search', (req, res) => {
             if(result[i]['STAR'] >= star){
               template += `
               <tr style=" margin-top:40px;">
-              <th width="15%">${result[i]['USER']}</th>
-              <th width="15%">${result[i]['DATE'].slice(0,10)}</th>
+              <th width="10%">${result[i]['USER']}</th>
+              <th width="10%">${result[i]['DATE'].slice(0,10)}</th>
               <th width="5%">${result[i]['STAR']}</th>
               <th width="5%">${result[i]['LIKE']}</th>
               <th width="60%">${result[i]['COMMENT']}</th>
+              <th width="10%">${result[i]['OS']}</th>
               </tr>`
             }
           }
@@ -271,9 +288,9 @@ app.get('/re_search', (req, res) => {
           res.end(template);
         });
       }else{
-        db.collection(app_name).find({ DATE: { $gte: start_date, $lte: end_date }, COMMENT: { $regex: filter }, OS: os }, { _id: 0 }).sort({ [condition]: sc }).toArray(function(err, result){
+        db.collection(app_name).find({ DATE: { $gte: start_date, $lte: end_date }, COMMENT: { $regex: filter }, OS: { $in: os_filter } }, { _id: 0 }).sort({ [condition]: sc }).toArray(function(err, result){
           if(err) throw err;
-          console.log('result : ' + result);
+          // console.log('result : ' + result);
           res.send(JSON.stringify(result));
         });
       }

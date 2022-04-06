@@ -10,7 +10,6 @@
   <link rel="stylesheet"  type="text/css" href="../css/bar.css"/>
   <link rel="stylesheet"  type="text/css" href="../css/report.css"/>
   <link rel="stylesheet"  type="text/css" href="../css/drop-down.css"/>
-
   <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
 
   <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
@@ -30,16 +29,7 @@
     padding-left: 10px;
   }
 
-  #btn_toggle{
-    width:55px;
-    height: 30px;
-    font-size:10px;
-    border:1px solid #ddd;
-    background-color:#2F5971;
-    border-radius:5px;
-    color:#fff;
-    font-weight:bold;
-  }
+
   .filter-txt{
     font-size:12px;
     color: #666;
@@ -52,6 +42,7 @@
     height: 30px;
     text-align: center;
     font-size: 10px;
+    margin-top: 10px;
   }
 
   .hifilter{
@@ -115,6 +106,42 @@
   }
 
 
+  .search-button{
+    margin-left: 20px;
+    right: 20%;
+    background-color: #2f5971;
+    border-radius: 20px;
+    color: #FAFAFA;
+    width: 7%;
+    height: 30px;
+    z-index: 1;
+    border: none;
+  }
+
+  .search-bar{
+    margin-top:100px;
+    margin-left:170px;
+    background-image:url(../img/search-bar.png);
+    background-size: contain;
+    background-position: center center;
+    height: 50px;
+    background-repeat: no-repeat;
+    text-align: center;
+    vertical-align: middle;
+  }
+
+  .iframe-preview::-webkit-scrollbar{
+    width: 12px;
+  }
+
+  .iframe-preview::-webkit-scrollbar-thumb {
+     background-color: #BFBFBF;
+     border-radius: 20px;
+   }
+
+   .iframe-preview::-webkit-scrollbar-track {
+     background-color: none;
+   }
 </style>
 
 </head>
@@ -153,17 +180,47 @@
   <!-- 사이드 바 -->
 <div class="side-menu">
   <ol>
-    <br/>
-    <span class="app-name"><%= my_app[0].app_name %></span>
 
-    <div style="display:inline;">
-      <input type="button" class="other-app" id="otherapp_btn" value=">"/>
+    <br/>
+    <div id="otherapp_btn" class="app-name-box" style="display:inline; margin-top:20px;">
+      <div style="margin-top:20px; width:180px;display:inline-block;">
+        <span class="app-name"><%= my_app[0].app_name %></span>
+      </div>
     </div>
 
+    <!--다른 앱 선택 드롭다운-->
+    <div style="position:absolute;">
+      <div id="btn_toggle" class="dropdown" style=" position:fixed;">
+        <button class="dropbtn dropbtn_click" style="right: 170px; top: 0px;">
+          <span class="dropbtn_content dropbtn_click" style="margin-left: 20px;font-size:12px;">Other App</span>
+          <span class="dropbtn_click" style=" font-size : 16px; float:right; color:#2f5971;">></span>
+        </button>
+        <div style="position:sticky; top:0;">
+        <div class="dropdown-content" style="top:0;">
+          <% for(let i = 0; i < app_list.length; i++) { %>
+            <a href="/member/my_report?db_name='<%= app_list[i].db_name %>'"><div class="fastfood" onclick="showMenu(this.innerText)"><%= app_list[i].app_name %></div></a>
+          <%  } %>
+        </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- 다른 앱 선택 드롭다운 끝 -->
+
+      <div>
+        <hr style="background-color: white;
+        height: 1px;
+        margin-top: 80px;
+        margin-left: 5px;
+        width: 190px;"/>
+      </div>
+
+
     <br/>
     <br/>
-    <li><a class="menu" href="/member/my_search?db_name='<%= my_app[0].db_name %>'">전체리뷰 살펴보기</a></li>
-    <li><a class="menu" href="/member/my_wordcloud?db_name='<%= my_app[0].db_name %>'">리뷰 키워드</a></li>
+    <li style="background-color:white;"><a  style="color:black;" class="menu" href="/member/my_search?db_name='<%= my_app[0].db_name %>'">전체리뷰 살펴보기</a></li>
+    <li class="keyword-btn"><a class="menu" href="/review/chart/wordcloud_member?db_name='<%= my_app[0].db_name %>'">리뷰 키워드</a></li>
     <li><a class="menu" href="/member/my_report?db_name='<%= my_app[0].db_name %>'">주제별 보고서 받기</a></li>
     <li><a class="menu" href="#">인기 많은 리뷰</a></li>
   </ol>
@@ -171,66 +228,40 @@
 
 <!-- 사이드바 끝 -->
 
-<!--다른 앱 선택 드롭다운-->
-<div style="position:absolute;">
-  <div id="btn_btn_toggle" class="dropdown" style="display:none; position:fixed;">
-    <button class="dropbtn">
-      <span class="dropbtn_content" style="font-size:10px;">Other App</span>
-      <span class="dropbtn_click" style="font-family: Material Icons; font-size : 16px; color : #ffffff; float:right;"
-        onclick="dropdown()">arrow_drop_down</span>
-    </button>
-    <div class="dropdown-content">
-      <% for(let i = 0; i < app_list.length; i++) { %>
-        <a href="/member/my_report?db_name='<%= app_list[i].db_name %>'"><div class="fastfood" onclick="showMenu(this.innerText)"><%= app_list[i].app_name %></div></a>
-      <%  } %>
-    </div>
-  </div>
-</div>
-
-<!-- 다른 앱 선택 드롭다운 끝 -->
 
   <!-- 1. Review Crawling 리뷰 가져오기 -->
 
-  <div style="padding-top:35px;">
+  <div class="search-bar">
     <form method="post" action="/review/url" target="targetURL2">
-      <div style="display:inline;">
-        <input class="input-box" id="app_name" name="app_name" maxlength="10" placeholder="앱 아이디 입력 (10자리 숫자)"/>
-      </div>
-      <div style="display:inline;">
-        <input class="search-box" id="searchAndroid" type='submit' value="Google"/>
-      </div>
-      <div style="display:inline;">
-        <input class="search-box" id="searchIOS" type='submit' value="Apple"/>
-      </div>
-      <div style="display:inline;">
-        <input type="button" class="font" id="btn_toggle" value="상세검색"/>
-      </div>
-      <input type="hidden" id="os" name="os" value="" />
-      <div id="Toggle" style="display:none; margin-top: 20px;">
-        <span class="filter-txt"> 별점 </span>
-        <select id="star" name="star" class="select1">
-          <option value="0" selected="selected">별점</option>
-          <option value="0">전체</option>
-          <option value="1">1점 이상</option>
-          <option value="2">2점 이상</option>
-          <option value="3">3점 이상</option>
-          <option value="4">4점 이상</option>
-          <option value="5">5점 이상</option>
-        </select>
+      <span class="filter-txt"> OS </span>
+      <select id="os" name="os" class="select1">
+        <option value="all" selected="selected">전체</option>
+        <option value="android"> Google </option>
+        <option value="ios"> Apple </option>
+      </select>
 
-        <span class="filter-txt" style="padding-left:10px;"> 기간 설정 </span>
-        <input type="text" id="demo" name="demo" value="" />
+      <span class="filter-txt" style="padding-left:10px;"> 별점 </span>
+      <select id="star" name="star" class="select1">
+        <option value="0" selected="selected">전체</option>
+        <option value="1">1점 이상</option>
+        <option value="2">2점 이상</option>
+        <option value="3">3점 이상</option>
+        <option value="4">4점 이상</option>
+        <option value="5">5점 이상</option>
+      </select>
 
-        <span class="filter-txt" style="padding-left:10px;"> 키워드 검색 </span>
-        <input class="input-box" style="width:200px; font-size:12px; textalign:center; padding-left:10px;" name="filter" maxlengh="10" placeholder=" 키워드를 입력하세요" />
+      <span class="filter-txt" style="padding-left:10px;"> 기간 설정 </span>
+      <input type="text" id="demo" name="demo" value="" style="font-size:12px;color: gray;"/>
+
+      <span class="filter-txt" style="padding-left:10px;"> 키워드 검색 </span>
+      <input class="input-box" style="width:200px; font-size:12px; textalign:center; padding-left:10px;" name="filter" maxlengh="10" placeholder=" 키워드를 입력하세요" />
+
+      <input type="hidden" name="app_name" value="<%= my_app[0].app_name %>">
+      <button style="display:inline;"class="search-button search-box keyword-btn" id="search-button" type='submit'> SEARCH </button>
 
 
-      </div>
-
-
-
-
-
+    </form>
+  </div>
 
 
 
@@ -243,7 +274,7 @@
         const btnElement
         = document.getElementById('otherapp_btn');
         const otherapp
-        = document.getElementById('btn_btn_toggle');
+        = document.getElementById('btn_toggle');
 
         if(otherapp.style.display=='none'){
           otherapp.style.display= 'inline';
@@ -254,17 +285,6 @@
         }
 
       })
-      })
-
-
-      $(function (){
-        $("#btn_toggle").click(function (){
-          if($("#Toggle").css("display") == 'none'){
-            $("#Toggle").css("display", 'block');
-          }else{
-            $("#Toggle").css("display", 'none');
-          }
-        });
 
         $("#searchAndroid").click(function (){
           $("#os").val('android');
@@ -308,7 +328,8 @@
                         "drops": "down"
                     }, function (start, end, label) {
                         console.log('New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD') + ' (predefined range: ' + label + ')');
-                    });
+                      }
+                    );
                 });
 
       </script>
@@ -318,9 +339,9 @@
 
   <br/>
 
-  <div style="float:left; margin-top:35px;">
+  <div style="float:left;margin-top:10px;">
 
-  <ul class="hifilter" style="margin-left:245px;">날짜 정렬
+  <ul class="hifilter" style="margin-left:900px;">날짜 정렬
     <input type='button' class="filter-btn" id='date-button' naem='condition' onclick='changeBtnName1()' value='▼'/>
     <input type="hidden" id="hiddenDate" value="-DATE"/>
   </ul>
@@ -352,11 +373,11 @@
       if(btnElement.value == "▼"){
         btnElement.value = "▲";
         realVal.value = "DATE";
-        document.targetURL2.location.href="/search/re_search?app_name=&star="+$('#star').val()+"&filter="+$('#filter').val()+"&condition=DATE";
+        document.targetURL2.location.href="/search/re_search?app_name=&star="+$('#star').val()+"&filter="+$('#filter').val()+"&os="+$('#os').val()+"&condition=DATE";
       }else{
         btnElement.value = "▼";
         realVal.value = "-DATE";
-        document.targetURL2.location.href="/search/re_search?app_name=&star="+$('#star').val()+"&filter="+$('#filter').val()+"&condition=-DATE";
+        document.targetURL2.location.href="/search/re_search?app_name=&star="+$('#star').val()+"&filter="+$('#filter').val()+"&os="+$('#os').val()+"&condition=-DATE";
       }
     }
 
@@ -374,11 +395,11 @@
       if(btnElement.value == "▼"){
         btnElement.value = "▲";
         realVal.value = "STAR";
-        document.targetURL2.location.href="/search/re_search?app_name=&star="+$('#star').val()+"&filter="+$('#filter').val()+"&condition=STAR";
+        document.targetURL2.location.href="/search/re_search?app_name=&star="+$('#star').val()+"&filter="+$('#filter').val()+"&os="+$('#os').val()+"&condition=STAR";
       }else{
         btnElement.value = "▼";
         realVal.value = "-STAR";
-        document.targetURL2.location.href="/search/re_search?app_name=&star="+$('#star').val()+"&filter="+$('#filter').val()+"&condition=-STAR";
+        document.targetURL2.location.href="/search/re_search?app_name=&star="+$('#star').val()+"&filter="+$('#filter').val()+"&os="+$('#os').val()+"&condition=-STAR";
       }
     }
 
@@ -396,28 +417,123 @@
       if(btnElement.value == "▼"){
         btnElement.value = "▲";
         realVal.value = "LIKE";
-        document.targetURL2.location.href="/search/re_search?app_name=&star="+$('#star').val()+"&filter="+$('#filter').val()+"&condition=LIKE";
+        document.targetURL2.location.href="/search/re_search?app_name=&star="+$('#star').val()+"&filter="+$('#filter').val()+"&os="+$('#os').val()+"&condition=LIKE";
       }else{
         btnElement.value = "▼";
         realVal.value = "-LIKE";
-        document.targetURL2.location.href="/search/re_search?app_name=&star="+$('#star').val()+"&filter="+$('#filter').val()+"&condition=-LIKE";
+        document.targetURL2.location.href="/search/re_search?app_name=&star="+$('#star').val()+"&filter="+$('#filter').val()+"&os="+$('#os').val()+"&condition=-LIKE";
       }
     }
 
   <!-- 추천수 정렬 -->
 
   </script>
+  <script>
+
+  window.onload=()=>{
+        document.querySelector('.dropbtn_click').onclick = ()=>{
+          dropdown();
+        }
+        document.getElementsByClassName('fastfood').onclick = ()=>{
+          showMenu(value);
+        };
+        dropdown = () => {
+          var v = document.querySelector('.dropdown-content');
+          var dropbtn = document.querySelector('.dropbtn')
+          v.classList.toggle('show');
+          dropbtn.style.borderColor = 'rgb(94, 94, 94)';
+        }
+
+        showMenu=(value)=>{
+          var dropbtn_icon = document.querySelector('.dropbtn_icon');
+          var dropbtn_content = document.querySelector('.dropbtn_content');
+          var dropbtn_click = document.querySelector('.dropbtn_click');
+          var dropbtn = document.querySelector('.dropbtn');
+
+          dropbtn_icon.innerText = '';
+          dropbtn_content.innerText = value;
+          dropbtn_content.style.color = '#252525';
+          dropbtn.style.borderColor = '#3992a8';
+        }
+      }
+      window.onclick= (e)=>{
+        if(!e.target.matches('.dropbtn_click')){
+          var dropdowns = document.getElementsByClassName("dropdown-content");
+
+          var dropbtn_icon = document.querySelector('.dropbtn_icon');
+          var dropbtn_content = document.querySelector('.dropbtn_content');
+          var dropbtn_click = document.querySelector('.dropbtn_click');
+          var dropbtn = document.querySelector('.dropbtn');
+
+          var i;
+          for (i = 0; i < dropdowns.length; i++) {
+            var openDropdown = dropdowns[i];
+            if (openDropdown.classList.contains('show')) {
+              openDropdown.classList.remove('show');
+            }
+          }
+        }
+      }
+
+  </script>
+  <script>
+  $(function() {
+  function Loading() {
+    var maskHeight = $(document).height();
+    var maskWidth  = window.document.body.clientWidth;
+
+    var mask       = "<div id='mask' style='position:absolute; z-index:9000; background-color:#000000; display:none; left:0; top:0;'></div>";
+    var loadingImg ='';
+
+    loadingImg +=" <div id='loadingImg'>";
+    loadingImg +=" <img src='../../img/spinner.gif' style='position:absolute; z-index:9500; text-align:center; display:block; margin-top:300px; margin-left:50%;'/>";
+    loadingImg +="</div>";
+
+    $('body')
+    .append(mask)
+
+    $('#mask').css({
+      'width' : maskWidth,
+      'height': maskHeight,
+      'opacity' :'0.3'
+    });
+
+    $('#mask').show();
+
+    $('.loadingImg').append(loadingImg);
+    $('#loadingImg').show();
+  }
+
+  function closeLoading() {
+    $('#mask, #loadingImg').hide();
+    $('#mask, #loadingImg').remove();
+  }
+
+  $('.keyword-btn').click(function(){
+    Loading();
+  });
+
+  window.addEventListener( 'message', (e) => {
+      // 전달 된 데이터
+      console.log( e.data.functionName );
+
+      // 부모창의 함수 실행
+      if( e.data.functionName === 'closeLoading' ){
+        closeLoading();
+      }
+  });
+  
+  });
+  </script>
 
 
-
-
-
+  <div id="map" class="loadingImg"></div>
 
   <br/>
   <br/>
 
-  <div style="text-align: center;">
-    <iframe id="targetURL2" name="targetURL2" class="iframe-preview" width="80%" height="700px" align="center" style="border:none; border-radius: 10px;" src="/review">
+  <div  class="iframe-preview"style="text-align: center; margin-top:50px; margin-left:75px;">
+    <iframe id="targetURL2" name="targetURL2" class="iframe-preview" width="80%" height="700px" align="center" style="margin-left: 75px; margin-top: 50px; border:none; border-radius: 10px;" src="/review">
     </iframe>
   </div>
 

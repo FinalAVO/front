@@ -23,7 +23,7 @@ const rdsConnection = mysql.createConnection({
 // 비회원
 
 app.get('/test', (req, res) => {
-  res.render('test.ejs', {session: req.session});
+  res.render('member/test.ejs', {session: req.session});
 })
 
 app.get('/', (req, res) => {
@@ -233,8 +233,9 @@ app.get('/member/my_search', (req, res) => {
 app.get('/member/my_wordcloud', (req, res) => {
   var user_id = req.session.loginData
   var db_name = req.query.db_name
+  console.log("db_name in my_wordcloud : " + db_name);
 
-  var sql1 = 'SELECT * FROM user_app WHERE user_id = "' + user_id + '" and db_name = ' + db_name;
+  var sql1 = 'SELECT * FROM user_app WHERE user_id = "' + user_id + '" and db_name = "' + db_name + '"';
   rdsConnection.query(sql1, function(err, my_app){
     var sql2 = 'SELECT * FROM user_app WHERE user_id = "' + user_id + '"';
     rdsConnection.query(sql2, function(err, app_list){
@@ -294,296 +295,6 @@ app.get("/review", (req, res) =>{
   `;
   res.end(template);
 });
-
-//----------------------------------------------------------
-
-// app.get("/review/report", (req, res) =>{
-//
-//
-//
-//
-//   var template = `
-//
-//   <!doctype html>
-//   <html>
-//   <head>
-//   <title>Result</title>
-//   <meta charset="utf-8">
-//   <link rel="stylesheet"  type="text/css" href="./review_table.css"/>
-//
-//   <style>
-//
-//   .report-title-box{
-//     margin:0px 0 0 0px;
-//   }
-//
-//   .report-title{
-//     float: left;
-//     margin:0px 0 0 0;
-//   }
-//
-//   .title-hr{
-//     background-color: #2F5971;
-//     height: 3px;
-//     margin-top: 20px;
-//     width: 100%;
-//     float: left;
-//
-//   }
-//
-//
-//   .real-report{
-//     margin:15px 0 0 0px;
-//   }
-//   .keyword-box {
-//     float: left;
-//     width:800px;
-//     margin:15px 500px 0 0px;
-//   }
-//
-//   .wordcount{
-//     display:flex;
-//     float: left;
-//     margin-right: 20px;
-//     background-color: #CECECE;
-//     color: #2F5971;
-//     padding: 5px 5px 5px 5px;
-//     font-size: 14px;
-//     border-radius: 15px;
-//   }
-//
-//
-//   .keyword-title{
-//     display:flex;
-//     float: left;
-//     font-size: 12px;
-//     color: gray;
-//     margin:7px 100px 7px 0;
-//   }
-//
-//   .star-title{
-//     float: left;
-//     margin:30px 0 0 0px;
-//     font-size: 14px;
-//   }
-//
-//   .star-txt-title{
-//     float: left;
-//     margin:32px 0 0 10px;
-//     font-size: 11px;
-//     color:gray;
-//   }
-//
-//   .star-box{
-//
-//     float: left;
-//     width: 800px;
-//     height: 150px;
-//     background-color: #CECECE;
-//     margin:10px 500px 0 0px;
-//   }
-//
-//   .count-title{
-//     float: left;
-//     margin:30px 0 0 0px;
-//     font-size: 14px;
-//   }
-//
-//   .count-txt-title{
-//     float: left;
-//     margin:32px 0 0 10px;
-//     font-size: 11px;
-//     color:gray;
-//   }
-//
-//   .count-box{
-//     display:left;
-//     float: left;
-//     width: 800px;
-//     height: 500px;
-//     background-color: #CECECE;
-//     margin:10px 500px 0 0px;
-//   }
-//
-//   .star2-title{
-//     float: left;
-//     margin:30px 0 0 0px;
-//     font-size: 14px;
-//   }
-//
-//   .star2-txt-title{
-//     float: left;
-//     margin:32px 0 0 10px;
-//     font-size: 11px;
-//     color:gray;
-//   }
-//
-//   .star2-box{
-//     float: left;
-//     width: 800px;;
-//     height: 150px;
-//     background-color: #CECECE;
-//     margin:10px 500px 0 0px;
-//   }
-//
-//   </style>
-//   </head>
-//   <body>
-//   <div>
-//   <!-- 보고서 가져오기 -->
-//
-//   <div class="report-title-box">
-//   <h2 class="report-title"> App1 </h2>
-//   <h2 class="report-title"> _Review Report </h2>
-//   <div>
-//   <hr class="title-hr">
-//   </div>
-//   </div>
-//
-//   <!-- 1. 키워드 워드카운트  -->
-//   <div style="margin-right:800px;">
-//   <div class="keyword-box">
-//   <p class="keyword-title"> Report Keyword Top 5 </p><br/><br/>
-//   <h3 class="wordcount" >#디자인 </h3>
-//   <h3 class="wordcount">#안녕 </h3>
-//   <h3 class="wordcount">#굿 </h3>
-//   <h3 class="wordcount">#좋아 </h3>
-//   <h3 class="wordcount">#보고서 </h3>
-//   </div>
-//   </div>
-//
-//   <div class="real-report">
-//   <!-- 2. 주제별 평점 분석 -->
-//   <div style="float:left;">
-//   <p class="star-title"> 주제별 별점 분석</p>
-//   <p class="star-txt-title"> (전체 별점 대비 주제별 별점 평균을 보여줍니다.)</p>
-//   </br>
-//   <div class="star-box">
-//   chartjs
-//   </div>
-//   </div>
-//
-//   <!-- 3. 주제별 리뷰 비율-->
-//   <div style="float:left; ">
-//   <p class="count-title" > 주제별 리뷰 비율 </p>
-//   <p class="count-txt-title"> (주제별 리뷰가 전체 리뷰에서 차지하는 비율을 보여줍니다.)</p>
-//   </br>
-//   <div class="count-box"> chartjs
-//   </div>
-//   </div>
-//
-//   <!-- 2. 기간별 별점 변화도-->
-//   <div style="float:left;">
-//   <p class="star-title"> 기간별 별점 변화도 </p>
-//   <p class="star-txt-title"> (기간별로 변화한 별점 현황을 보여줍니다..)</p>
-//   </br>
-//   <div class="star-box"> chartjs
-//   </div>
-//   </div>
-//
-//
-//
-//
-//   <!-- 5. 평점 점유율-->
-//   <div style="float:left;">
-//   <p class="star2-title" > 평점 점유율 </p>
-//   <p class="star2-txt-title"> (기간별로 별점별 점유율을 보여줍니다.)</p>
-//   </br>
-//   <div class="star2-box">
-//      <canvas id="canvas" height="50"></canvas>
-//      <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.min.js"></script>
-// <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@0.7.0"></script>
-// <script>
-//     new Chart(document.getElementById("canvas"), {
-//     type: 'horizontalBar',
-//     data: {
-//             labels: ['CURRENT'],
-//             datasets: [{
-//             label: '1점',
-//             data: [30],
-//             borderColor: "rgba(209, 216, 224, 1)",
-//             backgroundColor: "rgba(209, 216, 224, 0.5)",
-//             },
-//             {
-//             label: '2점',
-//             data: [40],
-//             borderColor: "rgba(75, 101, 132, 1)",
-//             backgroundColor: "rgba(75, 101, 132, 0.5)",
-//             },
-//             {
-//             label: '3점',
-//             data: [10],
-//             borderColor: "rgba(209, 216, 224, 1)",
-//             backgroundColor: "rgba(209, 216, 224, 0.5)",
-//             },
-//             {
-//             label: '4점',
-//             data: [20],
-//             borderColor: "rgba(75, 101, 132, 1)",
-//             backgroundColor: "rgba(75, 101, 132, 0.5)",
-//             },
-//             {
-//             label: '5점',
-//             data: [20],
-//             borderColor: "rgba(75, 101, 132, 1)",
-//             backgroundColor: "rgba(75, 101, 132, 0.5)",
-//             }]
-//     },
-//     options: {
-//             title: { display: false,
-//                     text: 'In My Mind'
-//             },
-//             responsive: true,
-//             tooltips: {
-//             enabled: false
-//             },
-//             hover: {
-//             mode: 'nearest',
-//             intersect: true
-//             },
-//             legend: {
-//             display: true
-//             },
-//             scales: {
-//             xAxes: [{
-//                     display: false,
-//                     stacked: true,
-//                     barThickness: 6
-//             }],
-//             yAxes: [{
-//                     display: false,
-//                     stacked: true,
-//                     barThickness: 30
-//             }]
-//             },
-//             plugins: {
-//             datalabels: {
-//             color: 'black',
-//             font: {
-//             weight: 'bold'
-//             },
-//             formatter: function(value, context) {
-//             return Math.round(value) + '%';
-//             }
-//             }
-//             }
-//     }
-//     });
-//
-//     </script>
-//
-//   </div>
-//   </div>
-//   </div>
-//
-//
-//   </div>
-//
-//   </body>
-//   </html>
-//   `;
-//   res.end(template);
-// });
 
 
 
@@ -664,12 +375,14 @@ app.get("/app_add", (req, res) =>{
 app.post('/review/url', (req, response) => {
 
   var app_name = req.body.app_name;
+  console.log(app_name);
   app_name = encodeURI(app_name.replace(/ /gi, ''));
   console.log(app_name);
 
   var filter = encodeURI(req.body.filter);
   var condition = req.body.condition;
   var os = req.body.os;
+  console.log(os);
   var date = req.body.date;
 
   var url = 'http://3.34.14.98:3000/scrap?app_name=' + app_name;
@@ -680,16 +393,18 @@ app.post('/review/url', (req, response) => {
 
   function slowfunc(callback){
     axios.get(url).then(function (res){
-      console.log(res.data);
+      // console.log(res.data);
       app_name = encodeURI(res.data);
+      // console.log(app_name);
       var real_app = res.data;
       req.session.appData = real_app;
       req.session.save(error => {
         if(error) console.log('error : ' + error);
       });
-      console.log(req.session.appData);
-      console.log(req.session);
+      // console.log(req.session.appData);
+      // console.log(req.session);
       url = 'http://3.37.3.24/search?app_name=' + app_name + '&filter=' + filter + '&condition=' + condition + '&os=' + os + '&date=' + date;
+      console.log(url);
       //url = 'http://3.37.3.24/test2';
       callback();
     }).catch(function (error){
@@ -714,13 +429,18 @@ app.post('/review/url', (req, response) => {
       </style>
 
       <script>
-          $(function(){
-            window.parent.postMessage(
-            { functionName : 'closeLoading' },
-            'http://3.37.3.24/guest/gu_search'
-            );
-          })
-        </script>
+      $(function(){
+        window.parent.postMessage(
+          { functionName : 'closeLoading' },
+          'http://3.37.3.24/guest/gu_search'
+        );
+
+        window.parent.postMessage(
+          { functionName : 'closeLoading' },
+          'http://3.37.3.24/member/my_search'
+        );
+      })
+      </script>
       </head>
       <body>
       <div>
@@ -800,21 +520,35 @@ app.post('/review/url', (req, response) => {
           background-color:#2F5971;
           color:white;
         }
+
+        .iframe-preview::-webkit-scrollbar{
+          width: 12px;
+        }
+
+        .iframe-preview::-webkit-scrollbar-thumb {
+           background-color: #BFBFBF;
+           border-radius: 20px;
+         }
+
+         .iframe-preview::-webkit-scrollbar-track {
+           background-color: none;
+         }
         </style>
 
         <script>
-            $(function(){
-              window.parent.postMessage(
-              { functionName : 'closeLoading' },
-              'http://3.37.3.24/guest/gu_search'
-              );
-            })
-          </script>
+        $(function(){
+          window.parent.postMessage(
+            { functionName : 'closeLoading' },
+            'http://3.37.3.24/guest/gu_search'
+          );
+        })
+        </script>
 
 
         </head>
         <body>
 
+        <div class="iframe-preview">
         <div>
         <h2 class="app-name" style="margin-left:5px;margin-top:0;top:0; left:0;padding-top:30px;padding-bottom:30px; background-color: #F1F2EC; width:100%;height:50px;">${result[0]['APP_NAME']}</h2>
         </div>
@@ -824,11 +558,12 @@ app.post('/review/url', (req, response) => {
         <table class="review-table" style="border="1"  height="85px;" text-align: center; table-layout:auto; margin-top:80px; position:relative;">
         <tr class="title-st tr-title">
         <thead style="table-layout:auto;width:100%;margin-top:30px;">
-        <th width="15%"> 유저 이름 </th>
-        <th width="15%"> 날짜 </th>
+        <th width="10%"> 유저 이름 </th>
+        <th width="10%"> 날짜 </th>
         <th width="5%"> 별점 </th>
         <th width="5%"> 추천 </th>
         <th width="60%"> 내용 </th>
+        <th width="10%"> OS </th>
         </thead>
         <tr height="15px;">
         </tr>
@@ -837,18 +572,19 @@ app.post('/review/url', (req, response) => {
           if(result[i]['STAR'] >= star){
             template += `
             <tr style=" margin-top:40px;">
-            <th width="15%">${result[i]['USER']}</th>
-            <th width="15%">${result[i]['DATE'].slice(0,10)}</th>
+            <th width="10%">${result[i]['USER']}</th>
+            <th width="10%">${result[i]['DATE'].slice(0,10)}</th>
             <th width="5%">${result[i]['STAR']}</th>
             <th width="5%">${result[i]['LIKE']}</th>
             <th width="60%">${result[i]['COMMENT']}</th>
+            <th width="10%">${result[i]['OS']}</th>
             </tr>`
           }
         }
         template +=`</table>
 
         </div>
-
+        </div>
 
         </body>
         </html>
@@ -894,15 +630,41 @@ app.post('/report', (req, res) => {
 
 app.get('/pdfCreate', (req, res) => {
 
+
+
   function slowfunc2(callback){
     console.log("pdf create Start");
 
     var url = "http://3.37.3.24/review/chart";
+
+    var settings = {
+      operation: "POST",
+      encoding: "utf8",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      data: JSON.stringify({
+            collection_name: "A카카오톡KakaoTalk",
+            user_data: req.session.loginData,
+            start_date: "2022-01-03",
+            end_date: "2022-04-01",
+            DESIGN: "DESIGN",
+            PROFILE: "PROFILE",
+            RESOURCE: "RESOURCE",
+            SPEED: "SPEED",
+            SAFETY: "SAFETY",
+            UPDATE: "UPDATE",
+            REMOVE: "REMOVE"
+      })
+    };
+
+    var data = 'collection_name="A카카오톡KakaoTalk"&user_data=req.session.loginData&start_date="2022-01-03"&end_date="2022-04-01"';
     phantom.create().then(function (ph) {
       ph.createPage().then(function (page) {
         page
         .open(
-          url
+          url,
+          settings
         )
         .then(setTimeout(function (status) {
           page.render("report.pdf")
@@ -911,7 +673,7 @@ app.get('/pdfCreate', (req, res) => {
             ph.exit();
             callback();
           });
-        }, 2000));
+        }, 7000));
       });
     });
   }

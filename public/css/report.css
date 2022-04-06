@@ -1,10 +1,13 @@
+hr{display: true;}
+
 .side-menu{
   margin-top: 57px;
 }
 ol {
   list-style-type: none;
   background-color: #2F5971;
-  width:150px;
+  background-image: url(../img/sidebar.png);
+  width:200px;
   padding:0;
   margin:0;
   position: fixed;
@@ -16,6 +19,27 @@ ol {
 .top_box{
   background-color: #2F5971;
   background-image: url(../img/my-app-list-banner.jpg);
+  background-size: 100% 100%;
+  width: 100%;
+  height: 120px;
+  position: relative;
+  top: 100px;
+}
+
+.top_box_add{
+  background-color: #2F5971;
+  background-image: url(../img/add-my-app-banner.jpg);
+  background-size: 100% 100%;
+  width: 100%;
+  height: 120px;
+  position: relative;
+  top: 100px;
+}
+
+.top_box_my{
+  background-color: #2F5971;
+  background-image: url(../img/add-my-app-banner.jpg);
+  background-size: 100% 100%;
   width: 100%;
   height: 120px;
   position: relative;
@@ -74,12 +98,10 @@ ol {
    background-color: none;
  }
 
-span{
-  font-size: 20px;
-  color:white;
-}
+
 .menu{
-  width: 150px;
+  width: 200px;
+  font-size: 14px;
   margin: auto;
   text-decoration-line : none;
   text-align: center;
@@ -87,7 +109,6 @@ span{
   display: block;
   color: #ffffff;
   padding: 15px 30px 15px 0px;
-  font-weight: bold;
 }
 
 .menu.job{
@@ -133,10 +154,11 @@ body {
 .dropdown-content{
   display : none;
   position : absolute;
+  top:0;
   z-index : 1; /*다른 요소들보다 앞에 배치*/
   font-weight: 400;
   background-color: #f9f9f9;
-  min-width : 200px;
+  min-width : 100px;
 }
 
 .dropdown-content a{
@@ -151,7 +173,7 @@ body {
   background-color : #ececec
 }
 
-.dropdown:hover .dropdown-content {
+.dropdown-content {
   display: block;
 }
 
@@ -163,19 +185,35 @@ body {
   width: 103px;
 }
 
+.menu-hr-main{
+  background-color: #white;
+  color:white;
+  height: 1px;
+  margin-top: 60px;
+  width: 103px;
+}
 
 
 .app-name{
-  float:left;
-  margin-left:30%;
-  margin-bottom: 20px;
-  margin-top:10px;
 
+  text-align: left;
+  align-items: left;
+  margin-bottom: 20px;
+  margin-top:20px;
+  font-size: 16px;
+  color:white;
+  font-weight: bold;
+}
+
+.app-name-box{
+  width: 140px;
+  height: auto;
+  cursor : pointer;
 }
 .other-app{
   float:right;
-  margin-right: 10px;
-  margin-top:18px;
+  margin-top:2px;
+  margin-right: 5px;
   background-color: transparent;
   color:white;
   border: none;
@@ -213,7 +251,6 @@ body {
 } */
 
 #slidemenu{
-
 position: absolute;
 width: 105px;
 height: 400px;
@@ -224,8 +261,9 @@ margin-top: 210px;
 margin-bottom: 400px;
 background:#C9E3E5;
 color:white;
-left:155px;
+left:210px;
 border-radius: 20px;
+z-index: 0;
 }
 
 .report-btn{
@@ -240,12 +278,14 @@ border-radius: 20px;
   width: 90px;
   border: none;
   border-radius: 10px;
+  cursor : pointer;
 
 }
 
 .iframe-preview{
   top:0;
-  margin-left: 270px;
+  margin-left: 350px;
+  margin-top: 100px;
   display: inline;
   display:block;
 }
