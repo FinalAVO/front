@@ -135,18 +135,23 @@ span{
 
     <!-- 마이 앱 리스트 -->
 
-    <div class="my_app_list">
-    <% for(let i = data.length-1; i >= 0; i--) { %>
-          <div class="myapp-box">
-            <a href="/member/my_report?db_name='<%= data[i].db_name %>'"><img width="100px" height="100px" style="float: left; margin:18px 0px 0px 18px; border-radius: 20px; display: inline-block;" src="<%= data[i].app_img %>"></a>
-            <a href="/member/my_report?db_name='<%= data[i].db_name %>'"><h3 style="margin: 4% 0% 0% 0%; padding-left: 17%; text-align: left; width: 100%;"> <%= data[i].app_name %> </h3></a>
-            <hr style=" margin-top: 1%; width: 55%; margin-left: 17%; background-color:#808080; height:1px;"/>
-            </br>
-            <span class="exTxt2" style="display: inline; float: left; margin-left: 3%; padding-top: 0%;">앱 등록 : <%= data[i].date.toLocaleDateString('ko-KR') %> </span>
-            <a href="/member/remove_app?db_name=<%= data[i].db_name %>"><button class="btn_open myapp-btn"> 삭제 </button></a>
+      <div class="my_app_list">
+        <% if(data.length > 0) { %>
+      <% for(let i = data.length-1; i >= 0; i--) { %>
+            <div class="myapp-box">
+              <a href="/member/my_report?db_name='<%= data[i].db_name %>'"><img width="100px" height="100px" style="float: left; margin:18px 0px 0px 18px; border-radius: 20px; display: inline-block;" src="<%= data[i].app_img %>"></a>
+              <a href="/member/my_report?db_name='<%= data[i].db_name %>'"><h3 style="margin: 4% 0% 0% 0%; padding-left: 17%; text-align: left; width: 100%;"> <%= data[i].app_name %> </h3></a>
+              <hr style=" margin-top: 1%; width: 55%; margin-left: 17%; background-color:#808080; height:1px;"/>
+              </br>
+              <span class="exTxt2" style="display: inline; float: left; margin-left: 3%; padding-top: 0%;">앱 등록 : <%= data[i].date.toLocaleDateString('ko-KR') %> </span>
+              <a href="/member/remove_app?db_name=<%= data[i].db_name %>"><button class="btn_open myapp-btn"> 삭제 </button></a>
+            </div>
+          <%  }} else { %>
+            <div style="margin-top: 20%;">
+            <img src="../../img/malpungsun.png"/>
           </div>
-        <%  } %>
-      </div>
+            <% } %>
+        </div>
 
 
     <!-- 하단 푸터 시작 -->

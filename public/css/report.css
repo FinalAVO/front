@@ -237,23 +237,10 @@ body {
 
 
 
-/* #slidemenu{
-  background:#C9E3E5;
-  color:white;
-  position:fixed;
-  margin-top: 210px;
-  margin-bottom: 400px;
-  width:105px;
-  height: 400px;
-  top:50px;
-  left:155px;
-  border-radius: 20px;
-} */
-
 #slidemenu{
 position: absolute;
 width: 105px;
-height: 400px;
+height: 420px;
 top: 50px;
 background-color: #999900;
 color: #fffffff;
@@ -267,7 +254,7 @@ z-index: 0;
 }
 
 .report-btn{
-  margin-top: 30px;
+  margin-top: 20px;
   margin-left: 5px;
   float: left;
   font-size: 12px;

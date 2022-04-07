@@ -158,33 +158,46 @@
 
       </script>
 
-      <form method="post" action="/review/chart" target="targetURL2">
-        <p><label class="report-c"><input class="report-c" type="checkbox" name="DESIGN" value="DESIGN">  디자인</label></p>
-        <br>
-        <p><label class="report-c"><input class="report-c" type="checkbox" name="PROFILE" value="PROFILE">  프로필</label></p>
-        <br>
-        <p><label class="report-c"><input class="report-c" type="checkbox" name="RESOURCE" value="RESOURCE"> 리소스 사용량</label></p>
-        <br>
-        <p><label class="report-c"><input class="report-c" type="checkbox" name="SPEED" value="SPEED">  속도 &nbsp</label></p>
-        <br>
-        <p><label class="report-c"><input class="report-c" type="checkbox" name="SAFETY" value="SAFETY">  안정성 &nbsp</label></p>
-        <br>
-        <p><label class="report-c"><input class="report-c" type="checkbox" name="REMOVE" value="REMOVE">  제거</label></p>
-        <br>
-        <p><label class="report-c"><input class="report-c" type="checkbox" name="UPDATE" value="UPDATE">  평점분석</label></p>
-        <br>
-        <p><input class="report-btn keyword-btn" type="submit" value="보고서 검색"></p>
-        <input type="hidden" value="<%= session.loginData %>" name="user_data">
-        <input type="hidden" value="<%= my_app[0].db_name %>" name="collection_name">
-        <input type="hidden" value="<%= my_app[0].app_name %>" name="app_name">
-        <!-- <p><button onclick="report_search()"> 보고서 검색</button> -->
-      </form>
+      <p><label class="report-c"><input type='checkbox' value='selectall' onclick='selectAll(this)'/> 전체 선택 </label></p>
+
+        <form method="post" action="/review/chart" target="targetURL2">
+          <p><label class="report-c"><input class="report-c" type="checkbox" name="subject" value="DESIGN">  디자인</label></p>
+          <br>
+          <p><label class="report-c"><input class="report-c" type="checkbox" name="subject" value="PROFILE">  프로필</label></p>
+          <br>
+          <p><label class="report-c"><input class="report-c" type="checkbox" name="subject" value="RESOURCE"> 리소스 사용량</label></p>
+          <br>
+          <p><label class="report-c"><input class="report-c" type="checkbox" name="subject" value="SPEED">  속도 &nbsp</label></p>
+          <br>
+          <p><label class="report-c"><input class="report-c" type="checkbox" name="subject" value="SAFETY">  안정성 &nbsp</label></p>
+          <br>
+          <p><label class="report-c"><input class="report-c" type="checkbox" name="subject" value="REMOVE">  제거</label></p>
+          <br>
+          <p><label class="report-c"><input class="report-c" type="checkbox" name="subject" value="UPDATE">  평점분석</label></p>
+          <br>
+          <p><input class="report-btn keyword-btn" type="submit" value="보고서 검색"></p>
+          <input type="hidden" value="<%= session.loginData %>" name="user_data">
+          <input type="hidden" value="<%= my_app[0].db_name %>" name="collection_name">
+          <input type="hidden" value="<%= my_app[0].app_name %>" name="app_name">
+
+        </form>
 
     </div>
     <div id="map" class="loadingImg"></div>
 
     <script>
 
+
+    function selectAll(selectAll)  {
+      const checkboxes
+           = document.getElementsByName('subject');
+
+      checkboxes.forEach((checkbox) => {
+        checkbox.checked = selectAll.checked;
+      })
+    }
+
+    
     // 기본 위치(top)값
     var floatPosition = parseInt($("#slidemenu").css('top'))
 
@@ -313,7 +326,7 @@ function Loading() {
   var loadingImg ='';
 
   loadingImg +=" <div id='loadingImg'>";
-  loadingImg +=" <img src='../../img/spinner.gif' style='position:absolute; z-index:9500; text-align:center; display:block; margin-top:300px; margin-left:50%;'/>";
+  loadingImg +=" <img src='../../img/spinner.gif' style='position:absolute; z-index:9500; text-align:center; display:block; width:1000px; height:570px; margin-top:0px; margin-left:26%;'/>";
   loadingImg +="</div>";
 
   $('body')

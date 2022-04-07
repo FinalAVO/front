@@ -648,14 +648,8 @@ app.get('/pdfCreate', (req, res) => {
             user_data: req.session.loginData,
             start_date: "2022-01-03",
             end_date: "2022-04-01",
-            DESIGN: "DESIGN",
-            PROFILE: "PROFILE",
-            RESOURCE: "RESOURCE",
-            SPEED: "SPEED",
-            SAFETY: "SAFETY",
-            UPDATE: "UPDATE",
-            REMOVE: "REMOVE"
-      })
+            subject: ["DESIGN", "PROFILE", "RESOURCE", "SPEED", "SAFETY", "UPDATE", "REMOVE"]
+          })
     };
 
     var data = 'collection_name="A카카오톡KakaoTalk"&user_data=req.session.loginData&start_date="2022-01-03"&end_date="2022-04-01"';

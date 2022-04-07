@@ -115,24 +115,22 @@ app.post("/", (req, res) =>{
           var yValues = [];
 
           for(var i=0; i< result1.length; i++){
-            for (var key in req.body){
-              if(result1[i]["subject"] == key){
-                xValues.push("'" + key + "'")
+            for (var j=0; j < req.body.subject.length; j++){
+              if(result1[i]["subject"] == req.body.subject[j]){
+                xValues.push("'" + req.body.subject[j] + "'")
                 yValues.push(result1[i]["avg_star"])
               }
             }
           }
-          console.log(xValues)
-          console.log(yValues)
 
 
-          var xValues1 = ['"count"'];
+          var xValues1 = ['"COUNT"'];
           var yValues2 = [a_review];
 
           for(var i=0; i< result1.length; i++){
-            for (var key in req.body){
-              if(result1[i]["subject"] == key){
-                xValues1.push("'" + key + "'")
+            for (var j=0; j < req.body.subject.length; j++){
+              if(result1[i]["subject"] == req.body.subject[j]){
+                xValues1.push("'" + req.body.subject[j] + "'")
                 yValues2.push(result1[i]["count"])
               }
             }
@@ -278,6 +276,10 @@ app.post("/", (req, res) =>{
             background-color: white;
             border-radius:20px;
             margin:10px 0 100px 0px;
+          }
+          .chartBox{
+            width: 1300px;
+            position: center;
           }
 
           </style>
@@ -431,6 +433,9 @@ app.post("/", (req, res) =>{
             </script>
             </div>
             </div>
+
+
+
 
           <!-- 5. 평점 점유율-->
           <div style="float:left;">

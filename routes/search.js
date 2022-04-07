@@ -291,7 +291,121 @@ app.get('/re_search', (req, res) => {
         db.collection(app_name).find({ DATE: { $gte: start_date, $lte: end_date }, COMMENT: { $regex: filter }, OS: { $in: os_filter } }, { _id: 0 }).sort({ [condition]: sc }).toArray(function(err, result){
           if(err) throw err;
           // console.log('result : ' + result);
-          res.send(JSON.stringify(result));
+          var template = `
+
+          <!doctype html>
+          <html>
+          <head>
+          <title>Result</title>
+          <meta charset="utf-8">
+          <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+          <style>
+
+          table {
+            font-size: 9pt;
+            width: 100%;
+            border-top: 1px solid #444444;
+            border-collapse: collapse;
+          }
+          th, td {
+            border-bottom: 1px solid #424242;
+            padding: 10px;
+          }
+
+          tr {
+            backgraoud-color: gray;
+          }
+
+          .app-name{
+            position:fixed;
+            top:0
+            margin:0;
+          }
+
+          .tr-title{
+            background-color:#2F5971;
+            color:white;
+            textalign:center;
+            margin-top:50px;
+            width:100%;
+          }
+
+          .title-st{
+
+            backgraoud-color: gray;
+
+          }
+
+          .review-table{
+            backgraoud-color: whith;
+          }
+
+
+
+          thead {
+            position: sticky;
+            top: 100px;;
+            width:100%;
+            background-color:#2F5971;
+            color:white;
+          }
+          </style>
+
+          <script>
+              $(function(){
+                window.parent.postMessage(
+                { functionName : 'closeLoading' },
+                'http://3.37.3.24/guest/gu_search'
+                );
+              })
+            </script>
+
+
+          </head>
+          <body>
+
+          <div>
+          <h2 class="app-name" style="margin-left:5px;margin-top:0;top:0; left:0;padding-top:30px;padding-bottom:30px; background-color: #F1F2EC; width:100%;height:50px;">${result[0]['APP_NAME']}</h2>
+          </div>
+
+          <div style="margin-top:100px;">
+
+          <table class="review-table" style="border="1"  height="85px;" text-align: center; table-layout:auto; margin-top:80px; position:relative;">
+          <tr class="title-st tr-title">
+          <thead style="table-layout:auto;width:100%;margin-top:30px;">
+          <th width="10%"> 유저 이름 </th>
+          <th width="10%"> 날짜 </th>
+          <th width="5%"> 별점 </th>
+          <th width="5%"> 추천 </th>
+          <th width="60%"> 내용 </th>
+          <th width="10%"> OS </th>
+          </thead>
+          <tr height="15px;">
+          </tr>
+          </div>`;
+          for(var i=0 ; i < result.length ; i++){
+            if(result[i]['STAR'] >= star){
+              template += `
+              <tr style=" margin-top:40px;">
+              <th width="10%">${result[i]['USER']}</th>
+              <th width="10%">${result[i]['DATE'].slice(0,10)}</th>
+              <th width="5%">${result[i]['STAR']}</th>
+              <th width="5%">${result[i]['LIKE']}</th>
+              <th width="60%">${result[i]['COMMENT']}</th>
+              <th width="10%">${result[i]['OS']}</th>
+              </tr>`
+            }
+          }
+          template +=`</table>
+
+          </div>
+
+
+          </body>
+          </html>
+          `;
+
+          res.end(template);
         });
       }
     }
