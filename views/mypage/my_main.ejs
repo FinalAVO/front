@@ -64,7 +64,7 @@
         <img src="../img/line.png" style="float:left; height: 50px;margin-left:20px;margin-top:13px;">
         <p class="my-main-txt">huri</p>
 
-        <button class="delete-user-btn"type="button">계정삭제</button>
+        <button class="delete-user-btn"type="button" onclick="location.href='/mypage/delete_user'">계정삭제</button>
   </div>
 
   <div class="basic_info">
@@ -73,7 +73,7 @@
         <img src="../img/line.png" style="float:left; height: 50px;margin-left:20px;margin-top:13px;">
         <p class="my-main-txt">wjdgn0373@naver.com</p>
 
-        <button class="email-change-btn"type="button">이메일 변경</button>
+        <button class="email-change-btn"type="button" onclick="location.href='/mypage/email_change'">이메일 변경</button>
 
   </div>
 
@@ -83,7 +83,7 @@
         <img src="../img/line.png" style="float:left; height: 50px;margin-left:20px;margin-top:13px;">
         <p class="my-main-txt">**********</p>
 
-        <button class="pw-change-btn"type="button">비밀번호 변경</button>
+        <button class="pw-change-btn"type="button" onclick="location.href='/mypage/pw_change'">비밀번호 변경</button>
 
   </div>
 
@@ -113,6 +113,67 @@
   </div>
 
 
+
+<!-- popup 1 -->
+
+  <div class="wrap" style="position:fixed; right: 30px; bottom: 30px;">
+    <a href="#pop_info_1" class="btn_open myapp-btn">보고서 다운로드</a>
+  </div>
+  <div id="pop_info_1" class="pop_wrap" style="display:none;">
+    <div class="pop_inner">
+
+      <div class ="box1" style=" align-items:center;">
+        <br>
+        <p id="font" style="margin-top:60px;"> 회원 탈퇴를 하시면 개인정보, 저장된 리뷰데이터 등이 모두 삭제됩니다.<br> 그래도 탈퇴하시겠습니까? </p>
+        <br>
+        <div style="margin-top:50px;">
+          <span style="float:left; margin-top:5px; margin-left:50px;color:#2F5971; font-size:16px;" id="font" > 비밀번호 확인 </span>
+          <input type="text" style="margin-left:22px;" class="email-input" name="findId" />
+        </div>
+
+
+        <br>
+
+        <div class="loginBtn-wrap" style="textalign:center; margin-top:70px; margin-left:190px;">
+          <button type="submit" id="loginBtn" style="float:right;" onclick="location.href='/login/login">탈퇴</button>
+        </div>
+      </div>
+
+      <span id="msg" style="color:black;"></span>
+      <br/>
+
+      <button type="button" class="btn_close" onclick="location.href='/mypage/my_main';">닫기</button>
+    </div>
+  </div>
+
+<!-- popup 1 -->
+
+
+<script>
+var target = document.querySelectorAll('.btn_open');
+var btnPopClose = document.querySelectorAll('.pop_wrap .btn_close');
+var targetID;
+
+
+// 팝업 열기
+for(var i = 0; i < target.length; i++){
+  target[i].addEventListener('click', function(){
+    targetID = this.getAttribute('href');
+    document.querySelector(targetID).style.display = 'block';
+  });
+}
+
+
+// 팝업 닫기
+for(var j = 0; j < target.length; j++){
+  btnPopClose[j].addEventListener('click', function(){
+    this.parentNode.parentNode.style.display = 'none';
+  });
+}
+});
+</script>
+
+
   <!-- 하단 푸터 시작 -->
   <div id='wrapper'>
     <div>
@@ -130,7 +191,6 @@
   <a href="/">
     <img width="25px" height="25px" style="padding-top:10px; padding-right:5px;" src="../img/twitter-logo.png">
   </a>
-
 
   <p class="footer-content1">avo@gmail.com</p>
   <p class="footer-content2">@ 2022 Review service from AVO</p>
