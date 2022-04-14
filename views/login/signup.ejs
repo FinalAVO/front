@@ -339,6 +339,7 @@
                 data: {"email": emailAuth}
               })
               .done(function(json){
+                alert("인증번호가 발송되었습니다.");
                 $('#email_span').html("");
                 $('#emailAuth').val(json);
               })
@@ -382,6 +383,7 @@
                 data: {"phone": phone}
               })
               .done(function(json){
+                alert("인증번호가 발송되었습니다.");
                 $('#phone_span').html("");
                 $('#phoneAuth').val(json);
               })

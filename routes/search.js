@@ -47,26 +47,44 @@ app.get('/', (req, res) => {
   }
   console.log(os_filter);
 
-  var date = req.query.start_date;
+  var date = req.query.date;
   if(!date || date == "undefined"){
+    var end_date;
+    var start_date;
     var e_date = new Date();
     if((e_date.getMonth() + 1) >= 10){
-      end_date = e_date.getFullYear() + '-' + (e_date.getMonth() + 1) + '-' + e_date.getDate();
+      if(e_date.getDate() < 10){
+        end_date = e_date.getFullYear() + '-' + (e_date.getMonth() + 1) + '-0' + e_date.getDate();
+      }else{
+        end_date = e_date.getFullYear() + '-' + (e_date.getMonth() + 1) + '-' + e_date.getDate();
+      }
     }else{
-      end_date = e_date.getFullYear() + '-0' + (e_date.getMonth() + 1) + '-' + e_date.getDate();
+      if(e_date.getDate() < 10){
+        end_date = e_date.getFullYear() + '-0' + (e_date.getMonth() + 1) + '-0' + e_date.getDate();
+      }else{
+        end_date = e_date.getFullYear() + '-0' + (e_date.getMonth() + 1) + '-' + e_date.getDate();
+      }
     }
     console.log(end_date);
     var s_date = new Date(e_date.setMonth(e_date.getMonth() - 3));
     if((s_date.getMonth() + 1) >= 10){
-      start_date = s_date.getFullYear() + '-' + (s_date.getMonth() + 1) + '-' + s_date.getDate();
+      if(s_date.getDate() < 10){
+        start_date = e_date.getFullYear() + '-' + (e_date.getMonth() + 1) + '-0' + e_date.getDate();
+      }else{
+        start_date = e_date.getFullYear() + '-' + (e_date.getMonth() + 1) + '-' + e_date.getDate();
+      }
     }else{
-      start_date = s_date.getFullYear() + '-0' + (s_date.getMonth() + 1) + '-' + s_date.getDate();
+      if(s_date.getDate() < 10){
+        start_date = e_date.getFullYear() + '-0' + (e_date.getMonth() + 1) + '-0' + e_date.getDate();
+      }else{
+        start_date = e_date.getFullYear() + '-0' + (e_date.getMonth() + 1) + '-' + e_date.getDate();
+      }
     }
     console.log(start_date);
   }else{
-    var start_date = date.slice(1,11);
+    var start_date = date.slice(0,11);
     console.log(start_date);
-    var end_date = date.slice(14);
+    var end_date = date.slice(13);
     console.log(end_date);
   }
 
@@ -75,9 +93,10 @@ app.get('/', (req, res) => {
       console.error(err);
       console.log("connection error...!");
       res.json("connection error...!");
-    }else{
+    }else{ // MongoDB에 성공적으로 connection 되면..
       db = database.db('review');
       if(!filter){
+        // 애플리케이션 이름을 컬렉션 이름으로 사용자가 요청한 조건 별로 find 실행
         db.collection(app_name).find({ DATE: { $gte: start_date, $lte: end_date }, OS: { $in: os_filter } }, { _id: 0 }).sort({ [condition]: sc }).toArray(function(err, result){
           if(err) throw err;
           // console.log('review : ' + result);
@@ -137,26 +156,44 @@ app.get('/re_search', (req, res) => {
   }
   console.log(os_filter);
 
-  var date = req.query.start_date;
+  var date = req.query.date;
   if(!date || date == "undefined"){
+    var end_date;
+    var start_date;
     var e_date = new Date();
     if((e_date.getMonth() + 1) >= 10){
-      end_date = e_date.getFullYear() + '-' + (e_date.getMonth() + 1) + '-' + e_date.getDate();
+      if(e_date.getDate() < 10){
+        end_date = e_date.getFullYear() + '-' + (e_date.getMonth() + 1) + '-0' + e_date.getDate();
+      }else{
+        end_date = e_date.getFullYear() + '-' + (e_date.getMonth() + 1) + '-' + e_date.getDate();
+      }
     }else{
-      end_date = e_date.getFullYear() + '-0' + (e_date.getMonth() + 1) + '-' + e_date.getDate();
+      if(e_date.getDate() < 10){
+        end_date = e_date.getFullYear() + '-0' + (e_date.getMonth() + 1) + '-0' + e_date.getDate();
+      }else{
+        end_date = e_date.getFullYear() + '-0' + (e_date.getMonth() + 1) + '-' + e_date.getDate();
+      }
     }
     console.log(end_date);
     var s_date = new Date(e_date.setMonth(e_date.getMonth() - 3));
     if((s_date.getMonth() + 1) >= 10){
-      start_date = s_date.getFullYear() + '-' + (s_date.getMonth() + 1) + '-' + s_date.getDate();
+      if(s_date.getDate() < 10){
+        start_date = e_date.getFullYear() + '-' + (e_date.getMonth() + 1) + '-0' + e_date.getDate();
+      }else{
+        start_date = e_date.getFullYear() + '-' + (e_date.getMonth() + 1) + '-' + e_date.getDate();
+      }
     }else{
-      start_date = s_date.getFullYear() + '-0' + (s_date.getMonth() + 1) + '-' + s_date.getDate();
+      if(s_date.getDate() < 10){
+        start_date = e_date.getFullYear() + '-0' + (e_date.getMonth() + 1) + '-0' + e_date.getDate();
+      }else{
+        start_date = e_date.getFullYear() + '-0' + (e_date.getMonth() + 1) + '-' + e_date.getDate();
+      }
     }
     console.log(start_date);
   }else{
-    var start_date = date.slice(1,11);
+    var start_date = date.slice(0,11);
     console.log(start_date);
-    var end_date = date.slice(14);
+    var end_date = date.slice(13);
     console.log(end_date);
   }
 
@@ -232,13 +269,13 @@ app.get('/re_search', (req, res) => {
           </style>
 
           <script>
-              $(function(){
-                window.parent.postMessage(
-                { functionName : 'closeLoading' },
-                'http://3.37.3.24/guest/gu_search'
-                );
-              })
-            </script>
+          $(function(){
+            window.parent.postMessage(
+              { functionName : 'closeLoading' },
+              'http://3.37.3.24/guest/gu_search'
+            );
+          })
+          </script>
 
 
           </head>
@@ -352,13 +389,13 @@ app.get('/re_search', (req, res) => {
           </style>
 
           <script>
-              $(function(){
-                window.parent.postMessage(
-                { functionName : 'closeLoading' },
-                'http://3.37.3.24/guest/gu_search'
-                );
-              })
-            </script>
+          $(function(){
+            window.parent.postMessage(
+              { functionName : 'closeLoading' },
+              'http://3.37.3.24/guest/gu_search'
+            );
+          })
+          </script>
 
 
           </head>

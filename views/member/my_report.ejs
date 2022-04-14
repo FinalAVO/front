@@ -173,11 +173,11 @@
           <br>
           <p><label class="report-c"><input class="report-c" type="checkbox" name="subject" value="REMOVE">  제거</label></p>
           <br>
-          <p><label class="report-c"><input class="report-c" type="checkbox" name="subject" value="UPDATE">  평점분석</label></p>
+          <p><label class="report-c"><input class="report-c" type="checkbox" name="subject" value="UPDATE">  업데이트</label></p>
           <br>
           <p><input class="report-btn keyword-btn" type="submit" value="보고서 검색"></p>
           <input type="hidden" value="<%= session.loginData %>" name="user_data">
-          <input type="hidden" value="<%= my_app[0].db_name %>" name="collection_name">
+          <input id="collection_name" type="hidden" value="<%= my_app[0].db_name %>" name="collection_name">
           <input type="hidden" value="<%= my_app[0].app_name %>" name="app_name">
 
         </form>
@@ -372,6 +372,22 @@ window.addEventListener( 'message', (e) => {
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.4/jspdf.min.js"></script>
 
 <script>
+$("#csv-dl").click(function(){
+  var collection_name = $("#collection_name").val()
+
+  $.ajax({
+    url: "/review/chart/csv_download",
+    type: "POST",
+    dataType: "JSON",
+    data: { "collection_name": collection_name }
+  }).done(function(json){
+    
+  }).fail(function (xhr, status, errorThrown){
+    alert("오류가 발생했습니다. 잠시 후 다시 시도해주세요..");
+  })
+});
+
+
 $("#pdf-dl").click(function(){
 
   html2canvas(document.querySelector('#targetURL2').contentDocument.documentElement, {background :'#FFFFFF'}).then(function(canvas) {
@@ -403,28 +419,13 @@ $("#pdf-dl").click(function(){
     }
 
     // 파일 저장
-    doc.save('sample.pdf');
+    doc.save('리뷰보고서.pdf');
 
   });
 
 });
 
 $(function() {
-
-  // $('#pdf-dl').click(function(){
-  //   console.log("hello");
-  //   $('#msg').html("다운로드 중입니다. (7초)");
-  //   setTimeout(() => $('#msg').html("다운로드 중입니다.. (6초)"), 1000);
-  //   setTimeout(() => $('#msg').html("다운로드 중입니다... (5초)"), 2000);
-  //   setTimeout(() => $('#msg').html("다운로드 중입니다. (4초)"), 3000);
-  //   setTimeout(() => $('#msg').html("다운로드 중입니다.. (3초)"), 4000);
-  //   setTimeout(() => $('#msg').html("다운로드 중입니다... (2초)"), 5000);
-  //   setTimeout(() => $('#msg').html("다운로드 중입니다. (1초)"), 6000);
-  //
-  //   setTimeout(() => $('#msg').html(""), 7000);
-  // });
-
-
 
   var target = document.querySelectorAll('.btn_open');
   var btnPopClose = document.querySelectorAll('.pop_wrap .btn_close');

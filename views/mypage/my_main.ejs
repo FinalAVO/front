@@ -59,19 +59,20 @@
 
 
   <div class="basic_info" style="margin-top:40px;">
-
+    <form method="post" action="/user/delete_user">
         <p class="my-main-title">ID</p>
         <img src="../img/line.png" style="float:left; height: 50px;margin-left:20px;margin-top:13px;">
-        <p class="my-main-txt">huri</p>
+        <p class="my-main-txt"><%= session.loginData %></p>
 
-        <button class="delete-user-btn"type="button" onclick="location.href='/mypage/delete_user'">계정삭제</button>
+        <button class="delete-user-btn" type="submit">계정삭제</button>
+      </form>
   </div>
 
   <div class="basic_info">
 
         <p class="my-main-title">e-mail</p>
         <img src="../img/line.png" style="float:left; height: 50px;margin-left:20px;margin-top:13px;">
-        <p class="my-main-txt">wjdgn0373@naver.com</p>
+        <p class="my-main-txt"><%= email %></p>
 
         <button class="email-change-btn"type="button" onclick="location.href='/mypage/email_change'">이메일 변경</button>
 
@@ -197,5 +198,8 @@ for(var j = 0; j < target.length; j++){
   </footer>
 
   <!-- 하단 푸터 끝 -->
+
+
+
 </body>
 </html>

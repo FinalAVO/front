@@ -5,6 +5,7 @@ const axios = require('axios');
 const mysql = require('mysql');
 const bcrypt = require('bcrypt');
 const nodemailer = require('nodemailer');
+const fs = require('fs');
 const request = require('request');
 
 const saltRounds = 10;
@@ -18,11 +19,14 @@ axios.defaults.withCredentials = true
 app.set('views', path.join(__dirname, '../views'));
 app.set('view engine', 'ejs');
 
-var connection = mysql.createConnection({
-  host     : 'mymysql.csstqmpesreg.ap-northeast-2.rds.amazonaws.com',
-  user     : 'admin',
-  password : 'abcd1234',
-  database : 'avo_review'
+let mysql_rawdata = fs.readFileSync('/data/front/config/mysql.json');
+let mysql_json = JSON.parse(mysql_rawdata);
+
+const rdsConnection = mysql.createConnection({
+  host     : mysql_json["host"],
+  user     : mysql_json["user"],
+  password : mysql_json["password"],
+  database : mysql_json["database"]
 });
 
 var transporter = nodemailer.createTransport({
@@ -43,7 +47,7 @@ app.post('/register', (req, res) => {
   var sql = 'INSERT INTO user(`user_id`, `user_pwd`, `email`, `phone`) VALUES (?, ?, ?, ?)';
   bcrypt.hash(param[1], saltRounds, (err, hash) => {
     param[1] = hash;
-    connection.query(sql, param, (error, rows) => {
+    rdsConnection.query(sql, param, (error, rows) => {
       if(err) console.log(err);
     });
   });
@@ -160,7 +164,7 @@ app.post('/login', (req, res) => {
   //var param = [req.query.user_id, req.query.user_pwd];
 
   var sql = 'SELECT * FROM user WHERE user_id=?'
-  connection.query(sql, param[0], (err, rows) => {
+  rdsConnection.query(sql, param[0], (err, rows) => {
     if(err) throw err;
 
     if(rows.length > 0){
@@ -191,7 +195,7 @@ app.post('/idCheck', (req, res) => {
 
   var sql = 'SELECT user_id FROM user WHERE user_id = ?';
 
-  connection.query(sql, [user_id], (err, rows) => {
+  rdsConnection.query(sql, [user_id], (err, rows) => {
     if(err) throw err;
     console.log(rows);
 
@@ -227,7 +231,7 @@ app.post('/emailTest', (req, res) => {
     console.log(user_id);
 
     var sql = 'SELECT * FROM user WHERE user_id = ?';
-    connection.query(sql, [user_id], (err, rows) => {
+    rdsConnection.query(sql, [user_id], (err, rows) => {
       console.log(rows);
       if(rows.length){
         var email = rows[0].email;
@@ -264,6 +268,43 @@ app.post('/findId', (req, res) => {
   })
 
   res.render('/login/findId.ejs');
+})
+
+// 이메일 변경
+app.post('/change_email', (req, res) => {
+  console.log("change_email start");
+
+  var new_email = req.body.email;
+  var user_id = req.session.loginData;
+
+  var sql = "UPDATE user SET email = ? WHERE user_id = ?";
+  rdsConnection.query(sql, [new_email, user_id], (err, row) => {
+    if(err) console.log(err);
+    console.log(row);
+    res.send('success');
+  })
+})
+
+// 계정 탈퇴
+app.post('/delete_user', (req, res) => {
+  console.log("delete_user start");
+
+  var user_id = req.session.loginData;
+
+  var sql = "DELETE FROM user WHERE user_id = ?";
+  rdsConnection.query(sql, [user_id], (err, row) => {
+    if(err) console.log(err);
+    console.log(row);
+    req.session.destroy(error => {
+      if(error) console.log(error);
+    });
+    res.writeHead(200, {'Content-Type': 'text/html;charset=UTF-8'});
+    template = `<script>
+    alert('정상적으로 탈퇴되었습니다.');
+    location.href="/"
+    </script>`;
+    res.end(template);
+  })
 })
 
 module.exports = app;

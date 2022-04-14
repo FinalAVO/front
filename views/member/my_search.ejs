@@ -251,10 +251,10 @@
       </select>
 
       <span class="filter-txt" style="padding-left:10px;"> 기간 설정 </span>
-      <input type="text" id="demo" name="demo" value="" style="font-size:12px;color: gray;"/>
+      <input type="text" id="demo" name="demo" style="font-size:12px;color: gray;"/>
 
       <span class="filter-txt" style="padding-left:10px;"> 키워드 검색 </span>
-      <input class="input-box" style="width:200px; font-size:12px; textalign:center; padding-left:10px;" name="filter" maxlengh="10" placeholder=" 키워드를 입력하세요" />
+      <input class="input-box" style="width:200px; font-size:12px; textalign:center; padding-left:10px;" id="filter" name="filter" maxlengh="10" placeholder=" 키워드를 입력하세요" />
 
       <input type="hidden" name="app_name" value="<%= my_app[0].app_name %>">
       <button style="display:inline;"class="search-button search-box keyword-btn" id="search-button" type='submit'> SEARCH </button>
@@ -373,11 +373,11 @@
       if(btnElement.value == "▼"){
         btnElement.value = "▲";
         realVal.value = "DATE";
-        document.targetURL2.location.href="/search/re_search?app_name=&star="+$('#star').val()+"&filter="+$('#filter').val()+"&os="+$('#os').val()+"&condition=DATE";
+        document.targetURL2.location.href="/search/re_search?app_name=&star="+$('#star').val()+"&filter="+$('#filter').val()+"&os="+$('#os').val()+"&condition=DATE&date="+$('#demo').val();
       }else{
         btnElement.value = "▼";
         realVal.value = "-DATE";
-        document.targetURL2.location.href="/search/re_search?app_name=&star="+$('#star').val()+"&filter="+$('#filter').val()+"&os="+$('#os').val()+"&condition=-DATE";
+        document.targetURL2.location.href="/search/re_search?app_name=&star="+$('#star').val()+"&filter="+$('#filter').val()+"&os="+$('#os').val()+"&condition=-DATE&date="+$('#demo').val();
       }
     }
 
@@ -395,11 +395,11 @@
       if(btnElement.value == "▼"){
         btnElement.value = "▲";
         realVal.value = "STAR";
-        document.targetURL2.location.href="/search/re_search?app_name=&star="+$('#star').val()+"&filter="+$('#filter').val()+"&os="+$('#os').val()+"&condition=STAR";
+        document.targetURL2.location.href="/search/re_search?app_name=&star="+$('#star').val()+"&filter="+$('#filter').val()+"&os="+$('#os').val()+"&condition=STAR&date="+$('#demo').val();
       }else{
         btnElement.value = "▼";
         realVal.value = "-STAR";
-        document.targetURL2.location.href="/search/re_search?app_name=&star="+$('#star').val()+"&filter="+$('#filter').val()+"&os="+$('#os').val()+"&condition=-STAR";
+        document.targetURL2.location.href="/search/re_search?app_name=&star="+$('#star').val()+"&filter="+$('#filter').val()+"&os="+$('#os').val()+"&condition=-STAR&date="+$('#demo').val();
       }
     }
 
@@ -417,11 +417,11 @@
       if(btnElement.value == "▼"){
         btnElement.value = "▲";
         realVal.value = "LIKE";
-        document.targetURL2.location.href="/search/re_search?app_name=&star="+$('#star').val()+"&filter="+$('#filter').val()+"&os="+$('#os').val()+"&condition=LIKE";
+        document.targetURL2.location.href="/search/re_search?app_name=&star="+$('#star').val()+"&filter="+$('#filter').val()+"&os="+$('#os').val()+"&condition=LIKE&date="+$('#demo').val();
       }else{
         btnElement.value = "▼";
         realVal.value = "-LIKE";
-        document.targetURL2.location.href="/search/re_search?app_name=&star="+$('#star').val()+"&filter="+$('#filter').val()+"&os="+$('#os').val()+"&condition=-LIKE";
+        document.targetURL2.location.href="/search/re_search?app_name=&star="+$('#star').val()+"&filter="+$('#filter').val()+"&os="+$('#os').val()+"&condition=-LIKE&date="+$('#demo').val();
       }
     }
 

@@ -249,12 +249,27 @@ app.get('/member/add_myapp', (req, res) => {
   res.render('member/add_myapp.ejs', { session: req.session });
 });
 
-
-
 // 마이페이지
 
 app.get('/mypage/my_main', (req, res) => {
-  res.render('mypage/my_main.ejs', { session: req.session });
+
+  if(req.session.loginData){
+    var user_id = req.session.loginData;
+
+    var sql = "SELECT email FROM user WHERE user_id = ?";
+    rdsConnection.query(sql, [user_id], (err, row) => {
+      if(err) throw err;
+      var email = row[0].email;
+      res.render('mypage/my_main.ejs', { session: req.session, email: email });
+    })
+  }else{
+    res.writeHead(200, {'Content-Type': 'text/html;charset=UTF-8'});
+    template = `<script>
+    alert('로그인 후 이용해주세요!');
+    location.href="/login/login"
+    </script>`;
+    res.end(template);
+  }
 });
 
 app.get('/mypage/basic_information', (req, res) => {
@@ -395,7 +410,7 @@ app.post('/review/url', (req, response) => {
   var condition = req.body.condition;
   var os = req.body.os;
   console.log(os);
-  var date = req.body.date;
+  var date = req.body.demo;
 
   var url = 'http://3.34.14.98:3000/scrap?app_name=' + app_name;
   //var url = 'http://3.37.3.24/test';

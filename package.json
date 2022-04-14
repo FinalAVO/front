@@ -17,6 +17,7 @@
     "nodemailer": "^6.7.2",
     "path": "^0.12.7",
     "phantom": "^6.3.0",
+    "python-shell": "^3.0.1",
     "request": "^2.88.2",
     "type": "^2.6.0"
   }

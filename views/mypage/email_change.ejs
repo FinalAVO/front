@@ -1,77 +1,107 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<title>Review</title>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Review</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-<link rel="stylesheet"  type="text/css" href="../css/index.css"/>
-<link rel="stylesheet"  type="text/css" href="../css/bar.css"/>
-<link rel="stylesheet"  type="text/css" href="../css/report.css"/>
-<link rel="stylesheet"  type="text/css" href="../css/mypage.css"/>
-<style>
-
-
-#font {
-  font-family: 'Pretendard'
-}
-
-.box1{
-  margin: 0 auto;
-  margin-top: 150px;
-  align-items:center;
-  width:600px;
-  height: 500px;
-  background-color: #ffffff;
-  border:none;
-  border-radius: 15px;
-  align-items:center;
-  text-align:center;
-  box-shadow: 2px 0 5px #ccc
-}
-
-/* ------------- Login ------------- */
+  <link rel="stylesheet"  type="text/css" href="../css/index.css"/>
+  <link rel="stylesheet"  type="text/css" href="../css/bar.css"/>
+  <link rel="stylesheet"  type="text/css" href="../css/report.css"/>
+  <link rel="stylesheet"  type="text/css" href="../css/mypage.css"/>
+  <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+  <style>
 
 
-.loginBtn-wrap{
-  width: 500px;
-  height: 40px;
-  border-radius: 50%;
-}
 
-#loginBtn{
-  width: 100%;
-  height: 100%;
-  font-size: 15px;
-  margin-top: 0px;
-  color: #fff;
-  background-color: #d8d8d8;
-  border: none;
-  border-radius: 3px;
-  outline: 0;
-  cursor: pointer;
-  transition: 0.3s ease;
-}
+  .email-top-box{
+    background-color: #2F5971;
+    background-image: url(../img/email-bar.png);
+    background-size: 100% 100%;
+    width: 100%;
+    height: 120px;
+    position: relative;
+    top: 100px;
+  }
 
-#loginBtn:hover{
-  background-color: #2F5971;
 
-}
 
-.email-input{
-  width: 300px;
-  height: 30px;
-  border: 2px inset gray;
-  border-radius: 20px;
-  padding-left:10px;
-}
+  #font {
+    font-family: 'Pretendard'
+  }
+
+  .box1{
+    margin: 0 auto;
+    margin-top: 150px;
+    align-items:center;
+    width:600px;
+    height: 500px;
+    background-color: #ffffff;
+    border:none;
+    border-radius: 15px;
+    align-items:center;
+    text-align:center;
+    box-shadow: 2px 0 5px #ccc
+  }
+
+  /* ------------- Login ------------- */
+
+
+  .loginBtn-wrap{
+    width: 500px;
+    height: 40px;
+    border-radius: 50%;
+  }
+
+  #loginBtn{
+    width: 100%;
+    height: 100%;
+    font-size: 15px;
+    margin-top: 0px;
+    color: #fff;
+    background-color: #d8d8d8;
+    border: none;
+    border-radius: 3px;
+    outline: 0;
+    cursor: pointer;
+    transition: 0.3s ease;
+  }
+
+  #loginBtn:hover{
+    background-color: #2F5971;
+
+  }
+
+  .email-input{
+    width: 300px;
+    height: 30px;
+    border: 2px inset gray;
+    border-radius: 20px;
+    padding-left:10px;
+  }
 
 
 </style>
 
-
-
-
+<script>
+$(function(){
+  $('#loginBtn').click(function(){
+    var emailAuth = $("#email").val();
+    $.ajax({
+      url: "/user/emailAuth",
+      type: "POST",
+      dataType: "JSON",
+      data: {"email": emailAuth}
+    })
+    .done(function(json){
+      alert("인증번호가 발송되었습니다.");
+    })
+    .fail(function (xhr, status, errorThrown){
+      alert("오류가 발생했습니다. 잠시 후 다시 시도해주세요..");
+    })
+  });
+})
+</script>
 
 </head>
 
@@ -95,75 +125,61 @@
           <li style="margin-right:7px;color:white;"><a href="/user/logout" style="color:white;">Logout</a></li>
         </div>
 
-      <% } else { %>
-        <li style="margin-right:12px;color:white;"><a href="/login/login" style="color:white;">Login</a></li>
-      <% } %>
-      </ul>
+        <% } else { %>
+          <li style="margin-right:12px;color:white;"><a href="/login/login" style="color:white;">Login</a></li>
+          <% } %>
+        </ul>
 
       </div>
 
-  <br/>
-  <hr/>
-
-  <!-- 상단바 끝 -->
-
-    <!-- 사이드 바 -->
-  <div class="side-menu">
-    <ol>
       <br/>
-      <span class="my-page-title">회원정보 수정</span>
+      <hr/>
+
+      <!-- 상단바 끝 -->
+
+
       <br/>
-      <br/>
-      <li><a class="menu" href="/mypage/my_main">기본정보</a></li>
-      <li><a class="menu" href="/mypage/security">보안</a></li>
-    </ol>
-  </div>
 
-  <!-- 사이드바 끝 -->
+      <div class="email-top-box">
+        </div>
 
-<br/>
-
-  <div>
-    <h3 style="float:left; margin-left:270px; margin-top:30px;"> 이메일 변경 <h3>
-  </div>
-
-  <hr style="background-color: #2F5971;
-  height: 2px;
-  margin-top: 20px;
-  width: 100%;
-  float: left;">
+        <hr style="background-color: #2F5971;
+        height: 2px;
+        margin-top: 20px;
+        width: 100%;
+        float: left;">
 
 
 
-  <div class ="box1" style=" align-items:center;">
-    <br>
-    <p id="font" style="margin-top:10px;"> 이메일 변경 </p>
-    <br>
-    <div style="margin-top:30px;">
-      <span style="float:left; margin-top:5px; margin-left:50px;color:#2F5971; font-size:16px;" id="font" > 현재 이메일 </span>
-      <input type="text" style="margin-left:22px;" class="email-input" name="findId" />
-    </div>
-    <div class="loginBtn-wrap" style="textalign:center; margin-top:42px; margin-left:50px;">
-      <button type="submit" id="loginBtn" style="float:right;" onclick="location.href='/login/login">인증번호 요청</button>
-    </div>
-    <div style="margin-top:42px;">
-      <span style="float:left; margin-top:5px; margin-left:50px;color:#2F5971; font-size:16px;" id="font" > 새 이메일 </span>
-      <input type="text" style="margin-left:40px;" class="email-input" name="findId" />
-    </div>
-    <div style="margin-top:42px;">
-      <span style="float:left; margin-top:7px; margin-left:50px;color:#2F5971; font-size:16px;"  id="font" > 이메일 인증번호 입력 </span>
-      <input type="text" style="margin-right: 30px;"class="email-input"  name="findId"/>
-    </div>
+        <div class ="box1" style=" align-items:center;">
+          <br>
+          <p id="font" style="margin-top:10px;"> 이메일 변경 </p>
+          <br>
+          <div style="margin-top:30px;">
+            <span style="float:left; margin-top:5px; margin-left:50px;color:#2F5971; font-size:16px;" id="font" > 현재 이메일 </span>
+            <input type="text" id="email" style="margin-left:22px;" class="email-input" name="findId" />
+          </div>
+          <div class="loginBtn-wrap" style="textalign:center; margin-top:42px; margin-left:50px;">
+            <button type="submit" id="loginBtn" style="float:right;">인증번호 요청</button>
+          </div>
+          <div style="margin-top:42px;">
+            <span style="float:left; margin-top:5px; margin-left:50px;color:#2F5971; font-size:16px;" id="font" > 새 이메일 </span>
+            <input type="text" style="margin-left:40px;" class="email-input" name="findId" />
+          </div>
+          <div style="margin-top:42px;">
+            <span style="float:left; margin-top:7px; margin-left:50px;color:#2F5971; font-size:16px;"  id="font" > 이메일 인증번호 입력 </span>
+            <input type="text" style="margin-right: 30px;"class="email-input"  name="findId"/>
+          </div>
 
-    <br>
+          <br>
 
-    <div class="loginBtn-wrap" style="textalign:center; margin-top:30px; margin-left:50px;">
-      <button type="submit" id="loginBtn" style="float:right;" onclick="location.href='#">저장</button>
-    </div>
-  </div>
+          <div class="loginBtn-wrap" style="textalign:center; margin-top:30px; margin-left:50px;">
+            <button type="submit" id="loginBtn" style="float:right;" onclick="location.href='#">저장</button>
+          </div>
+        </div>
 
 
-  <!-- 하단 푸터 시작 -->
-  <%- include('../footer.ejs') %>
-</body>
-</html>
+        <!-- 하단 푸터 시작 -->
+        <%- include('../footer.ejs') %>
+      </body>
+      </html>
