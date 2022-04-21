@@ -51,9 +51,10 @@ app.post('/register', (req, res) => {
       if(err) console.log(err);
     });
   });
-  res.json("register success");
+  res.json("회원가입이 완료되었습니다.");
 });
 
+// 이메일 인증(회원가입)
 app.post('/emailAuth', (req, res) => {
 
   var email = req.body.email;
@@ -74,6 +75,36 @@ app.post('/emailAuth', (req, res) => {
   res.json(rand);
 });
 
+// 이메일 인증(이메일 변경)
+app.post('/emailAuth2', (req, res) => {
+
+  var email = req.body.email;
+
+  var sql = "SELECT * FROM user WHERE email = ?";
+  rdsConnection.query(sql, [email], (err, row) => {
+    if(err) throw err;
+
+    if(row.length > 0){
+      const rand = Math.random().toString(36).slice(2, 8);
+      console.log(rand);
+
+      var message = "<h3>고객님의 이메일 인증번호는 </h3><h1>";
+      message += rand;
+      message += "</h1><h3>입니다.</h3>"
+
+      transporter.sendMail({
+        from: `"Reviewer" <reviewer3566@gmail.com>`,
+        to: email,
+        subject: "이메일 인증을 위한 인증번호를 발송합니다",
+        html: message
+      })
+      res.json(rand);
+    }else{
+      res.json("0");
+    }
+  })
+});
+
 app.post('/emailCC', (req, res) => {
   var user_cert = req.body.send_number;
   var rand = req.body.rand;
@@ -86,74 +117,74 @@ app.post('/emailCC', (req, res) => {
 })
 
 app.post("/phoneAuth", (req, res) => {
-    const user_name = "Review";
-    const user_phone_number = req.body.phone;
-    console.log(user_phone_number);
+  const user_name = "Review";
+  const user_phone_number = req.body.phone;
+  console.log(user_phone_number);
 
-    var rand = ""
-    for(var i = 0; i < 6; i++){
-      rand += String(Math.floor(Math.random() * (9 - 0)) + 0);
+  var rand = ""
+  for(var i = 0; i < 6; i++){
+    rand += String(Math.floor(Math.random() * (9 - 0)) + 0);
+  }
+  console.log(rand);
+
+  var resultCode = 200;
+  const date = Date.now().toString();
+
+  // 환경변수로 저장했던 중요한 정보들
+  const serviceId = 'ncp:sms:kr:282167820327:avo_sms';
+  const accessKey = 'c7Sp7NAycDbwPGwODzFc';
+  const secretKey = 'YV6SBVaeOb4t3Snxcq7SXdXrbvM5fSNkFZJjQSaC';
+  const my_number = '01026553901';
+
+  // 그 외 url 관련
+  const method = "POST";
+  const space = " ";
+  const newLine = "\n";
+  const url = `https://sens.apigw.ntruss.com/sms/v2/services/${serviceId}/messages`;
+  const url2 = `/sms/v2/services/${serviceId}/messages`;
+
+  // 중요한 key들을 한번 더 crypto-js 모듈을 이용하여 암호화 하는 과정.
+  const hmac = CryptoJS.algo.HMAC.create(CryptoJS.algo.SHA256, secretKey);
+  hmac.update(method);
+  hmac.update(space);
+  hmac.update(url2);
+  hmac.update(newLine);
+  hmac.update(date);
+  hmac.update(newLine);
+  hmac.update(accessKey);
+  const hash = hmac.finalize();
+  const signature = hash.toString(CryptoJS.enc.Base64);
+
+  request({
+    method : method,
+    json : true,
+    uri : url,
+    headers : {
+      'Contenc-type': 'application/json; charset=utf-8',
+      'x-ncp-iam-access-key': accessKey,
+      'x-ncp-apigw-timestamp': date,
+      'x-ncp-apigw-signature-v2': signature
+    },
+    body : {
+      'type' : 'SMS',
+      'countryCode' : '82',
+      'from' : my_number,
+      'content' : `${user_name}에서 알려드립니다. 고객님의 인증번호는 ${rand}입니다.`,
+      'messages' : [
+        {
+          'to' : `${user_phone_number}`
+        }
+      ]
     }
-    console.log(rand);
+  }, function(err, res, html) {
+    if(err) console.log(err);
+    else {
+      resultCode = 200;
+      console.log(html);
+    }
+  });
 
-    var resultCode = 200;
-    const date = Date.now().toString();
-
-    // 환경변수로 저장했던 중요한 정보들
-    const serviceId = 'ncp:sms:kr:282167820327:avo_sms';
-    const accessKey = 'c7Sp7NAycDbwPGwODzFc';
-    const secretKey = 'YV6SBVaeOb4t3Snxcq7SXdXrbvM5fSNkFZJjQSaC';
-    const my_number = '01026553901';
-
-    // 그 외 url 관련
-    const method = "POST";
-    const space = " ";
-    const newLine = "\n";
-    const url = `https://sens.apigw.ntruss.com/sms/v2/services/${serviceId}/messages`;
-    const url2 = `/sms/v2/services/${serviceId}/messages`;
-
-    // 중요한 key들을 한번 더 crypto-js 모듈을 이용하여 암호화 하는 과정.
-    const hmac = CryptoJS.algo.HMAC.create(CryptoJS.algo.SHA256, secretKey);
-    hmac.update(method);
-    hmac.update(space);
-    hmac.update(url2);
-    hmac.update(newLine);
-    hmac.update(date);
-    hmac.update(newLine);
-    hmac.update(accessKey);
-    const hash = hmac.finalize();
-    const signature = hash.toString(CryptoJS.enc.Base64);
-
-    request({
-		    method : method,
-		    json : true,
-		    uri : url,
-    		headers : {
-    			'Contenc-type': 'application/json; charset=utf-8',
-    			'x-ncp-iam-access-key': accessKey,
-    			'x-ncp-apigw-timestamp': date,
-    			'x-ncp-apigw-signature-v2': signature
-    		},
-    		body : {
-    			'type' : 'SMS',
-    			'countryCode' : '82',
-    			'from' : my_number,
-    			'content' : `${user_name}에서 알려드립니다. 고객님의 인증번호는 ${rand}입니다.`,
-    			'messages' : [
-    				{
-    					'to' : `${user_phone_number}`
-    				}
-    			]
-    		}
-    	}, function(err, res, html) {
-    		if(err) console.log(err);
-    		else {
-    			resultCode = 200;
-    			console.log(html);
-    		}
-    	});
-
-    	res.json(rand);
+  res.json(rand);
 });
 
 
@@ -280,8 +311,8 @@ app.post('/change_email', (req, res) => {
   var sql = "UPDATE user SET email = ? WHERE user_id = ?";
   rdsConnection.query(sql, [new_email, user_id], (err, row) => {
     if(err) console.log(err);
-    console.log(row);
-    res.send('success');
+
+    res.json('success');
   })
 })
 
@@ -289,22 +320,69 @@ app.post('/change_email', (req, res) => {
 app.post('/delete_user', (req, res) => {
   console.log("delete_user start");
 
+  var password = req.body.password;
   var user_id = req.session.loginData;
 
-  var sql = "DELETE FROM user WHERE user_id = ?";
-  rdsConnection.query(sql, [user_id], (err, row) => {
-    if(err) console.log(err);
-    console.log(row);
-    req.session.destroy(error => {
-      if(error) console.log(error);
-    });
-    res.writeHead(200, {'Content-Type': 'text/html;charset=UTF-8'});
-    template = `<script>
-    alert('정상적으로 탈퇴되었습니다.');
-    location.href="/"
-    </script>`;
-    res.end(template);
-  })
+  var sql = 'SELECT * FROM user WHERE user_id = ?';
+  rdsConnection.query(sql, [user_id], (err, rows) => {
+    if(err) throw err;
+
+    if(rows.length > 0){
+      bcrypt.compare(password, rows[0].user_pwd, (error, result) => {
+        if(result){
+          var sql_d = "DELETE FROM user WHERE user_id = ?";
+          rdsConnection.query(sql_d, [user_id], (err, row) => {
+            if(err) console.log(err);
+            console.log(row);
+            req.session.destroy(error => {
+              if(error) console.log(error);
+            });
+            res.json("1");
+          })
+        }else{
+          res.json("0");
+        }
+      });
+    }
+  });
+})
+
+// 비밀번호 변경
+app.post('/change_pwd', (req, res) => {
+  console.log("change_pwd start");
+
+  var user_id = req.session.loginData;
+  var password = req.body.password;
+  var new_password = req.body.new_password;
+
+  var sql = 'SELECT * FROM user WHERE user_id = ?'
+  rdsConnection.query(sql, [user_id], (err, rows) => {
+    if(err) throw err;
+
+    if(rows.length > 0){
+      bcrypt.compare(password, rows[0].user_pwd, (error, result) => {
+        if(result){
+          var sql_u = 'UPDATE user SET user_pwd = ? WHERE user_id = ?';
+          bcrypt.hash(new_password, saltRounds, (err, hash) => {
+            new_password = hash;
+            rdsConnection.query(sql_u, [new_password, user_id], (error, rows) => {
+              if(err) console.log(err);
+              req.session.destroy(error => {
+                if(error) console.log(error);
+              });
+              res.json("1");
+            });
+          });
+        }else{
+          console.log("비번 다름");
+          res.json("0");
+        }
+      });
+    }else{
+      console.log("원인 불명의 에러");
+      res.json("2");
+    }
+  });
 })
 
 module.exports = app;

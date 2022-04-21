@@ -4,9 +4,9 @@ const phantom = require("phantom");
 const mime = require('mime');
 const fastcsv = require("fast-csv");
 const fs = require('fs');
-const ws = fs.createWriteStream("reviewData.csv");
 const path = require('path');
 const mysql = require('mysql');
+const download = require('download');
 const {PythonShell} =require('python-shell');
 const AWS = require('aws-sdk');
 const BUCKET_NAME = 's3-001bucket';
@@ -32,14 +32,54 @@ app.get("/", (req, res) =>{
   res.send("")
 })
 
+app.get("/testtest", (req,res) => {
+  res.render("member/testtest.ejs");
+});
 
 
 app.post("/", (req, res) =>{
   var collection_name = req.body.collection_name;
   var user_id = req.body.user_data;
   var app_name = req.body.app_name;
-  var start_date = "2021-01-01";
-  var end_date = "2022-04-05";
+  var date = req.body.date;
+  console.log("original date in wordcloud_member : " + date);
+  if(!date || date == "undefined"){
+    var e_date = new Date();
+    if((e_date.getMonth() + 1) >= 10){
+      if(e_date.getDate() >= 10){
+        end_date = e_date.getFullYear() + '-' + (e_date.getMonth() + 1) + '-' + e_date.getDate();
+      }else{
+        end_date = e_date.getFullYear() + '-' + (e_date.getMonth() + 1) + '-0' + e_date.getDate();
+      }
+    }else{
+      if(e_date.getDate() >= 10){
+        end_date = e_date.getFullYear() + '-0' + (e_date.getMonth() + 1) + '-' + e_date.getDate();
+      }else{
+        end_date = e_date.getFullYear() + '-0' + (e_date.getMonth() + 1) + '-0' + e_date.getDate();
+      }
+    }
+    console.log(end_date);
+    var s_date = new Date(e_date.setMonth(e_date.getMonth() - 3));
+    if((s_date.getMonth() + 1) >= 10){
+      if(s_date.getDate() >= 10){
+        start_date = s_date.getFullYear() + '-' + (s_date.getMonth() + 1) + '-' + s_date.getDate();
+      }else{
+        start_date = s_date.getFullYear() + '-' + (s_date.getMonth() + 1) + '-0' + s_date.getDate();
+      }
+    }else{
+      if(s_date.getDate() >= 10){
+        start_date = s_date.getFullYear() + '-0' + (s_date.getMonth() + 1) + '-' + s_date.getDate();
+      }else{
+        start_date = s_date.getFullYear() + '-0' + (s_date.getMonth() + 1) + '-0' + s_date.getDate();
+      }
+    }
+    console.log(start_date);
+  }else{
+    var start_date = date.slice(0,10);
+    console.log(start_date);
+    var end_date = date.slice(13);
+    console.log(end_date);
+  }
   console.log(req.body);
   var url2 = "http://3.34.14.98:3000/report_crawl"
   axios.get(url2,{
@@ -74,7 +114,7 @@ app.post("/", (req, res) =>{
       });
 
       var user_id = req.body.user_data;
-      var params = [user_id, collection_name]
+      var params = [user_id, collection_name, start_date, end_date]
       console.log(collection_name);
       console.log(user_id);
 
@@ -86,8 +126,8 @@ app.post("/", (req, res) =>{
 
       word_token(options_wc, function(tk1, tk2, tk3, tk4, tk5){
 
-        var sql = 'SELECT * FROM star_report WHERE user_id = ? and app_name = ?';
-        var sql2 = 'SELECT * FROM star_share_report WHERE user_id = ? and app_name = ?';
+        var sql = 'SELECT * FROM star_report WHERE user_id = ? and app_name = ? and start_date = ? and end_date = ?';
+        var sql2 = 'SELECT * FROM star_share_report WHERE user_id = ? and app_name = ? and start_date = ? and end_date = ?';
 
         rdsConnection.query(sql, params, function(err, result1){
           rdsConnection.query(sql2, params, function(err, result2){
@@ -159,9 +199,17 @@ app.post("/", (req, res) =>{
                 db = database.db('review');
                 db.collection(collection_name).aggregate([
                   {
+                    $match: {
+                      "DATE" : {
+                        $gte: start_date,
+                        $lte: end_date
+                      }
+                    }
+                  },{
                     $group: {
                       _id: { "DATE": { $substr: [ "$DATE", 0, 10 ] }},
-                      avg_star:{ $avg: "$STAR" }
+                      avg_star:{ $avg: "$STAR" },
+                      count: { $sum: 1 }
                     }
                   },
                   {
@@ -170,7 +218,8 @@ app.post("/", (req, res) =>{
                       DATE: "$_id.DATE",
                       avg_star: {
                         $round: ["$avg_star", 1]
-                      }
+                      },
+                      count: "$count"
                     }
                   },
                   {
@@ -179,22 +228,24 @@ app.post("/", (req, res) =>{
                 ]).toArray(function(err, mongoResult){
                   if(err) throw err;
                   var mongoData = []
+                  var mongoData2 = []
                   // console.log(mongoResult);
                   var sum_ = 0;
-
-                  // for(var i=0; i < mongoResult.length; i++){
-                  //   mongoData.push(JSON.stringify({ x: mongoResult[i].DATE, y: mongoResult[i].avg_star }))
-                  // }
+                  var count_ = 0;
 
                   for(var i=0; i < mongoResult.length; i = i + 3){
                     if(i+2 < mongoResult.length){
                       sum_ = Math.round(((mongoResult[i].avg_star + mongoResult[i+1].avg_star + mongoResult[i+2].avg_star) / 3) * 10) / 10;
+                      count_ = mongoResult[i].count + mongoResult[i+1].count + mongoResult[i+2].count
                     } else if (i+1 < mongoResult.length){
                       sum_ = Math.round(((mongoResult[i].avg_star + mongoResult[i+1].avg_star) / 2) * 10) / 10;
+                      count_ = mongoResult[i].count + mongoResult[i+1].count
                     } else {
                       sum_ = mongoResult[i].avg_star
+                      count_ = mongoResult[i].count
                     }
                     mongoData.push(JSON.stringify({ x: mongoResult[i].DATE, y: sum_ }))
+                    mongoData2.push(JSON.stringify({ x: mongoResult[i].DATE, y: count_ }))
                   }
 
                   // console.log(mongoData);
@@ -233,11 +284,12 @@ app.post("/", (req, res) =>{
                     display:flex;
                     float: left;
                     margin-right: 20px;
-                    background-color: #CECECE;
-                    color: #2F5971;
-                    padding: 5px 5px 5px 5px;
+                    background-color: #FAFAFA;
+                    color: #2f5971;
+                    padding: 10px 10px 0px 10px;
                     font-size: 14px;
-                    border-radius: 15px;
+                    border-radius: 17px;
+                    height: 45px;
                   }
                   .keyword-title{
                     display:flex;
@@ -275,7 +327,13 @@ app.post("/", (req, res) =>{
                   }
                   .count-title{
                     float: left;
-                    margin:30px 0 0 65px;
+                    margin:30px 0 30px 0px;
+                    font-size: 14px;
+                  }
+
+                  .count-title2{
+                    float: left;
+                    margin:30px 0 0 5px;
                     font-size: 14px;
                   }
                   .count-txt-title{
@@ -294,7 +352,7 @@ app.post("/", (req, res) =>{
                   }
                   .star2-title{
                     float: left;
-                    margin:30px 0 0 0px;
+                    margin:30px 0 30px 0px;
                     font-size: 14px;
                   }
                   .star2-txt-title{
@@ -320,45 +378,91 @@ app.post("/", (req, res) =>{
                     border-radius:20px;
                     margin:10px 0 100px 0px;
                   }
-                  .chartBox{
+                  .chartBox1{
                     width: 1300px;
                     position: center;
+                    margin-top:535px;
+                    background-color: white;
+                    border-radius:20px;
                   }
+
+                  .chartBox2{
+                    width: 1300px;
+                    position: center;
+                    margin-top:50px;
+                    background-color: white;
+                    border-radius:20px;
+                  }
+
                   .count-txt-title2{
                     float: right;
                     margin:32px 40px 0 10px;
                     font-size: 11px;
                     color:gray;
                   }
+                  .wordcount>h5 {
+                    color:#ed5f48;
+                    margin-top:0px;
+                  }
+
+                  .wordcount>h3 {
+                    margin-top:18px;
+                    padding:0px;
+                  }
 
                   </style>
                   </head>
                   <body>
-                  <div>
                   <!-- 보고서 가져오기 -->
                   <div class="report-title-box">
-                  <h2 class="report-title"> ${app_name} </h2>
-                  <h2 class="report-title"> &nbsp;Review Report </h2>
+                    <h2 style="display:inline;"> ${app_name} </h2>
+                    <h2 style="display:inline;color:gray;font-size:14px;"> &nbsp;&nbsp;&nbsp;리뷰 수집 기간: ${start_date} ~ ${end_date} </h2>
+                  </div>
                   <div>
                   <hr class="title-hr">
                   </div>
-                  </div>
                   <!-- 1. 키워드 워드카운트  -->
                   <div style="margin-right:800px;">
-                  <div class="keyword-box">
-                  <p class="keyword-title"> Report Keyword Top 5 </p><br/><br/>
-                  <h3 class="wordcount" >#${tk1} </h3>
-                  <h3 class="wordcount">#${tk2} </h3>
-                  <h3 class="wordcount">#${tk3} </h3>
-                  <h3 class="wordcount">#${tk4} </h3>
-                  <h3 class="wordcount">#${tk5} </h3>
+                    <img src="../img/keyword-img.png">
+                    <br/>
+                    <div class="keyword-box">
+                      <div class="wordcount">
+                        <h5>TOP 1</h5>
+                        <h3>#${tk1} </h3>
+                      </div>
+                      <div class="wordcount">
+                        <h5>TOP 2</h5>
+                        <h3>#${tk2} </h3>
+                      </div>
+                      <div class="wordcount">
+                        <h5>TOP 3</h5>
+                        <h3>#${tk3} </h3>
+                      </div>
+                      <div class="wordcount">
+                        <h5>TOP 4</h5>
+                        <h3>#${tk4} </h3>
+                      </div>
+                      <div class="wordcount">
+                        <h5>TOP 5</h5>
+                        <h3>#${tk5} </h3>
+                      </div>
+                    </div>
                   </div>
+
+                  <div>
+                  <hr style="background-color: #e2e2e2;
+                  height: 0.5px;
+                  margin-top: 100px;
+                  margin-left: 5px;
+                  width: 100%;"/>
                   </div>
+
                   <div class="real-report">
                   <!-- 2. 주제별 평점 분석 -->
                   <div style="float:left; display: inline; width: 49%;">
-                  <p class="star-title"> 주제별 별점 분석</p>
-                  <p class="star-txt-title"> (전체 별점 대비 주제별 별점 평균을 보여줍니다.)</p>
+                  <img src="../img/chart1-img.png" width="50px;" height="47px;" style="float:left;display: inline;">
+                  <p class="star-title" style="float:left;display: inline;"> 주제별 별점 분석</p>
+                  <p class="star-txt-title" style="float:left;display: inline;"> (전체 별점 대비 주제별 별점 평균을 보여줍니다.)</p>
                   </br>
                   <div class="star-box2">
                   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js"></script>
@@ -438,8 +542,9 @@ app.post("/", (req, res) =>{
                   </div>
                   <!-- 3. 주제별 리뷰 비율-->
                   <div style="float:right; display: inline; width: 49%; ">
-                  <p class="count-title" style="margin-right:10px;"> 주제별 리뷰 비율 </p>
-                  <p class="count-txt-title"> (주제별 리뷰가 전체 리뷰에서 차지하는 비율을 보여줍니다.)</p>
+                  <img src="../img/chart2-img.png" width="50px;" height="47px;" style="float:left;display: inline; margin-left:45px;">
+                  <p class="count-title2" style="float:left;display:inline;"> 주제별 리뷰 비율 </p>
+                  <p class="count-txt-title"style="display:inline;" > (주제별 리뷰가 전체 리뷰에서 차지하는 비율을 보여줍니다.)</p>
                   </br>
                   <div class="count-box">
                   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
@@ -499,10 +604,12 @@ app.post("/", (req, res) =>{
                   </div>
                   </div>
 
-
-                  <p class="count-title" style="margin-right:10px;"> 기간 별 리뷰 비율 </p>
-                  <p class="count-txt-title"> (주제별 리뷰가 전체 리뷰에서 차지하는 비율을 보여줍니다.)</p>
-                  <div class="chartBox">
+                  <div style="padding-top:20px;">
+                  <img src="../img/chart3-img.png" width="50px;" height="47px;" style="float:left;display: inline; margin-top:30px;">
+                  <p class="count-title" style="margin-right:10px; margin-top:50px;"> 기간 별 리뷰 평점</p>
+                  <p class="count-txt-title"style="margin-top:52px;"> (기간별로 리뷰 평점의 변화를 보여줍니다. )</p>
+                  </div>
+                  <div class="chartBox1">
                   <canvas id="myChart"></canvas>
                   </div>
 
@@ -569,15 +676,85 @@ app.post("/", (req, res) =>{
                     }
                   }
                 });
-
-
                 </script>
 
+                <div style="margin-top:40px;">
+                <img src="../img/chart4-img.png" width="50px;" height="47px;" style="float:left;display: inline;">
+                <p class="count-title" style="margin-right:10px;"> 기간 별 리뷰 개수 </p>
+                <p class="count-txt-title"> (리뷰의 개수를 기간별로 보여줍니다.)</p>
+                </div>
+                <br/>
+                <div class="chartBox2">
+                <canvas id="chart2"></canvas>
+                </div>
+
+                <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-annotation/0.5.7/chartjs-plugin-annotation.min.js"></script>
+                <script>
+
+                var data2 = [${mongoData2}]
+                // console.log(data)
+
+                // const totalDuration = 3000;
+                // const delayBetweenPoints = totalDuration / data.length;
+                // const previousY = (ctx2) => ctx2.index === 0 ? ctx2.chart.scales.y.getPixelForValue(100) : ctx2.chart.getDatasetMeta(ctx2.datasetIndex).data[ctx2.index - 1].getProps(['y'], true).y;
+
+                var ctx2 = document.getElementById('chart2').getContext('2d');
+                var chart2 = new Chart(ctx2, {
+                  type: 'line',
+                  data: {
+                    datasets: [{
+                      borderColor: 'red',
+                      borderWidth: 2,
+                      radius: 1,
+                      data: data2,
+                    }
+                  ]
+                },
+                options: {
+                  animation: {
+                    x: {
+                      type: 'number',
+                      easing: 'linear',
+                      duration: delayBetweenPoints,
+                      from: NaN, // the point is initially skipped
+                      delay(ctx2) {
+                        if (ctx2.type !== 'data' || ctx2.xStarted) {
+                          return 0;
+                        }
+                        ctx2.xStarted = true;
+                        return ctx2.index * delayBetweenPoints;
+                      }
+                    },
+                    y: {
+                      type: 'number',
+                      easing: 'linear',
+                      duration: delayBetweenPoints,
+                      from: previousY,
+                      delay(ctx2) {
+                        if (ctx2.type !== 'data' || ctx2.yStarted) {
+                          return 0;
+                        }
+                        ctx2.yStarted = true;
+                        return ctx2.index * delayBetweenPoints;
+                      }
+                    }
+                  },
+                  interaction: {
+                    intersect: false
+                  },
+                  plugins: {
+                    legend: false
+                  }
+                }
+              });
+              </script>
 
                 <!-- 5. 평점 점유율-->
                 <div style="float:left;">
-                <p class="star2-title" > 평점 점유율(개) </p>
-                <p class="star2-txt-title"> (기간별로 별점별 점유율을 보여줍니다.)</p>
+                <img src="../img/chart5-img.png" width="50px;" height="47px;" style="float:left;display: inline;margin-top:20px;">
+                <p class="star2-title" style="margin-top:40px;" > 평점 점유율(개) </p>
+                <p class="star2-txt-title" style="margin-top:40px;"> (기간별로 별점별 점유율을 보여줍니다.)</p>
                 </br>
                 <div class="star3-box">
                 <canvas id="yolo" style="position: relative; width:1500px; height:200px; margin-left:62px;"></canvas>
@@ -667,10 +844,13 @@ app.post("/", (req, res) =>{
                     { functionName : 'closeLoading' },
                     'http://3.37.3.24/member/my_report'
                   );
+
+                  window.parent.postMessage(
+                    { functionName : 'closeLoading' },
+                    'http://avo-lb-1976068851.ap-northeast-2.elb.amazonaws.com/member/my_report'
+                  );
                 })
                 </script>
-                </div>
-                </div>
                 </div>
                 </div>
                 </body>
@@ -804,10 +984,9 @@ app.get('/wordcloud_member', (req, res) => {
 
   console.log(req.session.appData);
   var collection_name = req.query.db_name;
-  collection_name = collection_name.slice(1, -1);
   console.log(collection_name);
 
-  var date = req.query.date;
+  var date = req.query.demo;
   console.log("original date in wordcloud_member : " + date);
   if(!date || date == "undefined"){
     var e_date = new Date();
@@ -841,7 +1020,7 @@ app.get('/wordcloud_member', (req, res) => {
     }
     console.log(start_date);
   }else{
-    var start_date = date.slice(0,11);
+    var start_date = date.slice(0,10);
     console.log(start_date);
     var end_date = date.slice(13);
     console.log(end_date);
@@ -876,7 +1055,7 @@ app.get('/wordcloud_member', (req, res) => {
           if(error) console.log('error : ' + error);
         });
         console.log("collection_name : " + collection_name);
-        res.redirect('/member/my_wordcloud?db_name=' + collection_name);
+        res.redirect('/test');
       }else{
         res.end();
       }
@@ -887,51 +1066,36 @@ app.get('/wordcloud_member', (req, res) => {
   })
 })
 
-app.post('/csv_download'), (req, res) =>{
-  var collection_name = req.body.collection_name;
-  mongodb.connect(
-  databaseUrl,
-  { useNewUrlParser: true, useUnifiedTopology: true },
-  (err, client) => {
+app.get('/csv_download', function(req, res){
+  var collection_name = req.query.collection_name;
+  console.log(collection_name);
+  var mongo_file = fs.createWriteStream("reviewData.csv");
+
+  mongoClient.connect(databaseUrl, { useNewUrlParser: true, useUnifiedTopology: true }, (err, client) => {
     if (err) throw err;
-    client
-      .db("zkoder_db")
-      .collection("category")
-      .find({})
-      .toArray((err, data) => {
+    client.db("review").collection(collection_name).find({}, {_id: 0}).sort({ DATE: 1 }).toArray((err, data) => {
         if (err) throw err;
-        console.log(data);
+        // console.log(data);
         fastcsv
           .write(data, { headers: true })
           .on("finish", function() {
-            console.log("Write to bezkoder_mongodb_fastcsv.csv successfully!");
+            console.log("Write to reviewData.csv successfully!");
           })
-          .pipe(ws);
-        client.close();
-      });
-  }
-);
-}
+          .pipe(mongo_file);
 
-// var date1 = new Date(result1[0]["end_date"]);
-// var date2 = new Date(result1[0]["start_date"]);
-// var diffDate = date1.getTime() - date2.getTime();
-// var dateDays = Math.abs(diffDate / (1000 * 3600 * 24));
-//
-//
-// function formatDate(date) {
-//   var d = new Date(date), month = '' + (d.getMonth() + 1), day = '' + d.getDate(), year = d.getFullYear();
-//   if (month.length < 2)
-//   month = '0' + month;
-//   if (day.lengh < 2)
-//   day = '0' + day;
-//
-//   return [year, month, day].join('-');
-// }
-//
-// var center_date = dateDays/2
-// var stdate = formatDate(date2);
-// var edate = formatDate(date1);
-// var center = new Date(date2.setDate(date2.getDate() + center_date));
-// var cdate = formatDate(center);
+        try {
+          var file = "/data/front/reviewData.csv";
+          var filename = path.basename(file); // 파일 경로에서 파일명(확장자포함)만 추출
+          var mimetype = mime.getType(file); // 파일의 타입(형식)을 가져옴
+          res.setHeader('Content-disposition', 'attachment; filename=' + filename); // 다운받아질 파일명 설정
+          res.setHeader('Content-type', mimetype); // 파일 형식 지정
+          var filestream = fs.createReadStream(file, {encoding: 'utf-8'});
+          filestream.pipe(res);
+          console.log("res");
+        } catch (e){
+          console.log(e)
+        }
+      });
+  });
+});
 module.exports = app;

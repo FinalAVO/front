@@ -304,7 +304,7 @@
                     dataType : "JSON",
                     data : {"user_id":user_id, "user_pwd":user_pwd, "email":email, "phone":phone}
                   }).done(function(json){
-                    alert(json)
+                    alert(json);
                     location.href='/login/login';
                   }).fail(function (xhr, status, errorThrown){
                     alert("오류가 발생했습니다. 잠시 후 다시 시도해주세요..");
@@ -342,6 +342,7 @@
                 alert("인증번호가 발송되었습니다.");
                 $('#email_span').html("");
                 $('#emailAuth').val(json);
+                $('#user_num').focus();
               })
               .fail(function (xhr, status, errorThrown){
                 alert("오류가 발생했습니다. 잠시 후 다시 시도해주세요..");
@@ -386,6 +387,7 @@
                 alert("인증번호가 발송되었습니다.");
                 $('#phone_span').html("");
                 $('#phoneAuth').val(json);
+                $('#user_num2').focus();
               })
               .fail(function (xhr, status, errorThrown){
                 alert("오류가 발생했습니다. 잠시 후 다시 시도해주세요..");

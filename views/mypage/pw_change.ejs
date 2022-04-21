@@ -1,91 +1,151 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<title>Review</title>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Review</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-<link rel="stylesheet"  type="text/css" href="../css/index.css"/>
-<link rel="stylesheet"  type="text/css" href="../css/bar.css"/>
-<link rel="stylesheet"  type="text/css" href="../css/report.css"/>
-<link rel="stylesheet"  type="text/css" href="../css/mypage.css"/>
-<style>
-
-
-.pw-top-box{
-  background-color: #2F5971;
-  background-image: url(../img/pw-bar.png);
-  background-size: 100% 100%;
-  width: 100%;
-  height: 120px;
-  position: relative;
-  top: 100px;
-}
+  <link rel="stylesheet"  type="text/css" href="../css/index.css"/>
+  <link rel="stylesheet"  type="text/css" href="../css/bar.css"/>
+  <link rel="stylesheet"  type="text/css" href="../css/report.css"/>
+  <link rel="stylesheet"  type="text/css" href="../css/mypage.css"/>
+  <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+  <style>
 
 
-#font {
-  font-family: 'Pretendard'
-}
-
-.box1{
-  margin: 0 auto;
-  margin-top: 150px;
-  align-items:center;
-  width:600px;
-  height: 400px;
-  background-color: #ffffff;
-  border:none;
-  border-radius: 15px;
-  align-items:center;
-  text-align:center;
-  box-shadow: 2px 0 5px #ccc
-}
-
-/* ------------- Login ------------- */
+  .pw-top-box{
+    background-color: #2F5971;
+    background-image: url(../img/pw-bar.png);
+    background-size: 100% 100%;
+    width: 100%;
+    height: 120px;
+    position: relative;
+    top: 100px;
+  }
 
 
-.loginBtn-wrap{
-  width: 230px;
-  height: 40px;
-  border-radius: 50%;
-  margin-left: 50px;
-}
+  #font {
+    font-family: 'Pretendard'
+  }
 
-#loginBtn{
-  width: 100%;
-  height: 100%;
-  font-size: 15px;
-  margin-top: 0px;
-  color: #fff;
-  background-color: #d8d8d8;
-  border: none;
-  border-radius: 3px;
-  outline: 0;
-  cursor: pointer;
-  transition: 0.3s ease;
-}
+  .box1{
+    margin: 0 auto;
+    margin-top: 150px;
+    align-items:center;
+    width:600px;
+    height: 400px;
+    background-color: #ffffff;
+    border:none;
+    border-radius: 15px;
+    align-items:center;
+    text-align:center;
+    box-shadow: 2px 0 5px #ccc
+  }
 
-#loginBtn:hover{
-  background-color: #2F5971;
+  /* ------------- Login ------------- */
 
-}
 
-.email-input{
-  width: 300px;
-  height: 30px;
-  border: 2px inset gray;
-  border-radius: 20px;
-  margin-left:10px;
-  padding-left:10px;
-}
+  .loginBtn-wrap{
+    width: 230px;
+    height: 40px;
+    border-radius: 50%;
+    margin-left: 50px;
+  }
+
+  #loginBtn{
+    width: 100%;
+    height: 100%;
+    font-size: 15px;
+    margin-top: 0px;
+    color: #fff;
+    background-color: #d8d8d8;
+    border: none;
+    border-radius: 3px;
+    outline: 0;
+    cursor: pointer;
+    transition: 0.3s ease;
+  }
+
+  #loginBtn:hover{
+    background-color: #2F5971;
+
+  }
+
+  .email-input{
+    width: 300px;
+    height: 30px;
+    border: 2px inset gray;
+    border-radius: 20px;
+    margin-left:10px;
+    padding-left:10px;
+  }
 
 
 </style>
+<script>
+$(function(){
+  var num = 0;
+  $('#change_type').click(function(){
+    var password = $('#password');
+    var new_password = $('#new_password');
+    var new_password_ck = $('#new_password_ck');
 
+    if(num == 0){
+      password.attr("type", "text");
+      new_password.attr("type", "text");
+      new_password_ck.attr("type", "text");
+      num = 1;
+    }else{
+      password.attr("type", "password");
+      new_password.attr("type", "password");
+      new_password_ck.attr("type", "password");
+      num = 0;
+    }
+  })
 
+  $('#loginBtn').click(function(){
+    var ck_pwd = /(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*?[~#?!@$%^&*-])/;
+    var password = $('#password').val();
+    var new_password = $('#new_password').val();
+    var new_password_ck = $('#new_password_ck').val();
 
-
-
+    if(!ck_pwd.test(new_password)){
+      $("#new_password").focus();
+      $('#check_span3').html("비밀번호를 규정에 맞추어 다시 입력해주세요.");
+      document.getElementById('check_span3').style.color = "#FF0000";
+      $("#new_password").val("");
+      $('#new_password_ck').val("");
+    }else{
+      $('#check_span').html("");
+      if(new_password == new_password_ck){
+        $.ajax({
+          url: "/user/change_pwd",
+          type: "POST",
+          dataType: "JSON",
+          data: { "password": password, "new_password": new_password }
+        }).done(function(data){
+          if(data == "1"){
+            $('#check_span').html("");
+            alert("비밀번호가 변경되었습니다. 새 비밀번호로 다시 로그인 해주세요.");
+            $('#password').val("");
+            $('#password').focus();
+            location.href="/login/login";
+          }else{
+            $('#check_span').html("X 비밀번호가 일치하지 않습니다.");
+            document.getElementById('check_span').style.color = "#FF0000";
+          }
+        })
+      }else{
+        $('#check_span').html("");
+        $('#check_span2').html("X 비밀번호 확인이 일치하지 않습니다.");
+        document.getElementById('check_span2').style.color = "#FF0000";
+        $('#new_password_ck').val("");
+        $('#new_password_ck').focus();
+      }
+    }
+  })
+})
+</script>
 </head>
 
 
@@ -108,80 +168,83 @@
           <li style="margin-right:7px;color:white;"><a href="/user/logout" style="color:white;">Logout</a></li>
         </div>
 
-      <% } else { %>
-        <li style="margin-right:12px;color:white;"><a href="/login/login" style="color:white;">Login</a></li>
-      <% } %>
-      </ul>
+        <% } else { %>
+          <li style="margin-right:12px;color:white;"><a href="/login/login" style="color:white;">Login</a></li>
+          <% } %>
+        </ul>
 
       </div>
 
-  <br/>
-  <hr/>
+      <br/>
+      <hr/>
 
-  <!-- 상단바 끝 -->
-
-
-<br/>
-
-<div class="pw-top-box">
-  </div>
-
-  <hr style="background-color: #2F5971;
-  height: 2px;
-  margin-top: 20px;
-  width: 100%;
-  float: left;">
+      <!-- 상단바 끝 -->
 
 
+      <br/>
 
-  <div class ="box1" style=" align-items:center;">
-    <br>
-    <p id="font" style="margin-top:10px;"> 비밀번호 변경 </p>
-    <br>
-    <div style="margin-top:30px;">
-      <span style="float:left; margin-top:5px; margin-left:50px;color:#2F5971; font-size:16px;" id="font" > 현재 비밀번호 </span>
-      <input type="text" style="margin-left:22px;" class="email-input" name="findId" />
-    </div>
-    <div style="margin-top:30px;">
-      <span style="float:left; margin-top:5px; margin-left:50px;color:#2F5971; font-size:16px;" id="font" > 새 비밀번호 </span>
-      <input type="text" style="margin-left:35px;" class="email-input" name="findId" />
-    </div>
-    <div style="margin-top:30px;">
-      <span style="float:left; margin-top:7px; margin-left:50px;color:#2F5971; font-size:16px;"  id="font" > 새 비밀번호 확인 </span>
-      <input type="text" class="email-input" name="findId"/>
-    </div>
+      <div class="pw-top-box">
+      </div>
 
-    <br>
-
-    <div class="loginBtn-wrap" style="textalign:center; margin-top:42px; margin-left:190px;">
-      <button type="submit" id="loginBtn" style="float:right;" onclick="location.href='/login/login">비밀번호 변경</button>
-    </div>
-  </div>
+      <hr style="background-color: #2F5971;
+      height: 2px;
+      margin-top: 20px;
+      width: 100%;
+      float: left;">
 
 
-  <!-- 하단 푸터 시작 -->
-  <div id='wrapper'>
-    <div>
-    </div>
-  </div>
-  <footer>
-  <h3 class="avo-title"> AVO </h3>
-  <a href="/">
-    <img width="25px" height="25px" style="padding-top:10px; padding-right:5px;" src="../img/instagram-logo.png">
-  </a>
-  <a href="/">
-    <img width="25px" height="25px" style="padding-top:10px; padding-right:5px;" src="../img/facebook-logo.png">
-  </a>
 
-  <a href="/">
-    <img width="25px" height="25px" style="padding-top:10px; padding-right:5px;" src="../img/twitter-logo.png">
-  </a>
+      <div class ="box1" style=" align-items:center;">
+        <br>
+        <p id="font" style="margin-top:10px;"> 비밀번호 변경 </p>
+        <input type="button" id="change_type" value="변환"/>
+        <br>
+        <div style="margin-top:30px;">
+          <span style="float:left; margin-top:5px; margin-left:50px;color:#2F5971; font-size:16px;" id="font" > 현재 비밀번호 </span>
+          <input type="password" style="margin-left:22px;" id="password" class="email-input" name="password" /><br/>
+          <span id="check_span"></span>
+        </div>
+        <div style="margin-top:30px;">
+          <span style="float:left; margin-top:5px; margin-left:50px;color:#2F5971; font-size:16px;" id="font" > 새 비밀번호 </span>
+          <input type="password" style="margin-left:35px;" id="new_password" class="email-input" name="new_password" /><br/>
+          <span id="check_span3"></span>
+        </div>
+        <div style="margin-top:30px;">
+          <span style="float:left; margin-top:7px; margin-left:50px;color:#2F5971; font-size:16px;"  id="font" > 새 비밀번호 확인 </span>
+          <input type="password" id="new_password_ck" class="email-input"/><br/>
+          <span id="check_span2"></span>
+        </div>
+        <br>
+
+        <div class="loginBtn-wrap" style="textalign:center; margin-top:42px; margin-left:190px;">
+          <button type="button" id="loginBtn" style="float:right;">비밀번호 변경</button>
+        </div>
+      </div>
 
 
-  <p class="footer-content1">avo@gmail.com</p>
-  <p class="footer-content2">@ 2022 Review service from AVO</p>
-  </footer>
+      <!-- 하단 푸터 시작 -->
+      <div id='wrapper'>
+        <div>
+        </div>
+      </div>
+      <footer>
+        <h3 class="avo-title"> AVO </h3>
+        <a href="/">
+          <img width="25px" height="25px" style="padding-top:10px; padding-right:5px;" src="../img/instagram-logo.png">
+        </a>
+        <a href="/">
+          <img width="25px" height="25px" style="padding-top:10px; padding-right:5px;" src="../img/facebook-logo.png">
+        </a>
 
-  <!-- 하단 푸터 끝 -->
-</body>
-</html>
+        <a href="/">
+          <img width="25px" height="25px" style="padding-top:10px; padding-right:5px;" src="../img/twitter-logo.png">
+        </a>
+
+
+        <p class="footer-content1">avo@gmail.com</p>
+        <p class="footer-content2">@ 2022 Review service from AVO</p>
+      </footer>
+
+      <!-- 하단 푸터 끝 -->
+    </body>
+    </html>

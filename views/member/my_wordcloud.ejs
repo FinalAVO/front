@@ -202,7 +202,7 @@
     <br/>
     <br/>
     <li><a class="menu" href="/member/my_search?db_name='<%= my_app[0].db_name %>'">전체리뷰 살펴보기</a></li>
-    <li class="keyword-btn"style="background-color:white;"><a style="color:black;" class="menu" href="/review/chart/wordcloud_member?db_name='<%= my_app[0].db_name %>'">리뷰 키워드</a></li>
+    <li class="keyword-btn"style="background-color:white;"><a style="color:black;" class="menu" href="/member/my_wordcloud?db_name='<%= my_app[0].db_name %>'">리뷰 키워드</a></li>
     <li><a class="menu" href="/member/my_report?db_name='<%= my_app[0].db_name %>'">주제별 보고서 받기</a></li>
     <li><a class="menu" href="#">인기 많은 리뷰</a></li>
   </ol>
@@ -214,18 +214,22 @@
   <!-- 1. Review Crawling 리뷰 가져오기 -->
 
   <div class="search-bar" >
-    <form method="post" action="/review/url" target="targetURL2">
+    <form method="get" action="/review/chart/wordcloud_member" target="targetURL2">
 
       <span class="filter-txt" style="padding-left:10px;"> 기간 설정 </span>
       <input type="text" id="demo" name="demo" value="" />
 
-      <input type="hidden" name="app_name">
+      <input type="hidden" name="db_name" value="<%= my_app[0].db_name %>">
       <button style="display:inline;"class="search-button" id="search-button" type='submit'> SEARCH </button>
 
 
     </form>
   </div>
 
+  <div style="text-align: center;">
+    <iframe id="targetURL2" name="targetURL2" class="iframe-preview center" width="85%" height="900px" align="center" style="margin-left: 9%; margin-right: auto;border:none; border-radius: 10px; align-items:center; text-align:center; align-items:center;" src="/review">
+    </iframe>
+  </div>
 
 
       <script>
@@ -363,7 +367,7 @@
     var loadingImg ='';
 
     loadingImg +=" <div id='loadingImg'>";
-    loadingImg +=" <img src='../../img/spinner.gif' style='position:absolute; z-index:9500; text-align:center; display:block; width:1000px; height:570px; margin-top:0px; margin-left:26%;'/>";
+    loadingImg +=" <img src='../../img/spinner.gif' style='position:absolute; z-index:9500; text-align:center; display:block; width:1000px; height:570px; top: 0; margin-top:0px; margin-left:26%;'/>";
     loadingImg +="</div>";
 
     $('body')
@@ -381,15 +385,24 @@
     $('#loadingImg').show();
   }
 
+  $('#search-button').click(function(){
+    Loading();
+  })
+
   function closeLoading() {
     $('#mask, #loadingImg').hide();
     $('#mask, #loadingImg').remove();
   }
 
-  $('.keyword-btn').click(function(){
-    Loading();
-  });
+  window.addEventListener( 'message', (e) => {
+    // 전달 된 데이터
+    console.log( e.data.functionName );
 
+    // 부모창의 함수 실행
+    if( e.data.functionName === 'closeLoading' ){
+      closeLoading();
+    }
+  });
 
   });
   </script>
@@ -400,109 +413,6 @@
 
   <br/>
   <br/>
-
-
-  <script src="https://d3js.org/d3.v3.min.js"></script>
-  <script src="https://rawgit.com/jasondavies/d3-cloud/master/build/d3.layout.cloud.js" type="text/JavaScript"></script>
-
-
-    <script src="https://d3js.org/d3.v3.min.js"></script>
-    <script src="https://rawgit.com/jasondavies/d3-cloud/master/build/d3.layout.cloud.js" type="text/JavaScript"></script>
-    <script>
-    const width = 1200
-    const height = 800
-
-    var svg = d3.select("body").append("svg")
-    .attr("width", width)
-    .attr("height", height);
-    d3.csv("../<%= session.csvData %>", function (data) {
-      showCloud(data)
-    });
-    //scale.linear: 선형적인 스케일로 표준화를 시킨다.
-    //domain: 데이터의 범위, 입력 크기
-    //range: 표시할 범위, 출력 크기
-    //clamp: domain의 범위를 넘어간 값에 대하여 domain의 최대값으로 고정시킨다.
-    wordScale = d3.scale.linear().domain([0, 100]).range([30, 150]).clamp(true);
-    var keywords = []
-    var svg = d3.select("svg")
-    .append("g")
-    .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")")
-
-    function showCloud(data) {
-      keywords = [data[0].text, data[1].text, data[2].text]
-      d3.layout.cloud().size([width, height])
-      //클라우드 레이아웃에 데이터 전달
-      .words(data)
-      .rotate(function (d) {
-        return d.text.length > 3 ? 0 : 0;
-      })
-      //스케일로 각 단어의 크기를 설정
-      .fontSize(function (d) {
-        return wordScale(d.frequency);
-      })
-      //클라우드 레이아웃을 초기화 > end이벤트 발생 > 연결된 함수 작동
-      .on("end", draw)
-      .start();
-
-      function draw(words) {
-        var cloud = svg.selectAll("text").data(words)
-        //Entering words
-        cloud.enter()
-        .append("text")
-        .style("fill", function (d) {
-          return (keywords.indexOf(d.text) > -1 ? "#fbc280" : "#405275");
-        })
-        .style("fill-opacity", .5)
-        .attr("text-anchor", "middle")
-        .attr('font-size', 1)
-        .text(function (d) {
-          return d.text;
-        })
-        .on("mouseover", handleMouseOver)
-        .on("mouseout", handleMouseOut);
-        cloud
-        .transition()
-        .duration(600)
-        .style("font-size", function (d) {
-          return d.size + "px";
-        })
-        .attr("transform", function (d) {
-          return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
-        })
-        .style("fill-opacity", 1)
-      }
-    }
-
-    function handleMouseOver(d) {  // Add interactivity
-      console.log("hello");
-
-      // Use D3 to select element, change color and size
-      d3.select(this).style("fill-opacity", 0)
-
-      // Specify where to put label of text
-      svg.append("text").attr({
-        id: "t" + d.x + "-" + d.y,
-        x: function() { return d.x - 120; },
-        y: function() { return d.y; }
-      })
-      .attr('font-size', 100)
-      .attr('fill', 'black')
-      .style('background-color','white')
-      .text(function() {
-        return d.frequency;  // Value of the text
-      });
-    }
-
-    function handleMouseOut(d) {
-      console.log("bye");
-      // Use D3 to select element, change color back to normal
-      d3.select(this).style("fill-opacity", 1)
-
-      // Select text by id and then remove
-      d3.select("#t" + d.x + "-" + d.y).remove();  // Remove text location
-    }
-
-    </script>
 
 
     <br/>

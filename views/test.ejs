@@ -14,12 +14,35 @@
     <script src="https://d3js.org/d3.v3.min.js"></script>
     <script src="https://rawgit.com/jasondavies/d3-cloud/master/build/d3.layout.cloud.js" type="text/JavaScript"></script>
     <script>
+    $(function(){
+      window.parent.postMessage(
+        { functionName : 'cL' },
+        'http://3.37.3.24/guest/gu_search'
+      );
+
+      window.parent.postMessage(
+        { functionName : 'closeLoading' },
+        'http://3.37.3.24/member/my_wordcloud'
+      );
+
+      window.parent.postMessage(
+        { functionName : 'cL' },
+        'http://avo-lb-1976068851.ap-northeast-2.elb.amazonaws.com/guest/gu_search'
+      );
+
+      window.parent.postMessage(
+        { functionName : 'closeLoading' },
+        'http://avo-lb-1976068851.ap-northeast-2.elb.amazonaws.com/member/my_wordcloud'
+      );
+    })
+
         const width = 1200
         const height = 800
 
         var svg = d3.select("body").append("svg")
             .attr("width", width)
-            .attr("height", height);
+            .attr("height", height)
+            .attr("style", "margin-left: 190px");
         d3.csv("<%= session.csvData %>", function (data) {
             showCloud(data)
         });

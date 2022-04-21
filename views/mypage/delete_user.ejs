@@ -9,7 +9,19 @@
 <link rel="stylesheet"  type="text/css" href="../css/bar.css"/>
 <link rel="stylesheet"  type="text/css" href="../css/report.css"/>
 <link rel="stylesheet"  type="text/css" href="../css/mypage.css"/>
+<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
 <style>
+
+
+.delete-top-box{
+  background-color: #2F5971;
+  background-image: url(../img/delete-bar.png);
+  background-size: 100% 100%;
+  width: 100%;
+  height: 120px;
+  position: relative;
+  top: 100px;
+}
 
 
 #font {
@@ -70,11 +82,31 @@
 
 
 </style>
-
-
-
-
-
+<script>
+$(function(){
+  $('#loginBtn').click(function(){
+    var password = $('#password').val();
+      $.ajax({
+        url: "/user/delete_user",
+        type: "POST",
+        dataType: "JSON",
+        data: { "password": password }
+      }).done(function(json){
+        if(json == 0){
+          $('#check_span').html("");
+          $('#check_span').html("X 비밀번호가 일치하지 않습니다.");
+          document.getElementById('check_span').style.color = "#FF0000";
+        }else{
+          $('#check_span').html("");
+          alert('정상적으로 탈퇴되었습니다.');
+          location.href="/"
+        }
+      }).fail(function (xhr, status, errorThrown){
+        alert("오류가 발생했습니다. 잠시 후 다시 시도해주세요..");
+      })
+    })
+  })
+</script>
 </head>
 
 
@@ -112,8 +144,7 @@
 
 <br/>
 
-  <div>
-    <h3 style="font-size: 20px;margin-left:auto; margin-right: auto;margin-top:90px;"> 탈퇴 </h3>
+  <div class="delete-top-box">
   </div>
 
   <hr style="background-color: #2F5971;
@@ -130,14 +161,14 @@
     <br>
     <div style="margin-top:50px;">
       <span style="float:left; margin-top:5px; margin-left:50px;color:#2F5971; font-size:16px;" id="font" > 비밀번호 확인 </span>
-      <input type="text" style="margin-left:22px;" class="email-input" name="findId" />
+      <input type="password" id="password" style="margin-left:22px;" class="email-input" name="password" />
     </div>
-
-
+    <br/>
+    <span id="check_span"></span>
     <br>
 
     <div class="loginBtn-wrap" style="textalign:center; margin-top:70px; margin-left:190px;">
-      <button type="submit" id="loginBtn" style="float:right;" onclick="location.href='/login/login">탈퇴</button>
+      <button type="submit" id="loginBtn" style="float:right;">탈퇴</button>
     </div>
   </div>
 

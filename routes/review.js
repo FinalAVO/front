@@ -23,7 +23,7 @@ const rdsConnection = mysql.createConnection({
 // 비회원
 
 app.get('/test', (req, res) => {
-  res.render('member/test.ejs', {session: req.session});
+  res.render('test.ejs', {session: req.session});
 })
 
 app.get('/', (req, res) => {
@@ -91,6 +91,8 @@ app.get('/mypage/email_change', (req, res) => {
 });
 
 app.get('/mypage/delete_user', (req, res) => {
+
+
   res.render('mypage/delete_user.ejs', { session: req.session });
 });
 
@@ -235,7 +237,7 @@ app.get('/member/my_wordcloud', (req, res) => {
   var db_name = req.query.db_name
   console.log("db_name in my_wordcloud : " + db_name);
 
-  var sql1 = 'SELECT * FROM user_app WHERE user_id = "' + user_id + '" and db_name = "' + db_name + '"';
+  var sql1 = 'SELECT * FROM user_app WHERE user_id = "' + user_id + '" and db_name = ' + db_name;
   rdsConnection.query(sql1, function(err, my_app){
     var sql2 = 'SELECT * FROM user_app WHERE user_id = "' + user_id + '"';
     rdsConnection.query(sql2, function(err, app_list){
@@ -466,6 +468,16 @@ app.post('/review/url', (req, response) => {
           { functionName : 'closeLoading' },
           'http://3.37.3.24/member/my_search'
         );
+
+        window.parent.postMessage(
+          { functionName : 'closeLoading' },
+          'http://avo-lb-1976068851.ap-northeast-2.elb.amazonaws.com/guest/gu_search'
+        );
+
+        window.parent.postMessage(
+          { functionName : 'closeLoading' },
+          'http://avo-lb-1976068851.ap-northeast-2.elb.amazonaws.com/member/my_search'
+        );
       })
       </script>
       </head>
@@ -568,6 +580,21 @@ app.post('/review/url', (req, response) => {
             { functionName : 'closeLoading' },
             'http://3.37.3.24/guest/gu_search'
           );
+
+          window.parent.postMessage(
+            { functionName : 'closeLoading' },
+            'http://3.37.3.24/member/my_search'
+          );
+
+          window.parent.postMessage(
+            { functionName : 'closeLoading' },
+            'http://avo-lb-1976068851.ap-northeast-2.elb.amazonaws.com/guest/gu_search'
+          );
+
+          window.parent.postMessage(
+            { functionName : 'closeLoading' },
+            'http://avo-lb-1976068851.ap-northeast-2.elb.amazonaws.com/member/my_search'
+          );
         })
         </script>
 
@@ -619,7 +646,7 @@ app.post('/review/url', (req, response) => {
 
         response.end(template);
       }else{
-        console.log("request not respond");
+        console.log("데이터 없음");
       }
     }).catch(function (error){
       console.error(error);

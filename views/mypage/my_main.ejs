@@ -59,7 +59,7 @@
 
 
   <div class="basic_info" style="margin-top:40px;">
-    <form method="post" action="/user/delete_user">
+    <form method="get" action="/mypage/delete_user">
         <p class="my-main-title">ID</p>
         <img src="../img/line.png" style="float:left; height: 50px;margin-left:20px;margin-top:13px;">
         <p class="my-main-txt"><%= session.loginData %></p>
@@ -114,40 +114,6 @@
   </div>
 
 
-
-<!-- popup 1 -->
-
-  <div class="wrap" style="position:fixed; right: 30px; bottom: 30px;">
-    <a href="#pop_info_1" class="btn_open myapp-btn">보고서 다운로드</a>
-  </div>
-  <div id="pop_info_1" class="pop_wrap" style="display:none;">
-    <div class="pop_inner">
-
-      <div class ="box1" style=" align-items:center;">
-        <br>
-        <p id="font" style="margin-top:60px;"> 회원 탈퇴를 하시면 개인정보, 저장된 리뷰데이터 등이 모두 삭제됩니다.<br> 그래도 탈퇴하시겠습니까? </p>
-        <br>
-        <div style="margin-top:50px;">
-          <span style="float:left; margin-top:5px; margin-left:50px;color:#2F5971; font-size:16px;" id="font" > 비밀번호 확인 </span>
-          <input type="text" style="margin-left:22px;" class="email-input" name="findId" />
-        </div>
-
-
-        <br>
-
-        <div class="loginBtn-wrap" style="textalign:center; margin-top:70px; margin-left:190px;">
-          <button type="submit" id="loginBtn" style="float:right;" onclick="location.href='/login/login">탈퇴</button>
-        </div>
-      </div>
-
-      <span id="msg" style="color:black;"></span>
-      <br/>
-
-      <button type="button" class="btn_close" onclick="location.href='/mypage/my_main';">닫기</button>
-    </div>
-  </div>
-
-<!-- popup 1 -->
 
 
 <script>

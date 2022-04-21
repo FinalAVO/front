@@ -153,45 +153,59 @@
 <!-- 로딩창 -->
 <script>
 $(function() {
-function Loading() {
-  var maskHeight = $(document).height();
-  var maskWidth  = window.document.body.clientWidth;
+  function Loading() {
+    var maskHeight = $(document).height();
+    var maskWidth  = window.document.body.clientWidth;
 
-  var mask       = "<div id='mask' style='position:absolute; z-index:9000; background-color:#000000; display:none; left:0; top:0;'></div>";
-  var loadingImg ='';
+    var mask       = "<div id='mask' style='position:absolute; z-index:9000; background-color:#000000; display:none; left:0; top:0;'></div>";
+    var loadingImg ='';
 
-  loadingImg +=" <div id='loadingImg'>";
-  loadingImg +=" <img src='../../img/spinner.gif' style='position:absolute; z-index:9500; text-align:center; display:block; width:1000px; height:570px; margin-top:70px; margin-left:23%;'/>";
-  loadingImg +="</div>";
+    loadingImg +=" <div id='loadingImg'>";
+    loadingImg +=" <img src='../../img/spinner.gif' style='position:absolute; z-index:9500; text-align:center; display:block; width:1000px; height:570px; margin-top:70px; margin-left:23.75%;'/>";
+    loadingImg +="</div>";
 
 
-  $('body')
-  .append(mask)
+    $('body')
+    .append(mask)
 
-  $('#mask').css({
-    'width' : maskWidth,
-    'height': maskHeight,
-    'opacity' :'0.3'
+    $('#mask').css({
+      'width' : maskWidth,
+      'height': maskHeight,
+      'opacity' :'0.3'
+    });
+
+    $('#mask').show();
+
+    $('.loadingImg').append(loadingImg);
+    $('#loadingImg').show();
+  }
+
+  function closeLoading() {
+    $('#mask, #loadingImg').hide();
+    $('#mask, #loadingImg').remove();
+  }
+
+  $('.search-box').click(function(){
+    if($("#app_name").val() != ""){
+      Loading();
+      o2Frame = document.getElementById('targetURL2').contentWindow.document;
+      o2Frame.open();
+      o2Frame.close();
+      oFrame = document.getElementById('targetURL').contentWindow.document;
+      oFrame.open();
+      oFrame.close();
+    }
   });
 
-  $('#mask').show();
+  $('#wordcloud').click(function(){
+    if($("#app_name").val() != ""){
 
-  $('.loadingImg').append(loadingImg);
-  $('#loadingImg').show();
-}
+      const offset = $("#searchdiv").offset(); $('html, body').animate({scrollTop: offset.top}, 0);
+      Loading();
+    }
+  });
 
-function closeLoading() {
-  $('#mask, #loadingImg').hide();
-  $('#mask, #loadingImg').remove();
-}
-
-$('.search-box').click(function(){
-  if ($("#app_name").val() != ""){
-    Loading();
-  }
-});
-
-window.addEventListener( 'message', (e) => {
+  window.addEventListener( 'message', (e) => {
     // 전달 된 데이터
     console.log( e.data.functionName );
 
@@ -199,7 +213,12 @@ window.addEventListener( 'message', (e) => {
     if( e.data.functionName === 'closeLoading' ){
       closeLoading();
     }
-});
+
+    if( e.data.functionName === 'cL' ){
+      const offset = $("#scrollTarget").offset(); $('html, body').animate({scrollTop: offset.top}, 500);
+      closeLoading();
+    }
+  });
 
 });
 </script>
@@ -223,284 +242,287 @@ window.addEventListener( 'message', (e) => {
           <li style="margin-right:7px;color:white;"><a href="/user/logout" style="color:white;">Logout</a></li>
         </div>
 
-      <% } else { %>
-        <li style="margin-right:12px;color:white;"><a href="/login/login" style="color:white;">Login</a></li>
-      <% } %>
-      </ul>
+        <% } else { %>
+          <li style="margin-right:12px;color:white;"><a href="/login/login" style="color:white;">Login</a></li>
+          <% } %>
+        </ul>
 
-      </div>
-
-  <br/>
-  <hr/>
-
-  <!-- 상단바 끝 -->
-
-  <!-- 로딩 -->
-  <div id="map" class="loadingImg"></div>
-
-  <!-- 1. Review Crawling 리뷰 가져오기 -->
-
-  <div id="searchdiv" style="padding-top:100px; background-color:#2f5971; height:120px">
-    <form method="post" action="/review/url" target="targetURL2">
-      <div style="display:inline;">
-        <input class="input-box" id="app_name" name="app_name" style="text-align:center;" placeholder="앱 이름을 입력해주세요."/>
-        <button class="search-button search-box" id="search-button" type='submit'> SEARCH </button>
       </div>
 
       <br/>
+      <hr/>
+
+      <!-- 상단바 끝 -->
+
+      <!-- 로딩 -->
+      <div id="map" class="loadingImg"></div>
+
+      <!-- 1. Review Crawling 리뷰 가져오기 -->
+
+      <div id="searchdiv" style="padding-top:100px; background-color:#2f5971; height:120px">
+        <form method="post" action="/review/url" target="targetURL2">
+          <div style="display:inline;">
+            <input class="input-box" id="app_name" name="app_name" style="text-align:center; padding-left: 0; padding-right: 3px;" placeholder="앱 이름을 입력해주세요."/>
+            <button class="search-button search-box" id="search-button" type='submit'> SEARCH </button>
+          </div>
+
+          <br/>
+          <br/>
+
+          <div style="display:inline;">
+            <button id="btn_toggle" style="width: 90px; border: none; white-space: pre-line;" onclick='changeBtnName0()' type="button">상세검색 열기&#10;▼</button>
+          </div>
+
+          <div id="Toggle" style="display:none; margin-top: 5px;">
+            <br/>
+            <br/>
+            <span> OS </span>
+            <select id="os" name="os" class="select2">
+              <option value="all" selected="selected">전체</option>
+              <option value="android"> Google </option>
+              <option value="ios"> Apple </option>
+            </select>
+
+            <span style="padding-left:10px;"> 별점 </span>
+            <select id="star" name="star" class="select1">
+              <option value="0" selected="selected">전체</option>
+              <option value="1">1점 이상</option>
+              <option value="2">2점 이상</option>
+              <option value="3">3점 이상</option>
+              <option value="4">4점 이상</option>
+              <option value="5">5점 이상</option>
+            </select>
+
+            <span style="padding-left:10px;"> 키워드 검색 </span>
+            <input class="input-box" style="height: 40%; width: 50%; font-size:12px; text-align:center; padding-left:10px;" name="filter" id="filter" maxlengh="10" placeholder=" 키워드를 입력하세요" />
+          </div>
+        </form>
+      </div>
+
+      <img id="logo_img" src="../img/reviewerlogo.png">
+
+      <script>
+
+      var appname_input = document.getElementById("app_name");
+      var filter_input = document.getElementById("filter");
+
+      appname_input.addEventListener("keyup", function(event) {
+        if (event.keyCode === 13) {
+          document.getElementById("search-button").click();
+        }
+      });
+
+      filter_input.addEventListener("keyup", function(event) {
+        if (event.keyCode === 13) {
+          document.getElementById("search-button").click();
+        }
+      });
+
+      // 상세 버튼용
+      function changeBtnName0() {
+        if(document.getElementById("btn_toggle").innerText == "상세검색 열기\n▼"){
+          document.getElementById('searchdiv').style.height = "200px"
+          document.getElementById("btn_toggle").innerText = "상세검색 닫기\n▲";
+          document.getElementById("logo_img").style.top = "24.3%";
+        } else {
+          document.getElementById('searchdiv').style.height = "120px"
+          document.getElementById("btn_toggle").innerText = "상세검색 열기\n▼";
+          document.getElementById("logo_img").style.top = "16.5%";
+        }
+        return false;
+      }
+
+      $(function (){
+        $("#search-button").click(function (){
+          if($("#app_name").val() == ""){
+            alert("앱 이름을 입력해주세요.");
+            return false;
+          }
+        });
+
+        $("#btn_toggle").click(function (){
+          if($("#Toggle").css("display") == 'none'){
+            $("#Toggle").css("display", 'block');
+          }else{
+            $("#Toggle").css("display", 'none');
+          }
+        });
+
+        $("#searchAndroid").click(function (){
+          $("#os").val('android');
+          if($("#app_name").val() == ""){
+            alert("앱 이름을 입력해주세요.");
+            return false;
+          }
+        });
+
+        $("#searchIOS").click(function (){
+          $("#os").val('ios');
+          if($("#app_name").val() == ""){
+            alert("앱 이름을 입력해주세요.");
+            return false;
+          }
+        });
+      });
+
+      </script>
+
       <br/>
 
-      <div style="display:inline;">
-        <button id="btn_toggle" style="width: 90px; border: none; white-space: pre-line;" onclick='changeBtnName0()' type="button">상세검색 열기&#10;▼</button>
+
+
+
+      <div style="float:right; padding-right: 8%;">
+        <input type="hidden" id="real_app" value="<%=name %>" >
+        <ul class="hifilter" style="margin-left:78px;">날짜 정렬
+          <input type='button' class="filter-btn" id='date-button' name='condition' onclick='changeBtnName1()' value='▼'/>
+          <input type="hidden" id="hiddenDate" value="-DATE"/>
+        </ul>
+
+
+        <ul class="hifilter">별점 정렬
+          <input type='button' class="filter-btn" id='star-button' name='condition' onclick='changeBtnName2()'value='▼'/>
+          <input type="hidden" id="hiddenStar" value="-STAR"/>
+        </ul>
+
+        <ul class="hifilter">추천수 정렬
+          <input type='button' class="filter-btn" id='like-button' name='condition' onclick='changeBtnName3()' value='▼'/>
+          <input type="hidden" id="hiddenLike" value="-LIKE"/>
+        </ul>
+
       </div>
 
-      <div id="Toggle" style="display:none; margin-top: 5px;">
-        <br/>
-        <br/>
-        <span> OS </span>
-        <select id="os" name="os" class="select2">
-          <option value="all" selected="selected">전체</option>
-          <option value="android"> Google </option>
-          <option value="ios"> Apple </option>
-        </select>
+      <script>
 
-        <span style="padding-left:10px;"> 별점 </span>
-        <select id="star" name="star" class="select1">
-          <option value="0" selected="selected">전체</option>
-          <option value="1">1점 이상</option>
-          <option value="2">2점 이상</option>
-          <option value="3">3점 이상</option>
-          <option value="4">4점 이상</option>
-          <option value="5">5점 이상</option>
-        </select>
+      <!-- 날짜 정렬 -->
 
-        <span style="padding-left:10px;"> 키워드 검색 </span>
-        <input class="input-box" style="height: 40%; width: 50%; font-size:12px; text-align:center; padding-left:10px;" name="filter" id="filter" maxlengh="10" placeholder=" 키워드를 입력하세요" />
+      function changeBtnName1() {
+        console.log($('#name').val());
+        const btnElement
+        = document.getElementById('date-button');
+        const realVal
+        = document.getElementById('hiddenDate');
+
+        if(btnElement.value == "▼"){
+          btnElement.value = "▲";
+          realVal.value = "DATE";
+          document.targetURL2.location.href="/search/re_search?app_name=&star="+$('#star').val()+"&filter="+$('#filter').val()+"&os="+$('#os').val()+"&condition=DATE";
+        }else{
+          btnElement.value = "▼";
+          realVal.value = "-DATE";
+          document.targetURL2.location.href="/search/re_search?app_name=&star="+$('#star').val()+"&filter="+$('#filter').val()+"&os="+$('#os').val()+"&condition=-DATE";
+        }
+      }
+
+      <!-- 날짜 정렬 -->
+
+
+      <!-- 별점 정렬 -->
+
+      function changeBtnName2() {
+        const btnElement
+        = document.getElementById('star-button');
+        const realVal
+        = document.getElementById('hiddenStar');
+
+        if(btnElement.value == "▼"){
+          btnElement.value = "▲";
+          realVal.value = "STAR";
+          document.targetURL2.location.href="/search/re_search?app_name=&star="+$('#star').val()+"&filter="+$('#filter').val()+"&os="+$('#os').val()+"&condition=STAR";
+        }else{
+          btnElement.value = "▼";
+          realVal.value = "-STAR";
+          document.targetURL2.location.href="/search/re_search?app_name=&star="+$('#star').val()+"&filter="+$('#filter').val()+"&os="+$('#os').val()+"&condition=-STAR";
+        }
+      }
+
+      <!-- 별점 정렬 -->
+
+
+      <!-- 추천수 정렬 -->
+
+      function changeBtnName3() {
+        const btnElement
+        = document.getElementById('like-button');
+        const realVal
+        = document.getElementById('hiddenLike');
+
+        if(btnElement.value == "▼"){
+          btnElement.value = "▲";
+          realVal.value = "LIKE";
+          document.targetURL2.location.href="/search/re_search?app_name=&star="+$('#star').val()+"&filter="+$('#filter').val()+"&os="+$('#os').val()+"&condition=LIKE";
+        }else{
+          btnElement.value = "▼";
+          realVal.value = "-LIKE";
+          document.targetURL2.location.href="/search/re_search?app_name=&star="+$('#star').val()+"&filter="+$('#filter').val()+"&os="+$('#os').val()+"&condition=-LIKE";
+        }
+      }
+
+      <!-- 추천수 정렬 -->
+
+      </script>
+
+      <br/>
+
+      <div style="text-align: center;">
+        <iframe id="targetURL2" name="targetURL2" class="iframe-preview center" width="85%" height="600" align="center" style="margin-left: auto; margin-right: auto;border:none; border-radius: 10px; align-items:center; text-align:center; align-items:center;" src="/review">
+        </iframe>
       </div>
-    </form>
-  </div>
 
-  <img id="logo_img" src="../img/reviewerlogo.png">
+      <div display="none" id="scrollTarget"/>
+      <div>
 
-  <script>
+        <br/>
+        <br/>
+        <br/>
 
-  var appname_input = document.getElementById("app_name");
-  var filter_input = document.getElementById("filter");
 
-  appname_input.addEventListener("keyup", function(event) {
-    if (event.keyCode === 13) {
-      document.getElementById("search-button").click();
-    }
-  });
+        <form action="/review/chart/wordcloud" method="get" target="targetURL">
+          <!-- <h3> > 어플 키워드 분석결과 보기 < </h3> -->
+          <!-- <img  width="300px" style="padding-bottom: 40px;" src="../img/key.png"/> -->
+          <button id="wordcloud" class="myapp-btn" > Word Cloud <br/> 리뷰 키워드 분석하기 GO</button>
+        </form>
+        <br/>
 
-  filter_input.addEventListener("keyup", function(event) {
-    if (event.keyCode === 13) {
-      document.getElementById("search-button").click();
-    }
-  });
+        <div style="text-align: center;">
+          <iframe id="targetURL" name="targetURL" class="iframe-preview center" width="85%" height="900px" align="center" style="margin-left: auto; margin-right: auto;border:none; border-radius: 10px; align-items:center; text-align:center; align-items:center;" src="">
+          </iframe>
+        </div>
 
-  // 상세 버튼용
-  function changeBtnName0() {
-    if(document.getElementById("btn_toggle").innerText == "상세검색 열기\n▼"){
-      document.getElementById('searchdiv').style.height = "200px"
-      document.getElementById("btn_toggle").innerText = "상세검색 닫기\n▲";
-      document.getElementById("logo_img").style.top = "24.3%";
-    } else {
-      document.getElementById('searchdiv').style.height = "120px"
-      document.getElementById("btn_toggle").innerText = "상세검색 열기\n▼";
-      document.getElementById("logo_img").style.top = "16.5%";
-    }
-    return false;
-  }
+      </div>
 
-  $(function (){
-    $("#search-button").click(function (){
-      if($("#app_name").val() == ""){
-        alert("앱 이름을 입력해주세요.");
-        return false;
-      }
-    });
 
-    $("#btn_toggle").click(function (){
-      if($("#Toggle").css("display") == 'none'){
-        $("#Toggle").css("display", 'block');
-      }else{
-        $("#Toggle").css("display", 'none');
-      }
-    });
+      <br/>
+      <br/>
+      <br/>
 
-    $("#searchAndroid").click(function (){
-      $("#os").val('android');
-      if($("#app_name").val() == ""){
-        alert("앱 이름을 입력해주세요.");
-        return false;
-      }
-    });
 
-    $("#searchIOS").click(function (){
-      $("#os").val('ios');
-      if($("#app_name").val() == ""){
-        alert("앱 이름을 입력해주세요.");
-        return false;
-      }
-    });
-  });
 
-  </script>
+      <!-- 하단 푸터 시작 -->
+      <div id='wrapper'>
+        <div>
+        </div>
+      </div>
+      <footer style="margin-top:300px;">
+        <h3 class="avo-title"> AVO </h3>
+        <a href="/">
+          <img width="25px" height="25px" style="padding-top:10px; padding-right:5px;" src="../img/instagram-logo.png">
+        </a>
+        <a href="/">
+          <img width="25px" height="25px" style="padding-top:10px; padding-right:5px;" src="../img/facebook-logo.png">
+        </a>
 
-  <br/>
+        <a href="/">
+          <img width="25px" height="25px" style="padding-top:10px; padding-right:5px;" src="../img/twitter-logo.png">
+        </a>
+
+
+        <p class="footer-content1">avo@gmail.com</p>
+        <p class="footer-content2">@ 2022 Review service from AVO</p>
+      </footer>
 
 
 
 
-  <div style="float:right; padding-right: 8%;">
-    <input type="hidden" id="real_app" value="<%=name %>" >
-  <ul class="hifilter" style="margin-left:78px;">날짜 정렬
-    <input type='button' class="filter-btn" id='date-button' name='condition' onclick='changeBtnName1()' value='▼'/>
-    <input type="hidden" id="hiddenDate" value="-DATE"/>
-  </ul>
-
-
-  <ul class="hifilter">별점 정렬
-    <input type='button' class="filter-btn" id='star-button' name='condition' onclick='changeBtnName2()'value='▼'/>
-    <input type="hidden" id="hiddenStar" value="-STAR"/>
-  </ul>
-
-  <ul class="hifilter">추천수 정렬
-    <input type='button' class="filter-btn" id='like-button' name='condition' onclick='changeBtnName3()' value='▼'/>
-    <input type="hidden" id="hiddenLike" value="-LIKE"/>
-  </ul>
-
-  </div>
-
-  <script>
-
-  <!-- 날짜 정렬 -->
-
-    function changeBtnName1() {
-      console.log($('#name').val());
-      const btnElement
-      = document.getElementById('date-button');
-      const realVal
-      = document.getElementById('hiddenDate');
-
-      if(btnElement.value == "▼"){
-        btnElement.value = "▲";
-        realVal.value = "DATE";
-        document.targetURL2.location.href="/search/re_search?app_name=&star="+$('#star').val()+"&filter="+$('#filter').val()+"&os="+$('#os').val()+"&condition=DATE";
-      }else{
-        btnElement.value = "▼";
-        realVal.value = "-DATE";
-        document.targetURL2.location.href="/search/re_search?app_name=&star="+$('#star').val()+"&filter="+$('#filter').val()+"&os="+$('#os').val()+"&condition=-DATE";
-      }
-    }
-
-  <!-- 날짜 정렬 -->
-
-
-  <!-- 별점 정렬 -->
-
-    function changeBtnName2() {
-      const btnElement
-      = document.getElementById('star-button');
-      const realVal
-      = document.getElementById('hiddenStar');
-
-      if(btnElement.value == "▼"){
-        btnElement.value = "▲";
-        realVal.value = "STAR";
-        document.targetURL2.location.href="/search/re_search?app_name=&star="+$('#star').val()+"&filter="+$('#filter').val()+"&os="+$('#os').val()+"&condition=STAR";
-      }else{
-        btnElement.value = "▼";
-        realVal.value = "-STAR";
-        document.targetURL2.location.href="/search/re_search?app_name=&star="+$('#star').val()+"&filter="+$('#filter').val()+"&os="+$('#os').val()+"&condition=-STAR";
-      }
-    }
-
-  <!-- 별점 정렬 -->
-
-
-  <!-- 추천수 정렬 -->
-
-    function changeBtnName3() {
-      const btnElement
-      = document.getElementById('like-button');
-      const realVal
-      = document.getElementById('hiddenLike');
-
-      if(btnElement.value == "▼"){
-        btnElement.value = "▲";
-        realVal.value = "LIKE";
-        document.targetURL2.location.href="/search/re_search?app_name=&star="+$('#star').val()+"&filter="+$('#filter').val()+"&os="+$('#os').val()+"&condition=LIKE";
-      }else{
-        btnElement.value = "▼";
-        realVal.value = "-LIKE";
-        document.targetURL2.location.href="/search/re_search?app_name=&star="+$('#star').val()+"&filter="+$('#filter').val()+"&os="+$('#os').val()+"&condition=-LIKE";
-      }
-    }
-
-  <!-- 추천수 정렬 -->
-
-  </script>
-
-  <br/>
-
-  <div style="text-align: center;">
-    <iframe id="targetURL2" name="targetURL2" class="iframe-preview center" width="85%" height="600" align="center" style="margin-left: auto; margin-right: auto;border:none; border-radius: 10px; align-items:center; text-align:center; align-items:center;" src="/review">
-    </iframe>
-  </div>
-
-
-  <div>
-
-    <br/>
-    <br/>
-    <br/>
-
-
-
-    <!-- <h3> > 어플 키워드 분석결과 보기 < </h3> -->
-    <a href="/review/chart/wordcloud">
-      <!-- <img  width="300px" style="padding-bottom: 40px;" src="../img/key.png"/> -->
-      <button class="myapp-btn" > Word Cloud <br/> 리뷰 키워드 분석하기 GO</button>
-    </a>
-
-
-
-  </div>
-
-
-  <br/>
-  <br/>
-  <br/>
-
-
-
-  <!-- 하단 푸터 시작 -->
-  <div id='wrapper'>
-    <div>
-    </div>
-  </div>
-  <footer style="margin-top:300px;">
-  <h3 class="avo-title"> AVO </h3>
-  <a href="/">
-    <img width="25px" height="25px" style="padding-top:10px; padding-right:5px;" src="../img/instagram-logo.png">
-  </a>
-  <a href="/">
-    <img width="25px" height="25px" style="padding-top:10px; padding-right:5px;" src="../img/facebook-logo.png">
-  </a>
-
-  <a href="/">
-    <img width="25px" height="25px" style="padding-top:10px; padding-right:5px;" src="../img/twitter-logo.png">
-  </a>
-
-
-  <p class="footer-content1">avo@gmail.com</p>
-  <p class="footer-content2">@ 2022 Review service from AVO</p>
-  </footer>
-
-
-
-
-</body>
-</html>
+    </body>
+    </html>

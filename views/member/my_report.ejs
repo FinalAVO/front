@@ -13,9 +13,46 @@
   <link rel="stylesheet"  type="text/css" href="../css/popup-save.css"/>
 
   <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
 
 
   <style>
+
+  .filter-txt{
+    font-size:12px;
+    color: #666;
+  }
+
+  .search-bar{
+    float: left;
+    margin-left: 240px;
+    margin-top:30px;
+  }
+
+  .search-button{
+    margin-left: 20px;
+    right: 20%;
+    background-color: #2f5971;
+    border-radius: 20px;
+    color: #FAFAFA;
+    width: 75px;
+    height: 30px;
+    z-index: 1;
+    border: none;
+  }
+
+  #demo{
+    width: 180px;
+    height: 25px;
+    background-color: rgb(233, 233, 233);
+    border-radius: 15px;
+    border: 4px solid rgb(233, 233, 233);
+    box-shadow: 0 1px 0 1px rgba(0,0,0,.04);
+    text-align: center;
+
+  }
   .search-btn{
     margin-top: 30px;
     margin-left: 5px;
@@ -28,9 +65,47 @@
     width: 90px;
     border: none;
     border-radius: 10px;
-
   }
+
+  .btn_normal{
+    display: inline;
+    background-color: #F1F2EC;
+    width: 70%;
+    height: 60%;
+    border:none;
+    color:gray;
+    /* margin-top: 60px; */
+    /* margin-left:10px; */
+    border-radius: 10px;
+    cursor: pointer;
+  }
+
+  table{
+    border:1px solid gray;
+    border-collapse: collapse;
+    border-radius: 15px;
+    width:80%;
+    height:200px;
+    margin-left:auto;
+    margin-right:auto;
+    text-align:center;
+  }
+
+  tr, td{
+    border:1px solid gray;;
+  }
+
 </style>
+<script>
+  $(function(){
+    $('#search-button').click(function(){
+      var date = $('#demo').val();
+      $('#date').val(date);
+      console.log($('#date').val());
+      alert("날짜가 변경되었습니다.");
+    })
+  })
+</script>
 </head>
 
 
@@ -113,8 +188,8 @@
           <br/>
           <br/>
           <li><a class="menu" href="/member/my_search?db_name='<%= my_app[0].db_name %>'">전체리뷰 살펴보기</a></li>
-          <li class="keyword-btn"><a class="menu" href="/review/chart/wordcloud_member?db_name='<%= my_app[0].db_name %>'">리뷰 키워드</a></li>
-          <li style="background-color:white;"><a  style="color:black;"class="menu" href="/member/my_report?db_name='<%= my_app[0].db_name %>'">주제별 보고서 받기</a></li>
+          <li id="keyword-btn"><a class="menu" href="/member/my_wordcloud?db_name='<%= my_app[0].db_name %>'">리뷰 키워드</a></li>
+          <li style="background-color:white;"><a style="color:black;"class="menu" href="/member/my_report?db_name='<%= my_app[0].db_name %>'">주제별 보고서 받기</a></li>
           <li><a class="menu" href="#">인기 많은 리뷰</a></li>
         </ol>
       </div>
@@ -133,6 +208,8 @@
 
 
         <script>
+
+
 
         $(document).ready(function(){
           $('#otherapp_btn').click(function(){
@@ -156,9 +233,9 @@
 
 
 
-      </script>
+        </script>
 
-      <p><label class="report-c"><input type='checkbox' value='selectall' onclick='selectAll(this)'/> 전체 선택 </label></p>
+        <p><label class="report-c"><input type='checkbox' value='selectall' onclick='selectAll(this)'/> 전체 선택 </label></p>
 
         <form method="post" action="/review/chart" target="targetURL2">
           <p><label class="report-c"><input class="report-c" type="checkbox" name="subject" value="DESIGN">  디자인</label></p>
@@ -175,14 +252,57 @@
           <br>
           <p><label class="report-c"><input class="report-c" type="checkbox" name="subject" value="UPDATE">  업데이트</label></p>
           <br>
-          <p><input class="report-btn keyword-btn" type="submit" value="보고서 검색"></p>
+          <p><input id="reportBtn" class="report-btn keyword-btn" type="submit" value="보고서 검색"></p>
           <input type="hidden" value="<%= session.loginData %>" name="user_data">
           <input id="collection_name" type="hidden" value="<%= my_app[0].db_name %>" name="collection_name">
           <input type="hidden" value="<%= my_app[0].app_name %>" name="app_name">
-
+          <input type="hidden" id="date" name="date" value=""/>
         </form>
+      </div>
 
-    </div>
+      <div class="search-bar" >
+
+          <span class="filter-txt" style="padding-left:120px;"> 기간 설정 </span>
+          <input type="text" id="demo" name="demo" value="" />
+
+          <input type="hidden" name="app_name">
+          <button style="display:inline;"class="search-button" id="search-button" type='submit'> SAVE </button>
+
+      </div>
+
+      <script>
+      var today = new Date();
+
+      var date = new Date();
+      date.setMonth(date.getMonth() - 3);
+
+      $(function () {
+        $('#demo').daterangepicker({
+          "locale": {
+            "format": "YYYY-MM-DD",
+            "separator": " ~ ",
+            "applyLabel": "확인",
+            "cancelLabel": "취소",
+            "fromLabel": "From",
+            "toLabel": "To",
+            "customRangeLabel": "Custom",
+            "weekLabel": "W",
+            "daysOfWeek": ["일", "월", "화", "수", "목", "금", "토"],
+            "monthNames": ["1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월"],
+            "firstDay": 1
+          },
+          "startDate": date,
+          "endDate": today,
+          "drops": "down"
+        }, function (start, end, label) {
+          console.log('New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD') + ' (predefined range: ' + label + ')');
+        }
+      );
+    });
+
+    </script>
+
+
     <div id="map" class="loadingImg"></div>
 
     <script>
@@ -190,7 +310,7 @@
 
     function selectAll(selectAll)  {
       const checkboxes
-           = document.getElementsByName('subject');
+      = document.getElementsByName('subject');
 
       checkboxes.forEach((checkbox) => {
         checkbox.checked = selectAll.checked;
@@ -260,100 +380,125 @@
       }
     }
 
+    </script>
+
+    <div class="iframe-preview" style="display:block;">
+      <iframe id="targetURL2" onload="calcHeight();" name="targetURL2"  frameborder="0" scrolling="no" style="overflow-x:hidden; overflow:auto; width:100%; min-height:500px;"src="/review/chart">
+      </iframe>
+    </div>
+    <a id="capture" style="display:hidden"></a>
+    <!-- <img id="capture" style="display:hidden" src=""> -->
+
+    <script type="text/javascript">
+    //<![CDATA[
+    function calcHeight(){
+      //find the height of the internal page
+
+      var the_height=
+      document.getElementById('targetURL2').contentWindow.
+      document.body.scrollHeight;
+
+      //change the height of the iframe
+      document.getElementById('targetURL2').height=
+      the_height;
+
+      //document.getElementById('the_iframe').scrolling = "no";
+      document.getElementById('targetURL2').style.overflow = "hidden";
+    }
+    //
   </script>
 
-  <div class="iframe-preview" style="display:block;">
-    <iframe id="targetURL2" onload="calcHeight();" name="targetURL2"  frameborder="0" scrolling="no" style="overflow-x:hidden; overflow:auto; width:100%; min-height:500px;"src="/review/chart">
-    </iframe>
+
+
+  <div class="wrap" style="position:fixed; right: 30px; bottom: 30px;">
+    <a href="#pop_info_1" class="btn_open myapp-btn">보고서 다운로드</a>
   </div>
-
-  <script type="text/javascript">
-  //<![CDATA[
-  function calcHeight(){
-    //find the height of the internal page
-
-    var the_height=
-    document.getElementById('targetURL2').contentWindow.
-    document.body.scrollHeight;
-
-    //change the height of the iframe
-    document.getElementById('targetURL2').height=
-    the_height;
-
-    //document.getElementById('the_iframe').scrolling = "no";
-    document.getElementById('targetURL2').style.overflow = "hidden";
-  }
-  //
-</script>
-
-
-
-<div class="wrap" style="position:fixed; right: 30px; bottom: 30px;">
-  <a href="#pop_info_1" class="btn_open myapp-btn">보고서 다운로드</a>
-</div>
-<div id="pop_info_1" class="pop_wrap" style="display:none;">
-  <div class="pop_inner">
-    <h3 class="save-title">보고서 다운로드</h3><br/>
-    <div class="container row">
-      <div class="col-md-1">
+  <div id="pop_info_1" class="pop_wrap" style="display:none;">
+    <div class="pop_inner">
+      <br/>
+      <img src="../img/download.png"></img>
+      <br/>
+      <br/>
+      <div class="container row">
+        <!-- <div class="col-md-1">
         <p class="ok-txt">- 선택 기간 리뷰분석데이터를 csv 파일로 다운로드 할 수 있습니다.</p>
       </div>
       <div class="col-md-1">
-        <p class="ok-txt" style="margin-top:10px;">- 주제별 보고서를 PDF 파일로 다운로드 할 수 있습니다.</p>
-      </div>
+      <p class="ok-txt" style="margin-top:10px;">- 주제별 보고서를 PDF 파일로 다운로드 할 수 있습니다.</p>
+    </div> -->
+    <table>
+      <tr>
+        <td style="width:60%"><p>원본 리뷰 데이터를 CSV 파일로 다운로드 할 수 있습니다.</p></td>
+        <td style="width:40%"><button type="button" id="csv-dl" class="btn_normal">CSV 파일 다운로드</button></td>
+      </tr>
 
-      <button type="button" id="csv-dl" class="btn_confirm">CSV 파일 다운로드</button>
-      <button type="button" id="pdf-dl" class="btn_confirm">PDF 파일 다운로드</button>
-    </div>
+      <tr>
+        <td><p>주제별 보고서를 PDF 파일로 다운로드 할 수 있습니다.</p></td>
+        <td><button type="button" id="pdf-dl" class="btn_normal">PDF 파일 다운로드</button></td>
+      </tr>
 
-    <span id="msg" style="color:black;"></span>
-    <br/>
+      <tr>
+        <td><p>주제별 보고서를 JPG 파일로 다운로드 할 수 있습니다.</p></td>
+        <td><button type="button" id="jpg-dl" class="btn_normal">JPG 파일 다운로드</button></td>
+      </tr>
+    </table>
 
-    <button type="button" class="btn_close">닫기</button>
   </div>
+
+  <span id="msg" style="color:black;"></span>
+  <br/>
+
+  <button type="button" class="btn_close">닫기</button>
+</div>
 </div>
 
 
 
 
 <script>
+
 $(function() {
-function Loading() {
-  var maskHeight = $(document).height();
-  var maskWidth  = window.document.body.clientWidth;
+  function Loading() {
+    var maskHeight = $(document).height();
+    var maskWidth  = window.document.body.clientWidth;
 
-  var mask       = "<div id='mask' style='position:absolute; z-index:9000; background-color:#000000; display:none; left:0; top:0;'></div>";
-  var loadingImg ='';
+    var mask       = "<div id='mask' style='position:absolute; z-index:9000; background-color:#000000; display:none; left:0; top:0;'></div>";
+    var loadingImg ='';
 
-  loadingImg +=" <div id='loadingImg'>";
-  loadingImg +=" <img src='../../img/spinner.gif' style='position:absolute; z-index:9500; text-align:center; display:block; width:1000px; height:570px; margin-top:0px; margin-left:26%;'/>";
-  loadingImg +="</div>";
+    loadingImg +=" <div id='loadingImg'>";
+    loadingImg +=" <img src='../../img/spinner.gif' style='position:absolute; z-index:9500; text-align:center; display:block; width:1000px; height:570px; margin-top:0px; margin-left:26%;'/>";
+    loadingImg +="</div>";
 
-  $('body')
-  .append(mask)
+    $('body')
+    .append(mask)
 
-  $('#mask').css({
-    'width' : maskWidth,
-    'height': maskHeight,
-    'opacity' :'0.3'
-  });
+    $('#mask').css({
+      'width' : maskWidth,
+      'height': maskHeight,
+      'opacity' :'0.3'
+    });
 
-  $('#mask').show();
+    $('#mask').show();
 
-  $('.loadingImg').append(loadingImg);
-  $('#loadingImg').show();
-}
+    $('.loadingImg').append(loadingImg);
+    $('#loadingImg').show();
+  }
 
-function closeLoading() {
-  $('#mask, #loadingImg').hide();
-  $('#mask, #loadingImg').remove();
-}
+  function closeLoading() {
+    $('#mask, #loadingImg').hide();
+    $('#mask, #loadingImg').remove();
+  }
 
-$('.keyword-btn').click(function(){
-  Loading();
-});
+  $('#reportBtn').click(function(){
+    if($('.report-c:checked').length == 0){
+      alert("주제를 하나 이상 선택해주세요!");
+      return false;
+    }else{
+      Loading();
+    }
+  })
 
-window.addEventListener( 'message', (e) => {
+  window.addEventListener( 'message', (e) => {
     // 전달 된 데이터
     console.log( e.data.functionName );
 
@@ -361,7 +506,7 @@ window.addEventListener( 'message', (e) => {
     if( e.data.functionName === 'closeLoading' ){
       closeLoading();
     }
-});
+  });
 
 });
 </script>
@@ -374,27 +519,22 @@ window.addEventListener( 'message', (e) => {
 <script>
 $("#csv-dl").click(function(){
   var collection_name = $("#collection_name").val()
-
-  $.ajax({
-    url: "/review/chart/csv_download",
-    type: "POST",
-    dataType: "JSON",
-    data: { "collection_name": collection_name }
-  }).done(function(json){
-    
-  }).fail(function (xhr, status, errorThrown){
-    alert("오류가 발생했습니다. 잠시 후 다시 시도해주세요..");
-  })
+  location.href = "/review/chart/csv_download?collection_name=" + collection_name;
 });
 
+$("#jpg-dl").click(function(){
+  html2canvas(document.querySelector('#targetURL2').contentWindow.document.body, {background :'#FAFAFA'}).then(function(canvas) {
+    var el = document.getElementById("capture");
+    el.href = canvas.toDataURL("image/jpeg");
+    el.download = '리뷰보고서.jpg';
+    el.click();
+  });
+
+});
 
 $("#pdf-dl").click(function(){
 
-  html2canvas(document.querySelector('#targetURL2').contentDocument.documentElement, {background :'#FFFFFF'}).then(function(canvas) {
-    // var el = document.getElementById("capture");
-    // el.href = canvas.toDataURL("image/jpeg");
-    // el.download = '파일명.jpg';
-    // el.click();
+  html2canvas(document.querySelector('#targetURL2').contentDocument.documentElement, {background :'#FAFAFA'}).then(function(canvas) {
     var imgData = canvas.toDataURL('image/jpeg');
 
     var imgWidth = 210; // 이미지 가로 길이(mm) A4 기준
